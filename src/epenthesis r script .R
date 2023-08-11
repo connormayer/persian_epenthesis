@@ -3,8 +3,8 @@ require(tidyverse)
 require(brms)
 
 #setwd("C:/Users/conno/Dropbox/ling/research/noah_project")
-setwd("E:/Dropbox/ling/research/noah_project")
-df <- read_csv("Persian_epenthesis.csv")
+setwd("E:/git_repos/persian_epenthesis")
+df <- read_csv("data/Persian_epenthesis.csv")
 
 #define preceding vowwls 
 vowels <- c("e", "i", "u", "o")
@@ -28,7 +28,7 @@ sonority <- c(t = 0,
 
 
 #load leap q csv 
-leap_q_df <- read_csv("leap_q.csv")
+leap_q_df <- read_csv("data/leap_q.csv")
 
 #join leap q csv to df 
 epenthesis_df <- df %>%
@@ -38,7 +38,7 @@ epenthesis_df <- df %>%
 # vowel. has_ep indicates whether epenthesis occurs or not
 epenthesis_df <- epenthesis_df %>%
   mutate(preceding_v = ifelse(last_sound %in% vowels, TRUE, FALSE),
-       has_ep = ifelse(ep_type %in% c("anaptyxis", "prothesis"), TRUE, FALSE))
+         has_ep = ifelse(ep_type %in% c("anaptyxis", "prothesis"), TRUE, FALSE))
 
 
 #add sonority delta 
@@ -91,7 +91,7 @@ epenthesis_df <- epenthesis_df %>%
          english_speaking_proficiency,
          english_understanding_proficiency,
          english_reading_proficiency
-    )
+  )
 
 # Convert ep_type and participant to factors and set the reference level to be
 # 'none' for ep_type
@@ -101,18 +101,18 @@ epenthesis_df$ep_type <- relevel(as.factor(epenthesis_df$ep_type), ref = "none")
 # Get subset of columns we'll do PCA on
 leap_q_subset <- epenthesis_df %>%
   select(participant,
-    current_farsi_exposure,
-    current_english_exposure,
-    length_of_farsi_residence,
-    farsi_speaking_proficiency,
-    farsi_understanding_proficiency,
-    farsi_reading_proficiency,
-    age_of_english_acquisition,
-    age_of_english_fluency,
-    length_of_english_residence,
-    english_speaking_proficiency,
-    english_understanding_proficiency,
-    english_reading_proficiency
+         current_farsi_exposure,
+         current_english_exposure,
+         length_of_farsi_residence,
+         farsi_speaking_proficiency,
+         farsi_understanding_proficiency,
+         farsi_reading_proficiency,
+         age_of_english_acquisition,
+         age_of_english_fluency,
+         length_of_english_residence,
+         english_speaking_proficiency,
+         english_understanding_proficiency,
+         english_reading_proficiency
   )
 
 # Scale columns (good practice before doing a PCA)
@@ -253,9 +253,38 @@ hyp_test
 # coefficients. You can see the peak at about -0.03
 plot(hyp_test)
 
-epenthesis_df$word <- as_factor(epenthesis_df$word)
 
-epenthesis_df %>%
-  group_by(word, ep_type) %>%
-  count(.drop=FALSE)
 
+
+
+# Generate tableaux
+# This code relies on the ordering in the spreadsheets being a particular way
+
+# Global counts
+counts_df <- epenthesis_df %>%
+  group_by(word, ep_type, participant, .drop = FALSE) %>%
+  summarize(count=n()) %>%
+  ungroup() %>%
+  filter(word != 'spreading')
+
+fh_template <- read_csv('data/tableaux/fleischhacker_template.csv')
+fh_template <- fh_template %>%
+  arrange(Input)
+fh_template[is.na(fh_template)] <- 0
+
+# Global tableaux
+global_counts <- counts_df %>%
+  group_by(word, ep_type, .drop = FALSE) %>%
+  summarize(count=sum(count)) 
+
+global_fh_tableau <- fh_template
+global_fh_tableau$Frequency <- global_counts$count
+write_csv(global_fh_tableau, 'data/tableaux/fleischhacker/fh_global.csv')
+
+for (p in unique(counts_df$participant)) {
+  participant_counts <- counts_df %>%
+    filter(participant == p)
+  p_fh_tableau <- fh_template
+  p_fh_tableau$Frequency <- participant_counts$count
+  write_csv(p_fh_tableau, str_glue('data/tableaux/fleischhacker/fh_p{p}.csv'))
+}
