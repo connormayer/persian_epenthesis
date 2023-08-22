@@ -2,7 +2,8 @@ library(tidyverse)
 library(maxent.ot)
 
 #set wd
-setwd("~/Desktop/git_repo_persian_epenthesis")
+#setwd("~/Desktop/git_repo_persian_epenthesis")
+setwd("E:/git_repos/persian_epenthesis")
 
 #fleischhaker global 
 fh_global <- read_csv("data/tableaux/fleischhacker/fh_global.csv")
@@ -48,6 +49,27 @@ results$predictions
 #compare models 
 compare_models(fh_model, gs_model, gc_model, method = "bic")
 
+# Connor's version
+# Make empty tibble to hold model results
+results_df <- tibble()
+
+# Folder containing individual tableaux
+tableaux_folder <- "data/tableaux/fleischhacker"
+# Loop over files in folder
+for (f in list.files(tableaux_folder)) {
+  # Concatenate folder path and filename to get full path to file
+  full_path <- file.path(tableaux_folder, f)
+  # Read file
+  tableau_df <- read_csv(full_path)
+  # Optimize weights
+  model <- optimize_weights(tableau_df)
+  # Store results in dataframe
+  results_df <- rbind(results_df, c(f, model$weights, model$loglik, model$k, model$n))
+}
+# Add column names
+colnames(results_df) <- c('participant', names(model$weights), 'loglik', 'k', 'n')
+# Write results
+write_csv(results_df, 'data/inidividual_results_fleischhacker.csv')
 
 #run max ent on each individual participant
 #fleischhacker
