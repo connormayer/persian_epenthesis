@@ -71,6 +71,50 @@ colnames(results_df) <- c('participant', names(model$weights), 'loglik', 'k', 'n
 # Write results
 write_csv(results_df, 'data/inidividual_results_fleischhacker.csv')
 
+
+#gouskova_simple 
+gs_results_df <- tibble()
+
+# Folder containing individual tableaux
+gs_tableaux_folder <- "data/tableaux/gouskova_simple"
+# Loop over files in folder
+for (f in list.files(gs_tableaux_folder)) {
+  # Concatenate folder path and filename to get full path to file
+  gs_full_path <- file.path(gs_tableaux_folder, f)
+  # Read file
+ gs_tableau_df <- read_csv(gs_full_path)
+  # Optimize weights
+  gs_model <- optimize_weights(gs_tableau_df)
+  # Store results in dataframe
+  gs_results_df <- rbind(gs_results_df, c(f, gs_model$weights, gs_model$loglik, gs_model$k, gs_model$n))
+}
+# Add column names
+colnames(gs_results_df) <- c('participant', names(gs_model$weights), 'loglik', 'k', 'n')
+# Write results
+write_csv(gs_results_df, 'data/inidividual_results_gouskova_simple.csv')
+
+#gouskova_complex
+gc_results_df <- tibble()
+
+# Folder containing individual tableaux
+gc_tableaux_folder <- "data/tableaux/gouskova_complex"
+# Loop over files in folder
+for (f in list.files(gc_tableaux_folder)) {
+  # Concatenate folder path and filename to get full path to file
+  gc_full_path <- file.path(gc_tableaux_folder, f)
+  # Read file
+  gc_tableau_df <- read_csv(gc_full_path)
+  # Optimize weights
+  gc_model <- optimize_weights(gc_tableau_df)
+  # Store results in dataframe
+  gc_results_df <- rbind(gc_results_df, c(f, gc_model$weights, gc_model$loglik, gc_model$k, gc_model$n))
+}
+# Add column names
+colnames(gc_results_df) <- c('participant', names(gc_model$weights), 'loglik', 'k', 'n')
+# Write results
+write_csv(gc_results_df, 'data/inidividual_results_gouskova_complex.csv')
+
+
 #run max ent on each individual participant
 #fleischhacker
 library(fs)
