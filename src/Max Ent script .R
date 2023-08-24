@@ -49,89 +49,70 @@ results$predictions
 #compare models 
 compare_models(fh_model, gs_model, gc_model, method = "bic")
 
-# Connor's version
-# Make empty tibble to hold model results
-results_df <- tibble()
 
-# Folder containing individual tableaux
-tableaux_folder <- "data/tableaux/fleischhacker"
-# Loop over files in folder
-for (f in list.files(tableaux_folder)) {
-  # Concatenate folder path and filename to get full path to file
-  full_path <- file.path(tableaux_folder, f)
-  # Read file
-  tableau_df <- read_csv(full_path)
-  # Optimize weights
-  model <- optimize_weights(tableau_df)
-  # Store results in dataframe
-  results_df <- rbind(results_df, c(f, model$weights, model$loglik, model$k, model$n))
+fit_models <- function(tableaux_folder, output) {
+  # Make empty tibble to hold model results
+  results_df <- tibble()
+  
+  # Loop over files in folder
+  for (f in list.files(tableaux_folder)) {
+    # Concatenate folder path and filename to get full path to file
+    full_path <- file.path(tableaux_folder, f)
+    # Read file
+    tableau_df <- read_csv(full_path)
+    # Optimize weights
+    model <- optimize_weights(tableau_df)
+    # Store results in dataframe
+    results_df <- rbind(results_df, c(f, model$weights, model$loglik, model$k, model$n))
+  }
+  # Add column names
+  colnames(results_df) <- c('participant', names(model$weights), 'loglik', 'k', 'n')
+  # Write results
+  write_csv(results_df, output)
+  return(results_df)
 }
-# Add column names
-colnames(results_df) <- c('participant', names(model$weights), 'loglik', 'k', 'n')
-# Write results
-write_csv(results_df, 'data/inidividual_results_fleischhacker.csv')
 
+fh_results_df <- fit_models(
+  "data/tableaux/fleischhacker", 
+  "data/individual_results_fleischhacker.csv"
+)
 
-#gouskova_simple 
-gs_results_df <- tibble()
+gouskova_results_df <- fit_models(
+  "data/tableaux/gouskova_simple", 
+  "data/individual_results_gouskova_simple.csv"
+)
 
-# Folder containing individual tableaux
-gs_tableaux_folder <- "data/tableaux/gouskova_simple"
-# Loop over files in folder
-for (f in list.files(gs_tableaux_folder)) {
-  # Concatenate folder path and filename to get full path to file
-  gs_full_path <- file.path(gs_tableaux_folder, f)
-  # Read file
- gs_tableau_df <- read_csv(gs_full_path)
-  # Optimize weights
-  gs_model <- optimize_weights(gs_tableau_df)
-  # Store results in dataframe
-  gs_results_df <- rbind(gs_results_df, c(f, gs_model$weights, gs_model$loglik, gs_model$k, gs_model$n))
-}
-# Add column names
-colnames(gs_results_df) <- c('participant', names(gs_model$weights), 'loglik', 'k', 'n')
-# Write results
-write_csv(gs_results_df, 'data/inidividual_results_gouskova_simple.csv')
+gouskova_complex_results_df <- fit_models(
+  "data/tableaux/gouskova_complex", 
+  "data/individual_results_gouskova_complex.csv"
+)
 
-#gouskova_complex
-gc_results_df <- tibble()
+# Add profiency information
+experimental_df <- read_csv('data/experimental_results.csv') %>%
+  select(participant, PC1) %>%
+  unique()
 
-# Folder containing individual tableaux
-gc_tableaux_folder <- "data/tableaux/gouskova_complex"
-# Loop over files in folder
-for (f in list.files(gc_tableaux_folder)) {
-  # Concatenate folder path and filename to get full path to file
-  gc_full_path <- file.path(gc_tableaux_folder, f)
-  # Read file
-  gc_tableau_df <- read_csv(gc_full_path)
-  # Optimize weights
-  gc_model <- optimize_weights(gc_tableau_df)
-  # Store results in dataframe
-  gc_results_df <- rbind(gc_results_df, c(f, gc_model$weights, gc_model$loglik, gc_model$k, gc_model$n))
-}
-# Add column names
-colnames(gc_results_df) <- c('participant', names(gc_model$weights), 'loglik', 'k', 'n')
-# Write results
-write_csv(gc_results_df, 'data/inidividual_results_gouskova_complex.csv')
-
+regex <- "fh_p(\\d+)\\.csv"
+fh_results_df$participant <- as.double(str_match(fh_results_df$participant, regex)[,2])
+joined_df <- inner_join(fh_results_df, experimental_df, by=c("participant"))
 
 #run max ent on each individual participant
 #fleischhacker
-library(fs)
-
-fh_file_path <- fs::dir_ls("tableaux/fleischhacker")
-fh_file_path
-
-fh_file_contents <- list()
-for(i in seq_along(fh_file_path)) {
-  fh_file_contents[[i]] <- read_csv(
-    file = fh_file_path[[i]]
-  )
-}
-
-fh_file_contents <- set_names(fh_file_contents, c("fh_global.csv", "fh_p1.csv", "fh_p2.csv", "fh_p3.csv", "fh_p4.csv", "fh_p5.csv", "fh_p6.csv", "fh_p7.csv", "fh_p8.csv", "fh_p9.csv", "fh_p10.csv", "fh_p13.csv", "fh_p14.csv", "fh_p15.csv", "fh_p16.csv", "fh_p17.csv", "fh_p18.csv", "fh_p19.csv", "fh_p20.csv", "fh_p21.csv","fh_template.csv"))
-
-
-lapply(fh_file_contents, optimize_weights)
+# library(fs)
+# 
+# fh_file_path <- fs::dir_ls("tableaux/fleischhacker")
+# fh_file_path
+# 
+# fh_file_contents <- list()
+# for(i in seq_along(fh_file_path)) {
+#   fh_file_contents[[i]] <- read_csv(
+#     file = fh_file_path[[i]]
+#   )
+# }
+# 
+# fh_file_contents <- set_names(fh_file_contents, c("fh_global.csv", "fh_p1.csv", "fh_p2.csv", "fh_p3.csv", "fh_p4.csv", "fh_p5.csv", "fh_p6.csv", "fh_p7.csv", "fh_p8.csv", "fh_p9.csv", "fh_p10.csv", "fh_p13.csv", "fh_p14.csv", "fh_p15.csv", "fh_p16.csv", "fh_p17.csv", "fh_p18.csv", "fh_p19.csv", "fh_p20.csv", "fh_p21.csv","fh_template.csv"))
+# 
+# 
+# lapply(fh_file_contents, optimize_weights)
 
 
