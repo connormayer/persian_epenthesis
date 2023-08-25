@@ -50,6 +50,7 @@ results$predictions
 compare_models(fh_model, gs_model, gc_model, method = "bic")
 
 
+
 fit_models <- function(tableaux_folder, output) {
   # Make empty tibble to hold model results
   results_df <- tibble()
@@ -110,9 +111,11 @@ class(fh_pivot$Weight)
 
 #normalize constraint weights
 
-fh_normalized <- fh_pivot %>%
-  group_by(participant, Weight) %>%
-  mutate(Weights_normalized = as.numeric(Weight) / max(as.numeric(Weight)))
+fh_normalized <- fh_pivot %>% 
+  group_by(participant) %>% 
+  mutate(Max_weight = max(Weight), 
+         weights_normalized = as.numeric(Weight) / as.numeric(Max_weight)) 
+
 
 #run max ent on each individual participant
 #fleischhacker
@@ -133,4 +136,7 @@ fh_normalized <- fh_pivot %>%
 # 
 # lapply(fh_file_contents, optimize_weights)
 
+#run max ent on each individual participant
+#fleischhacker
+#
 
