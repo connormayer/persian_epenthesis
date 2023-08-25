@@ -95,6 +95,24 @@ experimental_df <- read_csv('data/experimental_results.csv') %>%
 regex <- "fh_p(\\d+)\\.csv"
 fh_results_df$participant <- as.double(str_match(fh_results_df$participant, regex)[,2])
 joined_df <- inner_join(fh_results_df, experimental_df, by=c("participant"))
+view(joined_df)
+
+#table4a %>% 
+##pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
+
+#pivot joined_df so that it has the columns Participant, Constraint, Weight, k, n, loglik, PC1.
+fh_pivot <- joined_df %>%
+  pivot_longer(c('DEP-[ə]/S_T', 'C//V', 'C/V', 'L-ANCHOR', 'CONTIGUITY', 'DEP-[ə]/S_N', 'DEP-[ə]/S_L', 'DEP-[ə]/S_W', 'DEP-[ə]/T_R', 'COMPLEX'),
+            names_to = "Constraint", values_to = "Weight")
+fh_pivot
+
+class(fh_pivot$Weight)
+
+#normalize constraint weights
+
+fh_normalized <- fh_pivot %>%
+  group_by(participant, Weight) %>%
+  mutate(Weights_normalized = as.numeric(Weight) / max(as.numeric(Weight)))
 
 #run max ent on each individual participant
 #fleischhacker

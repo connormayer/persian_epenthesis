@@ -4,7 +4,7 @@ library(brms)
 setwd("C:/Users/conno/Dropbox/ling/research/noah_project")
 #setwd("E:/Dropbox/ling/research/noah_project")
 
-df <- read_csv("persian_data.csv")
+df <- read_csv("corpus_data.csv")
 
 vowels <- c("[u]", "[ə]", "[ɔɪ]")
 
@@ -211,6 +211,16 @@ library(brms)
 m_base <- brm(ep_type ~ delta + preceding_v + onset_age + onset + (1|speaker) + (1|word),
          data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
          chains=4, cores=4)
+summary(m_base)
+
+plot(m_base)
+
+
+hyp_test <- hypothesis(m_base, 'muprothesis_onset_age < muanaptyxis_onset_age')
+hyp_test
+
+plot(hyp_test)
+
 
 # Ref level set to prothesis
 m_base_2 <- brm(relevel(ep_type, ref="prothesis") ~ delta + preceding_v + onset_age + onset + (1|speaker) + (1|word),
