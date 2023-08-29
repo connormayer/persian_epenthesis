@@ -98,8 +98,6 @@ fh_results_df$participant <- as.double(str_match(fh_results_df$participant, rege
 joined_df <- inner_join(fh_results_df, experimental_df, by=c("participant"))
 view(joined_df)
 
-#table4a %>% 
-##pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
 
 #pivot joined_df so that it has the columns Participant, Constraint, Weight, k, n, loglik, PC1.
 fh_pivot <- joined_df %>%
@@ -110,11 +108,31 @@ fh_pivot
 class(fh_pivot$Weight)
 
 #normalize constraint weights
-
 fh_normalized <- fh_pivot %>% 
   group_by(participant) %>% 
   mutate(Max_weight = max(Weight), 
          weights_normalized = as.numeric(Weight) / as.numeric(Max_weight)) 
+
+view(fh_normalized)
+
+
+#conver participant column to a factor and reorder by PC1
+fh_final <- fh_normalized 
+
+fh_final$participant <- factor(fh_normalized_1$participant)   
+
+fh_final$participant <- fct_reorder(fh_normalized_1$participant, fh_normalized_1$PC1)
+
+
+#bar plot plotting constraint and their weights for each participant 
+ggplot(data = fh_final) + 
+  geom_bar(mapping = aes(x = Constraint, y = weights_normalized), stat = "identity") +
+  facet_wrap(~participant) +
+  theme(axis.text.x =element_text(size=rel(0.5)))
+
+
+
+
 
 
 #run max ent on each individual participant
