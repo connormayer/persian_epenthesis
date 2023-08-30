@@ -6,7 +6,7 @@ library(maxent.ot)
 setwd("E:/git_repos/persian_epenthesis")
 
 #fleischhaker global 
-fh_global <- read_csv("data/tableaux/fleischhacker/fh_global.csv")
+fh_global <- read_csv("data/tableaux/fh_global.csv")
 
 #fit model 
 fh_model <- optimize_weights(fh_global)
@@ -21,7 +21,7 @@ results$predictions
 
 
 #gouskova_simple global 
-gs_global <- read_csv("data/tableaux/gouskova_simple/gs_global.csv")
+gs_global <- read_csv("data/tableaux/gs_global.csv")
 
 #fit model 
 gs_model <- optimize_weights(gs_global)
@@ -34,7 +34,7 @@ results$loglik
 results$predictions
 
 #gouskova_complex global 
-gc_global <- read_csv("data/tableaux/gouskova_complex/gc_global.csv")
+gc_global <- read_csv("data/tableaux/gc_global.csv")
 
 #fit model 
 gc_model <- optimize_weights(gc_global)
@@ -128,7 +128,7 @@ fh_final$participant <- fct_reorder(fh_normalized_1$participant, fh_normalized_1
 ggplot(data = fh_final) + 
   geom_bar(mapping = aes(x = Constraint, y = weights_normalized), stat = "identity") +
   facet_wrap(~participant) +
-  theme(axis.text.x =element_text(size=rel(0.5)))
+  theme(axis.text.x =element_text(size=rel(0.3)))
 
 
 

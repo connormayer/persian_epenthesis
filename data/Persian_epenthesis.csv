@@ -2756,24 +2756,24 @@ participant,word ,onset,ep_type,last_sound ,context
 19,beautiful ,bj ,none,na,context 
 19,dwarf ,dw ,anaptyxis ,na,context 
 19,quickly ,kw ,anaptyxis ,na,context 
-19,snoops ,sn ,prothesis ,na,context 
+19,snoops ,sn ,none,na,context 
 19,bring ,br ,anaptyxis ,na,context 
-19,start ,st ,prothesis ,na,context 
+19,start ,st ,none,na,context 
 19,flickering ,fl ,anaptyxis ,na,context 
 19,spark ,sp ,none,na,context 
 19,small ,sm ,none,na,context 
 19,scoop ,sk ,none,na,context 
-19,skin ,sk ,prothesis ,na,context 
-19,snag ,sn ,prothesis ,na,context 
+19,skin ,sk ,none,na,context 
+19,snag ,sn ,none,na,context 
 19,thread ,θr ,anaptyxis ,na,context 
 19,sweeps ,sw ,anaptyxis ,na,context 
 19,please ,pl ,none,na,context 
 19,floor ,fl ,anaptyxis ,na,context 
 19,thrashing ,θr,anaptyxis ,na,context 
-19,speed ,sp ,prothesis ,na,context 
+19,speed ,sp ,none,na,context 
 19,smiles ,sm ,none,na,context 
 19,swoon ,sw ,anaptyxis ,na,context 
-19,slouched ,sl ,prothesis ,na,context 
+19,slouched ,sl ,none,na,context 
 19,swim ,sw ,none,na,context 
 19,dreaming ,dr ,anaptyxis ,na,context 
 19,twin ,tw ,anaptyxis ,na,context 
@@ -2790,7 +2790,7 @@ participant,word ,onset,ep_type,last_sound ,context
 19,sniffs ,sn ,none,na,context 
 19,flock ,fl ,anaptyxis ,na,context 
 19,snatch ,sn ,none,na,context 
-19,small ,sm ,prothesis ,na,context 
+19,small ,sm ,none,na,context 
 19,slow ,sl ,none,na,context 
 19,stop ,st ,none,na,context 
 19,smacked ,sm ,prothesis ,na,context 
@@ -2810,7 +2810,7 @@ participant,word ,onset,ep_type,last_sound ,context
 19,smelling ,sm ,none,na,context 
 19,brother ,br ,none,na,context 
 19,freaks ,fr ,anaptyxis ,na,context 
-19,starts ,st,prothesis ,na,context 
+19,starts ,st,na,na,context 
 20,trot ,tr ,na,z,passage 
 20,snaps ,sn ,na,n,passage 
 20,dwane ,dw ,na,na,passage 
@@ -2906,9 +2906,9 @@ participant,word ,onset,ep_type,last_sound ,context
 20,quickly ,kw ,none,na,context 
 20,snoops ,sn ,none,na,context 
 20,bring ,br ,anaptyxis,na,context 
-20,start ,st ,prothesis ,na,context 
+20,start ,st ,none,na,context 
 20,flickering ,fl ,anaptyxis,na,context 
-20,spark ,sp ,prothesis ,na,context 
+20,spark ,sp ,none,na,context 
 20,small ,sm ,none,na,context 
 20,scoop ,sk ,none,na,context 
 20,skin ,sk ,none,na,context 
@@ -2940,7 +2940,7 @@ participant,word ,onset,ep_type,last_sound ,context
 20,snatch ,sn ,none,na,context 
 20,small ,sm ,none,na,context 
 20,slow ,sl ,none,na,context 
-20,stop ,st ,prothesis ,na,context 
+20,stop ,st ,none,na,context 
 20,smacked ,sm ,prothesis ,na,context 
 20,skeptical ,sk ,none,na,context 
 20,fly ,fl ,none,na,context 
@@ -2953,12 +2953,12 @@ participant,word ,onset,ep_type,last_sound ,context
 20,sleep ,sl ,none,na,context 
 20,scarlett ,sk ,na,na,context 
 20,creek ,kr ,none,na,context 
-20,plethora ,pl ,anaptyxix ,na,context 
+20,plethora ,pl ,anaptyxis ,na,context 
 20,snow ,sn ,none,na,context 
 20,smelling ,sm ,none,na,context 
 20,brother ,br ,none,na,context 
 20,freaks ,fr ,none,na,context 
-20,starts ,st,prothesis,na,context 
+20,starts ,st,na,na,context 
 21,trot ,tr ,na,z,passage 
 21,snaps ,sn ,na,n,passage 
 21,dwane ,dw ,na,na,passage 

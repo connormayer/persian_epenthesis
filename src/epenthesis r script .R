@@ -228,6 +228,10 @@ ep_rate_df %>%
   #geom_smooth(method='lm') +
   ylab("Proportion of total complex onsets with prothesis")
 
+
+#create experimental results df
+write_csv(epenthesis_df, 'data/expiremental_results.csv')
+
 # Fit a model with none as the reference level
 m_base <- brm(
   ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
@@ -254,9 +258,6 @@ hyp_test
 plot(hyp_test)
 
 
-
-
-
 # Generate tableaux
 # This code relies on the ordering in the spreadsheets being a particular way
 
@@ -267,12 +268,12 @@ counts_df <- epenthesis_df %>%
   ungroup() %>%
   filter(word != 'spreading')
 
+#generate global and individual tableaux for fleischhacker analysis 
 fh_template <- read_csv('data/tableaux/fleischhacker_template.csv')
 fh_template <- fh_template %>%
   arrange(Input)
 fh_template[is.na(fh_template)] <- 0
 
-# Global tableaux
 global_counts <- counts_df %>%
   group_by(word, ep_type, .drop = FALSE) %>%
   summarize(count=sum(count)) 
@@ -288,3 +289,43 @@ for (p in unique(counts_df$participant)) {
   p_fh_tableau$Frequency <- participant_counts$count
   write_csv(p_fh_tableau, str_glue('data/tableaux/fleischhacker/fh_p{p}.csv'))
 }
+
+
+#generate global and individual tableaux for gouskova_simple analysis 
+gs_template <- read_csv('data/tableaux/gouskova_simple_template.csv')
+gs_template <- gs_template %>%
+  arrange(Input)
+gs_template[is.na(gs_template)] <- 0
+
+global_gs_tableau <- gs_template
+global_gs_tableau$Frequency <- global_counts$count
+write_csv(global_gs_tableau, 'data/tableaux/gouskova_simple/gs_global.csv')
+
+for (p in unique(counts_df$participant)) {
+  participant_counts <- counts_df %>%
+    filter(participant == p)
+  p_gs_tableau <- gs_template
+  p_gs_tableau$Frequency <- participant_counts$count
+  write_csv(p_gs_tableau, str_glue('data/tableaux/gouskova_simple/gs_p{p}.csv'))
+}
+
+
+#generate global and individual tableaux for gouskova_complex analysis
+gc_template <- read_csv('data/tableaux/gouskova_complex_template.csv')
+gc_template <- gc_template %>%
+  arrange(Input)
+gc_template[is.na(gc_template)] <- 0
+
+global_gc_tableau <- gc_template
+global_gc_tableau$Frequency <- global_counts$count
+write_csv(global_gc_tableau, 'data/tableaux/gouskova_complex/gc_global.csv')
+
+for (p in unique(counts_df$participant)) {
+  participant_counts <- counts_df %>%
+    filter(participant == p)
+  p_gc_tableau <- gc_template
+  p_gc_tableau$Frequency <- participant_counts$count
+  write_csv(p_gc_tableau, str_glue('data/tableaux/gouskova_complex/gc_p{p}.csv'))
+}
+
+#when we clean up the code maybe we can make a loop for this instead of copy and pasting
