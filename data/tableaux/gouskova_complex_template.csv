@@ -1,214 +1,214 @@
-Input ,Output ,Frequency ,SyllableContact_4,SyllableContact_3,SyllableContact_2,SyllableContact_1,SyllableContact_-1,*Complex,*Dep,Contiguity 
-trot ,trot ,,,,,,,1,,
-trot ,terot,,,,,,,,1,1
-trot ,etrot,,,1,,,,,1,
-snaps,snaps,,,,,,,1,,
-snaps,senaps,,,,,,,,1,1
-snaps,esnaps,,,,,1,,,1,
-dwayne,dwayne,,,,,,,1,,
-dwayne,dewayne,,,,,,1,,1,1
-dwayne,edwayne,,1,,,,,,1,
-cute ,cute ,,,,,,,1,,
-cute ,ceyute ,,,,,,1,,1,1
-cute ,ecute ,,1,,,,,,1,
-swats ,swats ,,,,,,,1,,
-swats ,sewats,,,,,,1,,1,1
-swats ,eswats,,,1,,,,,1,
-gloves,gloves,,,,,,,1,,
-gloves,geloves,,,,,,,,1,1
-gloves,egloves,,,1,,,,,1,
-smith,smith,,,,,,,1,,
-smith,semith,,,,,,,,1,1
-smith,esmith ,,,,,1,,,1,
-starts ,starts ,,,,,,,1,,
-starts ,setarts ,,,,,,,,1,1
-starts ,estarts ,,,,,,1,,1,
-steps ,steps ,,,,,,,1,,
-steps ,seteps ,,,,,,,,1,1
-steps ,esteps ,,,,,,1,,1,
-slugs ,slugs ,,,,,,,1,,
-slugs ,selugs ,,,,,,,,1,1
-slugs ,eslugs ,,,,1,,,,1,
-quacks ,quacks ,,,,,,,1,,
-quacks ,qeuaks ,,,,,,1,,1,1
-quacks ,equacks ,,1,,,,,,1,
-skip ,skip ,,,,,,,1,,
-skip ,sekip ,,,,,,,,1,1
-skip ,eskip ,,,,,,1,,1,
-flying ,flying ,,,,,,,1,,
-flying ,felying ,,,,,,,,1,1
-flying ,eflying ,,,,1,,,,1,
-drink ,drink ,,,,,,,1,,
-drink ,derink ,,,,,,,,1,1
-drink ,edrink ,,,1,,,,,1,
-grabs ,grabs ,,,,,,,1,,
-grabs,gerabs ,,,,,,,,1,1
-grabs ,egrabs ,,,1,,,,,1,
-smog ,smog ,,,,,,,1,,
-smog ,semog ,,,,,,,,1,1
-smog ,esmog ,,,,,1,,,1,
-beautiful ,beautiful ,,,,,,,1,,
-beautiful ,beeautiful ,,,,,,1,,1,1
-beautiful ,ebeautiful ,,1,,,,,,1,
-dwarf,dwarf ,,,,,,,1,,
-dwarf,dewarf ,,,,,,1,,1,1
-dwarf,edwarf ,,1,,,,,,1,
-quickly ,quickly ,,,,,,,1,,
-quickly ,qeuickly ,,,,,,1,,1,1
-quickly ,equickly ,,1,,,,,,1,
-snoops ,snoops ,,,,,,,1,,
-snoops ,senoops ,,,,,,,,1,1
-snoops ,esnoops ,,,,,1,,,1,
-bring ,bring ,,,,,,,1,,
-bring ,bering ,,,,,,,,1,1
-bring ,ebring ,,,1,,,,,1,
-start ,start ,,,,,,,1,,
-start ,setart ,,,,,,,,1,1
-start ,estart ,,,,,,1,,1,
-flickering ,flickering ,,,,,,,1,,
-flickering ,felickering ,,,,,,,,1,1
-flickering ,eflickering ,,,,1,,,,1,
-spark ,spark ,,,,,,,1,,
-spark ,separk ,,,,,,,,1,1
-spark ,espark ,,,,,,1,,1,
-scoop ,scoop ,,,,,,,1,,
-scoop ,secoop ,,,,,,,,1,1
-scoop ,escoop ,,,,,,1,,1,
-skin ,skin ,,,,,,,1,,
-skin ,sekin ,,,,,,,,1,1
-skin ,eskin ,,,,,,1,,1,
-snag ,snag ,,,,,,,1,,
-snag ,senag ,,,,,,,,1,1
-snag ,esnag ,,,,,1,,,1,
-thread ,thread ,,,,,,,1,,
-thread ,theread ,,,,,,,,1,1
-thread ,ethread ,,,,1,,,,1,
-sweeps ,sweeps ,,,,,,,1,,
-sweeps ,seweeps ,,,,,,1,,1,1
-sweeps ,esweeps ,,,1,,,,,1,
-please ,please ,,,,,,,1,,
-please ,pelease ,,,,,,,,1,1
-please ,eplease ,,,1,,,,,1,
-floor ,floor ,,,,,,,1,,
-floor ,feloor ,,,,,,,,1,1
-floor ,efloor ,,,,1,,,,1,
-thrashing ,thrashing ,,,,,,,1,,
-thrashing ,therashing ,,,,,,,,1,1
-thrashing ,ethrashing ,,,,1,,,,1,
-speed ,speed ,,,,,,,1,,
-speed ,sepeed ,,,,,,,,1,1
-speed ,espeed ,,,,,,1,,1,
-smiles ,smiles ,,,,,,,1,,
-smiles ,semiles ,,,,,,,,1,1
-smiles ,esmiles ,,,,,1,,,1,
-swoon ,swoon ,,,,,,,1,,
-swoon ,sewoon ,,,,,,1,,1,1
-swoon ,eswoon ,,,1,,,,,1,
-slouched ,slouched ,,,,,,,1,,
-slouched ,selouched ,,,,,,,,1,1
-slouched ,eslouched ,,,,1,,,,1,
-swim ,swim ,,,,,,,1,,
-swim ,sewim ,,,,,,1,,1,1
-swim ,eswim ,,,1,,,,,1,
-dreaming ,dreaming ,,,,,,,1,,
-dreaming ,dereaming ,,,,,,,,1,1
-dreaming ,edreaming ,,,1,,,,,1,
-twin ,twin ,,,,,,,1,,
-twin ,tewin ,,,,,,1,,1,1
-twin ,etwin ,,1,,,,,,1,
-bugle ,bugle ,,,,,,,1,,
-bugle ,beugle ,,,,,,1,,1,1
-bugle ,ebugle ,,1,,,,,,1,
-clean ,clean ,,,,,,,1,,
-clean ,celean ,,,,,,,,1,1
-clean ,eclean ,,,1,,,,,1,
-snips ,snips ,,,,,,,1,,
-snips ,senips ,,,,,,,,1,1
-snips ,esnips ,,,,,1,,,1,
-ground ,ground ,,,,,,,1,,
-ground ,geround ,,,,,,,,1,1
-ground ,eground ,,,1,,,,,1,
-slips ,slips ,,,,,,,1,,
-slips ,selips ,,,,,,,,1,1
-slips ,eslips ,,,,1,,,,1,
-place ,place ,,,,,,,1,,
-place ,pelace ,,,,,,,,1,1
-place ,eplace ,,,1,,,,,1,
-tweaking ,tweaking ,,,,,,,1,,
-tweaking ,teweaking ,,,,,,1,,1,1
-tweaking ,etweaking ,,1,,,,,,1,
-sweeping ,sweeping ,,,,,,,1,,
-sweeping ,seweeping ,,,,,,1,,1,1
-sweeping ,esweeping ,,,1,,,,,1,
-sloth ,sloth ,,,,,,,1,,
-sloth ,seloth ,,,,,,,,1,1
-sloth ,esloth ,,,,1,,,,1,
-sniffs ,sniffs ,,,,,,,1,,
-sniffs ,seniffs ,,,,,,,,1,1
-sniffs ,esniffs ,,,,,1,,,1,
-flock ,flock ,,,,,,,1,,
-flock ,felock ,,,,,,,,1,1
-flock ,eflock ,,,,1,,,,1,
-snatch ,snatch ,,,,,,,1,,
-snatch ,senatch ,,,,,,,,1,1
-snatch ,esnatch ,,,,,1,,,1,
-small ,small ,,,,,,,1,,
-small ,semall ,,,,,,,,1,1
-small ,esmall ,,,,,1,,,1,
-slow ,slow ,,,,,,,1,,
-slow ,selow ,,,,,,,,1,1
-slow ,eslow ,,,,1,,,,1,
-stop ,stop ,,,,,,,1,,
-stop,setop ,,,,,,,,1,1
-stop ,estop ,,,,,,1,,1,
-smacked ,smacked ,,,,,,,1,,
-smacked ,semacked ,,,,,,,,1,1
-smacked ,esmacked ,,,,,1,,,1,
-skeptical ,skeptical ,,,,,,,1,,
-skeptical ,sekeptical ,,,,,,,,1,1
-skeptical ,eskeptical ,,,,,,1,,1,
-fly ,fly ,,,,,,,1,,
-fly ,fely ,,,,,,,,1,1
-fly ,efly ,,,,1,,,,1,
-breeze ,breeze ,,,,,,,1,,
-breeze ,bereeze ,,,,,,,,1,1
-breeze ,ebreeze ,,,1,,,,,1,
-queen ,queen ,,,,,,,1,,
-queen ,qeueen ,,,,,,1,,1,1
-queen ,equeen ,,1,,,,,,1,
-twitches ,twitches ,,,,,,,1,,
-twitches ,tewitches ,,,,,,1,,1,1
-twitches ,etwitches ,,1,,,,,,1,
-throttle ,throttle ,,,,,,,1,,
-throttle,therottle ,,,,,,,,1,1
-throttle ,ethrottle ,,,,1,,,,1,
-brings ,brings ,,,,,,,1,,
-brings ,berings ,,,,,,,,1,1
-brings ,ebrings ,,,1,,,,,1,
-three ,three ,,,,,,,1,,
-three ,theree,,,,,,,,1,1
-three ,ethree ,,,,1,,,,1,
-sleep ,sleep ,,,,,,,1,,
-sleep ,seleep ,,,,,,,,1,1
-sleep ,esleep ,,,,1,,,,1,
-scarlett ,scarlett ,,,,,,,1,,
-scarlett ,secarlett ,,,,,,,,1,1
-scarlett ,escarlett ,,,,,,1,,1,
-creek ,creek ,,,,,,,1,,
-creek ,cereek ,,,,,,,,1,1
-creek ,ecreek ,,,1,,,,,1,
-plethora ,plethora ,,,,,,,1,,
-plethora ,pelethora ,,,,,,,,1,1
-plethora ,eplethora ,,,1,,,,,1,
-snow ,snow ,,,,,,,1,,
-snow ,senow ,,,,,,,,1,1
-snow ,esnow ,,,,,1,,,1,
-smelling ,smelling ,,,,,,,1,,
-smelling ,semelling ,,,,,,,,1,1
-smelling ,esmelling ,,,,,1,,,1,
-brother ,brother ,,,,,,,1,,
-brother ,berother ,,,,,,,,1,1
-brother ,ebrother ,,,1,,,,,1,
-freaks ,freaks ,,,,,,,1,,
-freaks ,fereaks ,,,,,,,,1,1
-freaks ,efreaks ,,,,1,,,,1,
+Input ,Output ,Frequency ,SyllableContact_4,SyllableContact_3,SyllableContact_2,SyllableContact_1,SyllableContact_-1,SyllableContact_-2,SyllableContact_-3,SyllableContact_-5,*Complex,*Dep,Contiguity 
+trot ,trot ,,,,,,,,,,1,,
+trot ,terot,,,,,,,1,,,,1,1
+trot ,etrot,,,1,,,,,,,,1,
+snaps,snaps,,,,,,,,,,1,,
+snaps,senaps,,,,,,,,1,,,1,1
+snaps,esnaps,,,,,1,,,,,,1,
+dwayne,dwayne,,,,,,,,,,1,,
+dwayne,dewayne,,,,,,1,,,,,1,1
+dwayne,edwayne,,1,,,,,,,,,1,
+cute ,cute ,,,,,,,,,,1,,
+cute ,ceyute ,,,,,,1,,,,,1,1
+cute ,ecute ,,1,,,,,,,,,1,
+swats ,swats ,,,,,,,,,,1,,
+swats ,sewats,,,,,,1,,,,,1,1
+swats ,eswats,,,1,,,,,,,,1,
+gloves,gloves,,,,,,,,,,1,,
+gloves,geloves,,,,,,,1,,,,1,1
+gloves,egloves,,,1,,,,,,,,1,
+smith,smith,,,,,,,,,,1,,
+smith,semith,,,,,,,,1,,,1,1
+smith,esmith ,,,,,1,,,,,,1,
+starts ,starts ,,,,,,,,,,1,,
+starts ,setarts ,,,,,,,,,1,,1,1
+starts ,estarts ,,,,,,1,,,,,1,
+steps ,steps ,,,,,,,,,,1,,
+steps ,seteps ,,,,,,,,,1,,1,1
+steps ,esteps ,,,,,,1,,,,,1,
+slugs ,slugs ,,,,,,,,,,1,,
+slugs ,selugs ,,,,,,,1,,,,1,1
+slugs ,eslugs ,,,,1,,,,,,,1,
+quacks ,quacks ,,,,,,,,,,1,,
+quacks ,qeuaks ,,,,,,1,,,,,1,1
+quacks ,equacks ,,1,,,,,,,,,1,
+skip ,skip ,,,,,,,,,,1,,
+skip ,sekip ,,,,,,,,,1,,1,1
+skip ,eskip ,,,,,,1,,,,,1,
+flying ,flying ,,,,,,,,,,1,,
+flying ,felying ,,,,,,,1,,,,1,1
+flying ,eflying ,,,,1,,,,,,,1,
+drink ,drink ,,,,,,,,,,1,,
+drink ,derink ,,,,,,,1,,,,1,1
+drink ,edrink ,,,1,,,,,,,,1,
+grabs ,grabs ,,,,,,,,,,1,,
+grabs,gerabs ,,,,,,,1,,,,1,1
+grabs ,egrabs ,,,1,,,,,,,,1,
+smog ,smog ,,,,,,,,,,1,,
+smog ,semog ,,,,,,,,1,,,1,1
+smog ,esmog ,,,,,1,,,,,,1,
+beautiful ,beautiful ,,,,,,,,,,1,,
+beautiful ,beeautiful ,,,,,,1,,,,,1,1
+beautiful ,ebeautiful ,,1,,,,,,,,,1,
+dwarf,dwarf ,,,,,,,,,,1,,
+dwarf,dewarf ,,,,,,1,,,,,1,1
+dwarf,edwarf ,,1,,,,,,,,,1,
+quickly ,quickly ,,,,,,,,,,1,,
+quickly ,qeuickly ,,,,,,1,,,,,1,1
+quickly ,equickly ,,1,,,,,,,,,1,
+snoops ,snoops ,,,,,,,,,,1,,
+snoops ,senoops ,,,,,,,,1,,,1,1
+snoops ,esnoops ,,,,,1,,,,,,1,
+bring ,bring ,,,,,,,,,,1,,
+bring ,bering ,,,,,,,1,,,,1,1
+bring ,ebring ,,,1,,,,,,,,1,
+start ,start ,,,,,,,,,,1,,
+start ,setart ,,,,,,,,,1,,1,1
+start ,estart ,,,,,,1,,,,,1,
+flickering ,flickering ,,,,,,,,,,1,,
+flickering ,felickering ,,,,,,,1,,,,1,1
+flickering ,eflickering ,,,,1,,,,,,,1,
+spark ,spark ,,,,,,,,,,1,,
+spark ,separk ,,,,,,,,,1,,1,1
+spark ,espark ,,,,,,1,,,,,1,
+scoop ,scoop ,,,,,,,,,,1,,
+scoop ,secoop ,,,,,,,,,1,,1,1
+scoop ,escoop ,,,,,,1,,,,,1,
+skin ,skin ,,,,,,,,,,1,,
+skin ,sekin ,,,,,,,,,1,,1,1
+skin ,eskin ,,,,,,1,,,,,1,
+snag ,snag ,,,,,,,,,,1,,
+snag ,senag ,,,,,,,,1,,,1,1
+snag ,esnag ,,,,,1,,,,,,1,
+thread ,thread ,,,,,,,,,,1,,
+thread ,theread ,,,,,,,1,,,,1,1
+thread ,ethread ,,,,1,,,,,,,1,
+sweeps ,sweeps ,,,,,,,,,,1,,
+sweeps ,seweeps ,,,,,,1,,,,,1,1
+sweeps ,esweeps ,,,1,,,,,,,,1,
+please ,please ,,,,,,,,,,1,,
+please ,pelease ,,,,,,,1,,,,1,1
+please ,eplease ,,,1,,,,,,,,1,
+floor ,floor ,,,,,,,,,,1,,
+floor ,feloor ,,,,,,,1,,,,1,1
+floor ,efloor ,,,,1,,,,,,,1,
+thrashing ,thrashing ,,,,,,,,,,1,,
+thrashing ,therashing ,,,,,,,1,,,,1,1
+thrashing ,ethrashing ,,,,1,,,,,,,1,
+speed ,speed ,,,,,,,,,,1,,
+speed ,sepeed ,,,,,,,,,1,,1,1
+speed ,espeed ,,,,,,1,,,,,1,
+smiles ,smiles ,,,,,,,,,,1,,
+smiles ,semiles ,,,,,,,,1,,,1,1
+smiles ,esmiles ,,,,,1,,,,,,1,
+swoon ,swoon ,,,,,,,,,,1,,
+swoon ,sewoon ,,,,,,1,,,,,1,1
+swoon ,eswoon ,,,1,,,,,,,,1,
+slouched ,slouched ,,,,,,,,,,1,,
+slouched ,selouched ,,,,,,,1,,,,1,1
+slouched ,eslouched ,,,,1,,,,,,,1,
+swim ,swim ,,,,,,,,,,1,,
+swim ,sewim ,,,,,,1,,,,,1,1
+swim ,eswim ,,,1,,,,,,,,1,
+dreaming ,dreaming ,,,,,,,,,,1,,
+dreaming ,dereaming ,,,,,,,1,,,,1,1
+dreaming ,edreaming ,,,1,,,,,,,,1,
+twin ,twin ,,,,,,,,,,1,,
+twin ,tewin ,,,,,,1,,,,,1,1
+twin ,etwin ,,1,,,,,,,,,1,
+bugle ,bugle ,,,,,,,,,,1,,
+bugle ,beugle ,,,,,,1,,,,,1,1
+bugle ,ebugle ,,1,,,,,,,,,1,
+clean ,clean ,,,,,,,,,,1,,
+clean ,celean ,,,,,,,1,,,,1,1
+clean ,eclean ,,,1,,,,,,,,1,
+snips ,snips ,,,,,,,,,,1,,
+snips ,senips ,,,,,,,,1,,,1,1
+snips ,esnips ,,,,,1,,,,,,1,
+ground ,ground ,,,,,,,,,,1,,
+ground ,geround ,,,,,,,1,,,,1,1
+ground ,eground ,,,1,,,,,,,,1,
+slips ,slips ,,,,,,,,,,1,,
+slips ,selips ,,,,,,,1,,,,1,1
+slips ,eslips ,,,,1,,,,,,,1,
+place ,place ,,,,,,,,,,1,,
+place ,pelace ,,,,,,,1,,,,1,1
+place ,eplace ,,,1,,,,,,,,1,
+tweaking ,tweaking ,,,,,,,,,,1,,
+tweaking ,teweaking ,,,,,,1,,,,,1,1
+tweaking ,etweaking ,,1,,,,,,,,,1,
+sweeping ,sweeping ,,,,,,,,,,1,,
+sweeping ,seweeping ,,,,,,1,,,,,1,1
+sweeping ,esweeping ,,,1,,,,,,,,1,
+sloth ,sloth ,,,,,,,,,,1,,
+sloth ,seloth ,,,,,,,1,,,,1,1
+sloth ,esloth ,,,,1,,,,,,,1,
+sniffs ,sniffs ,,,,,,,,,,1,,
+sniffs ,seniffs ,,,,,,,,1,,,1,1
+sniffs ,esniffs ,,,,,1,,,,,,1,
+flock ,flock ,,,,,,,,,,1,,
+flock ,felock ,,,,,,,1,,,,1,1
+flock ,eflock ,,,,1,,,,,,,1,
+snatch ,snatch ,,,,,,,,,,1,,
+snatch ,senatch ,,,,,,,,1,,,1,1
+snatch ,esnatch ,,,,,1,,,,,,1,
+small ,small ,,,,,,,,,,1,,
+small ,semall ,,,,,,,,1,,,1,1
+small ,esmall ,,,,,1,,,,,,1,
+slow ,slow ,,,,,,,,,,1,,
+slow ,selow ,,,,,,,1,,,,1,1
+slow ,eslow ,,,,1,,,,,,,1,
+stop ,stop ,,,,,,,,,,1,,
+stop,setop ,,,,,,,,,1,,1,1
+stop ,estop ,,,,,,1,,,,,1,
+smacked ,smacked ,,,,,,,,,,1,,
+smacked ,semacked ,,,,,,,,1,,,1,1
+smacked ,esmacked ,,,,,1,,,,,,1,
+skeptical ,skeptical ,,,,,,,,,,1,,
+skeptical ,sekeptical ,,,,,,,,,1,,1,1
+skeptical ,eskeptical ,,,,,,1,,,,,1,
+fly ,fly ,,,,,,,,,,1,,
+fly ,fely ,,,,,,,1,,,,1,1
+fly ,efly ,,,,1,,,,,,,1,
+breeze ,breeze ,,,,,,,,,,1,,
+breeze ,bereeze ,,,,,,,1,,,,1,1
+breeze ,ebreeze ,,,1,,,,,,,,1,
+queen ,queen ,,,,,,,,,,1,,
+queen ,qeueen ,,,,,,1,,,,,1,1
+queen ,equeen ,,1,,,,,,,,,1,
+twitches ,twitches ,,,,,,,,,,1,,
+twitches ,tewitches ,,,,,,1,,,,,1,1
+twitches ,etwitches ,,1,,,,,,,,,1,
+throttle ,throttle ,,,,,,,,,,1,,
+throttle,therottle ,,,,,,,1,,,,1,1
+throttle ,ethrottle ,,,,1,,,,,,,1,
+brings ,brings ,,,,,,,,,,1,,
+brings ,berings ,,,,,,,1,,,,1,1
+brings ,ebrings ,,,1,,,,,,,,1,
+three ,three ,,,,,,,,,,1,,
+three ,theree,,,,,,,1,,,,1,1
+three ,ethree ,,,,1,,,,,,,1,
+sleep ,sleep ,,,,,,,,,,1,,
+sleep ,seleep ,,,,,,,1,,,,1,1
+sleep ,esleep ,,,,1,,,,,,,1,
+scarlett ,scarlett ,,,,,,,,,,1,,
+scarlett ,secarlett ,,,,,,,,,1,,1,1
+scarlett ,escarlett ,,,,,,1,,,,,1,
+creek ,creek ,,,,,,,,,,1,,
+creek ,cereek ,,,,,,,1,,,,1,1
+creek ,ecreek ,,,1,,,,,,,,1,
+plethora ,plethora ,,,,,,,,,,1,,
+plethora ,pelethora ,,,,,,,1,,,,1,1
+plethora ,eplethora ,,,1,,,,,,,,1,
+snow ,snow ,,,,,,,,,,1,,
+snow ,senow ,,,,,,,,1,,,1,1
+snow ,esnow ,,,,,1,,,,,,1,
+smelling ,smelling ,,,,,,,,,,1,,
+smelling ,semelling ,,,,,,,,1,,,1,1
+smelling ,esmelling ,,,,,1,,,,,,1,
+brother ,brother ,,,,,,,,,,1,,
+brother ,berother ,,,,,,,1,,,,1,1
+brother ,ebrother ,,,1,,,,,,,,1,
+freaks ,freaks ,,,,,,,,,,1,,
+freaks ,fereaks ,,,,,,,1,,,,1,1
+freaks ,efreaks ,,,,1,,,,,,,1,
