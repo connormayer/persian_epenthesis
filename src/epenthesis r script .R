@@ -230,13 +230,13 @@ ep_rate_df %>%
 
 
 #create experimental results df
-write_csv(epenthesis_df, 'data/expiremental_results.csv')
+write_csv(epenthesis_df, 'data/experimental_results.csv')
 
 # Fit a model with none as the reference level
 m_base <- brm(
-  ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
-  data = epenthesis_df, 
-  family="categorical", 
+  ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  data = epenthesis_df,
+  family="categorical",
   prior=c(set_prior("normal(0,3)")),
   chains=4, cores=4)
 summary(m_base)
@@ -278,6 +278,7 @@ global_counts <- counts_df %>%
   group_by(word, ep_type, .drop = FALSE) %>%
   summarize(count=sum(count)) 
 
+# TODO: Sort global counts and tableau alphabetically so numbers go in the right places
 global_fh_tableau <- fh_template
 global_fh_tableau$Frequency <- global_counts$count
 write_csv(global_fh_tableau, 'data/tableaux/fleischhacker/fh_global.csv')

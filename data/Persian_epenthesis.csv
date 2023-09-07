@@ -1309,7 +1309,7 @@ participant,word ,onset,ep_type,last_sound ,context
 9,spreading ,sp,none,na,context 
 9,sniffs ,sn ,prothesis ,na,context 
 9,flock ,fl ,none,na,context 
-9,prothesis ,sn ,none,na,context 
+9,snatch ,sn ,none,na,context 
 9,small ,sm ,none,na,context 
 9,slow ,sl ,none,na,context 
 9,stop ,st ,none,na,context 
@@ -2524,7 +2524,7 @@ participant,word ,onset,ep_type,last_sound ,context
 18,smith ,sm ,none,na,passage 
 18,starts ,st ,none,s,passage 
 18,steps ,st ,none,n,passage 
-18,prothesis ,sl ,none,i,passage 
+18,slugs ,sl ,none,i,passage 
 18,quacks ,kw ,none,d,passage 
 18,skip ,sk ,none,n,passage 
 18,flying ,fl ,none,s,passage 

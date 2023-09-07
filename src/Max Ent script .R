@@ -3,8 +3,8 @@ library(maxent.ot)
 
 #set wd
 #setwd("~/Desktop/git_repo_persian_epenthesis")
-#setwd("E:/git_repos/persian_epenthesis")
-setwd("C:/Users/conno/git_repos/persian_epenthesis")
+setwd("E:/git_repos/persian_epenthesis")
+#setwd("C:/Users/conno/git_repos/persian_epenthesis")
 
 ##################################################
 # Fit weights to data pooled across participants #
@@ -37,7 +37,7 @@ gs_results$predictions
 gc_global <- read_csv("data/tableaux/gc_global.csv")
 
 #fit model 
-gc_model <- optimize_weights(gc_complex_global)
+gc_model <- optimize_weights(gc_global)
 gc_model$weights
 gc_model$loglik
 
@@ -80,76 +80,60 @@ fh_results_df <- fit_models(
   "data/individual_results_fleischhacker.csv"
 )
 
-gouskova_results_df <- fit_models(
+gs_results_df <- fit_models(
   "data/tableaux/gouskova_simple", 
   "data/individual_results_gouskova_simple.csv"
 )
 
-gouskova_complex_results_df <- fit_models(
+gc_results_df <- fit_models(
   "data/tableaux/gouskova_complex", 
   "data/individual_results_gouskova_complex.csv"
 )
 
-# Add profiency information
 experimental_df <- read_csv('data/experimental_results.csv') %>%
   select(participant, PC1) %>%
   unique()
 
-regex <- "fh_p(\\d+)\\.csv"
-fh_results_df$participant <- as.double(str_match(fh_results_df$participant, regex)[,2])
-joined_df <- inner_join(fh_results_df, experimental_df, by=c("participant"))
-joined_df$participant <- as_factor(joined_df$participant)
+process_data <- function(model_df, experimental_df, prefix, constraint_names) {
+  regex <- str_glue("{prefix}_p(\\d+)\\.csv")
+  new_df <- model_df
+  new_df$participant <- as.double(str_match(new_df$participant, regex)[,2])
+  joined_df <- inner_join(new_df, experimental_df, by=c("participant"))
+  joined_df$participant <- as_factor(joined_df$participant)
+  pivot_df <- joined_df %>% 
+    pivot_longer(constraint_names, names_to = "Constraint", values_to = "Weight")
+  normalized_df <- pivot_df %>% 
+    group_by(participant) %>% 
+    mutate(weights_normalized = as.numeric(Weight) / max(Weight)) 
+  final_df <- normalized_df 
+  final_df$participant <- factor(normalized_df$participant)   
+  final_df$participant <- fct_reorder(normalized_df$participant, normalized_df$PC1)
+  return(final_df)
+}
 
+plot_results <- function(df) {
+  ggplot(df, aes(x=PC1, y=weights_normalized)) +
+    geom_point() +
+    geom_smooth(method='lm') +
+    facet_wrap(~Constraint) +
+    xlab("Relative Farsi Dominance") + 
+    ylab("Normalized constraint weight")
+}
 
-#pivot joined_df so that it has the columns Participant, Constraint, Weight, k, n, loglik, PC1.
-fh_pivot <- joined_df %>%
-  pivot_longer(c('DEP-[ə]/S_T', 'C//V', 'C/V', 'L-ANCHOR', 'CONTIGUITY', 'DEP-[ə]/S_N', 'DEP-[ə]/S_L', 'DEP-[ə]/S_W', 'DEP-[ə]/T_R', 'COMPLEX'),
-            names_to = "Constraint", values_to = "Weight")
-fh_pivot
+fh_prefix <- 'fh'
+fh_colnames <- colnames(fh_results_df)
+fh_names <- fh_colnames[2:(length(fh_colnames)-3)]
+fh_final <- process_data(fh_results_df, experimental_df, fh_prefix, fh_names)
+plot_results(fh_final)
 
-#normalize constraint weights
-fh_normalized <- fh_pivot %>% 
-  group_by(participant) %>% 
-  mutate(weights_normalized = as.numeric(Weight) / max(Weight)) 
+gs_prefix <- 'gs'
+gs_colnames <- colnames(gs_results_df)
+gs_names <- gs_colnames[2:(length(gs_colnames)-3)]
+gs_final <- process_data(gs_results_df, experimental_df, gs_prefix, gs_names)
+plot_results(gs_final)
 
-fh_normalized
-
-#convert participant column to a factor and reorder by PC1
-fh_final <- fh_normalized 
-fh_final$participant <- factor(fh_normalized$participant)   
-fh_final$participant <- fct_reorder(fh_normalized$participant, fh_normalized$PC1)
-
-#bar plot plotting constraint and their weights for each participant 
-ggplot(data = fh_final) + 
-  geom_bar(mapping = aes(x = Constraint, y = weights_normalized), stat = "identity") +
-  facet_wrap(~participant) +
-  theme(axis.text.x =element_text(size=rel(0.3)))
-
-
-
-
-
-
-#run max ent on each individual participant
-#fleischhacker
-# library(fs)
-# 
-# fh_file_path <- fs::dir_ls("tableaux/fleischhacker")
-# fh_file_path
-# 
-# fh_file_contents <- list()
-# for(i in seq_along(fh_file_path)) {
-#   fh_file_contents[[i]] <- read_csv(
-#     file = fh_file_path[[i]]
-#   )
-# }
-# 
-# fh_file_contents <- set_names(fh_file_contents, c("fh_global.csv", "fh_p1.csv", "fh_p2.csv", "fh_p3.csv", "fh_p4.csv", "fh_p5.csv", "fh_p6.csv", "fh_p7.csv", "fh_p8.csv", "fh_p9.csv", "fh_p10.csv", "fh_p13.csv", "fh_p14.csv", "fh_p15.csv", "fh_p16.csv", "fh_p17.csv", "fh_p18.csv", "fh_p19.csv", "fh_p20.csv", "fh_p21.csv","fh_template.csv"))
-# 
-# 
-# lapply(fh_file_contents, optimize_weights)
-
-#run max ent on each individual participant
-#fleischhacker
-#
-
+gc_prefix <- 'gc'
+gc_colnames <- colnames(gc_results_df)
+gc_names <- gc_colnames[2:(length(gc_colnames)-3)]
+gc_final <- process_data(gc_results_df, experimental_df, gc_prefix, gc_names)
+plot_results(gc_final)

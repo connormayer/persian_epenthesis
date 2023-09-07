@@ -995,7 +995,7 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,sonority_delta,gender,
 9,spreading,sp,none,FALSE,FALSE,context,-1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,sniffs,sn,prothesis,TRUE,FALSE,context,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,flock,fl,none,FALSE,FALSE,context,2,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
-9,prothesis,sn,none,FALSE,FALSE,context,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
+9,snatch,sn,none,FALSE,FALSE,context,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,small,sm,none,FALSE,FALSE,context,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,slow,sl,none,FALSE,FALSE,context,2,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,stop,st,none,FALSE,FALSE,context,-1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
@@ -1825,7 +1825,7 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,sonority_delta,gender,
 18,smith,sm,none,FALSE,FALSE,passage,1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,starts,st,none,FALSE,FALSE,passage,-1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,steps,st,none,FALSE,FALSE,passage,-1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
-18,prothesis,sl,none,FALSE,TRUE,passage,2,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
+18,slugs,sl,none,FALSE,TRUE,passage,2,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,quacks,kw,none,FALSE,FALSE,passage,4,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,skip,sk,none,FALSE,FALSE,passage,-1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,flying,fl,none,FALSE,FALSE,passage,2,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
