@@ -74,7 +74,7 @@ please,eplease,0,0,0,1,1,0,0,0,0,0,0
 plethora,plethora,1,1,1,0,0,0,0,0,0,1,0
 plethora,pelethora,0,0,0,0,1,0,0,1,0,0,0
 plethora,eplethora,0,0,1,1,0,0,0,0,0,0,0
-quacks,quacks,0,0,1,1,0,0,0,0,0,0,1
+quacks,quacks,1,0,1,1,0,0,0,0,0,0,1
 quacks,qeuaks,0,0,0,0,0,1,0,0,0,1,0
 quacks,equacks,0,0,0,1,1,0,0,0,0,0,0
 queen,queen,1,1,1,0,0,0,0,0,0,1,0
@@ -119,9 +119,6 @@ slugs,eslugs,0,0,0,1,1,0,0,0,0,0,0
 smacked,smacked,1,0,1,1,0,0,0,0,0,0,1
 smacked,semacked,0,0,0,0,0,1,1,0,0,0,0
 smacked,esmacked,0,0,0,1,1,0,0,0,0,0,0
-small,small,1,0,1,1,0,0,0,0,0,0,1
-small,semall,0,0,0,0,0,1,1,0,0,0,0
-small,esmall,0,0,0,1,1,0,0,0,0,0,0
 small,small,2,0,1,1,0,0,0,0,0,0,1
 small,semall,0,0,0,0,0,1,1,0,0,0,0
 small,esmall,0,0,0,1,1,0,0,0,0,0,0

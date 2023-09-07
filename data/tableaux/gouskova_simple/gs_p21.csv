@@ -33,10 +33,10 @@ drink,drink,0,1,0,0,0
 drink,derink,1,0,1,0,1
 drink,edrink,0,0,1,1,0
 dwarf,dwarf,0,1,0,0,0
-dwarf,dewarf,1,0,1,0,1
+dwarf,dewarf,0,0,1,0,1
 dwarf,edwarf,0,0,1,1,0
 dwayne,dwayne,0,1,0,0,0
-dwayne,dewayne,0,0,1,0,1
+dwayne,dewayne,1,0,1,0,1
 dwayne,edwayne,0,0,1,1,0
 flickering,flickering,0,1,0,0,0
 flickering,felickering,1,0,1,0,1
@@ -75,7 +75,7 @@ plethora,plethora,0,1,0,0,0
 plethora,pelethora,1,0,1,0,1
 plethora,eplethora,0,0,1,1,0
 quacks,quacks,0,1,0,0,0
-quacks,qeuaks,0,0,1,0,1
+quacks,qeuaks,1,0,1,0,1
 quacks,equacks,0,0,1,1,0
 queen,queen,0,1,0,0,0
 queen,qeueen,1,0,1,0,1
@@ -84,8 +84,8 @@ quickly,quickly,0,1,0,0,0
 quickly,qeuickly,1,0,1,0,1
 quickly,equickly,0,0,1,1,0
 scarlett,scarlett,0,1,0,0,0
-scarlett,secarlett,1,0,1,0,1
-scarlett,escarlett,0,0,1,0,0
+scarlett,secarlett,0,0,1,0,1
+scarlett,escarlett,1,0,1,0,0
 scoop,scoop,0,1,0,0,0
 scoop,secoop,0,0,1,0,1
 scoop,escoop,1,0,1,0,0
@@ -121,9 +121,6 @@ smacked,semacked,0,0,1,0,1
 smacked,esmacked,1,0,1,1,0
 small,small,0,1,0,0,0
 small,semall,0,0,1,0,1
-small,esmall,1,0,1,1,0
-small,small,0,1,0,0,0
-small,semall,0,0,1,0,1
 small,esmall,2,0,1,1,0
 smelling,smelling,0,1,0,0,0
 smelling,semelling,0,0,1,0,1
@@ -141,8 +138,8 @@ snag,snag,0,1,0,0,0
 snag,senag,0,0,1,0,1
 snag,esnag,1,0,1,1,0
 snaps,snaps,0,1,0,0,0
-snaps,senps,1,0,1,0,1
-snaps,esnaps,0,0,1,1,0
+snaps,senps,0,0,1,0,1
+snaps,esnaps,1,0,1,1,0
 snatch,snatch,0,1,0,0,0
 snatch,senatch,0,0,1,0,1
 snatch,esnatch,1,0,1,1,0

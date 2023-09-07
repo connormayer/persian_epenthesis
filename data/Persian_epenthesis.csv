@@ -1,7 +1,7 @@
 participant,word ,onset,ep_type,last_sound ,context 
 1,trot ,tr ,none,z,passage 
 1,snaps ,sn ,none,n,passage 
-1,dwane ,dw ,anaptyxis ,na,passage 
+1,dwayne ,dw ,anaptyxis ,na,passage 
 1,cute ,kj ,none,e,passage 
 1,swats ,sw ,none,d,passage 
 1,gloves ,gl ,none,l,passage 
@@ -75,7 +75,7 @@ participant,word ,onset,ep_type,last_sound ,context
 1,starts,st,none,d,passage 
 1,trot ,tr ,none,na,context 
 1,snaps ,sn ,none,na,context 
-1,dwane ,dw ,none,na,context 
+1,dwayne ,dw ,none,na,context 
 1,cute ,kj ,none,na,context 
 1,swats ,sw ,none,na,context 
 1,gloves ,gl ,none,na,context 
@@ -149,7 +149,7 @@ participant,word ,onset,ep_type,last_sound ,context
 1,starts ,st,none,na,context 
 2,trot ,tr ,none,z,passage 
 2,snaps ,sn ,none,n,passage 
-2,dwane ,dw ,anaptyxis ,na,passage 
+2,dwayne ,dw ,anaptyxis ,na,passage 
 2,cute ,kj ,none,e,passage 
 2,swats ,sw ,none,d,passage 
 2,gloves ,gl ,none,l,passage 
@@ -223,7 +223,7 @@ participant,word ,onset,ep_type,last_sound ,context
 2,starts ,st ,none,d,passage 
 2,trot ,tr ,none,na,context 
 2,snaps ,sn ,none,na,context 
-2,dwane ,dw ,anaptyxis ,na,context 
+2,dwayne ,dw ,anaptyxis ,na,context 
 2,cute ,kj ,none,na,context 
 2,swats ,sw ,none,na,context 
 2,gloves ,gl ,none,na,context 
@@ -297,7 +297,7 @@ participant,word ,onset,ep_type,last_sound ,context
 2,starts ,st ,none,na,context 
 3,trot ,tr ,none,z,passage 
 3,snaps ,sn ,none,n,passage 
-3,dwane ,dw ,none,na,passage 
+3,dwayne ,dw ,none,na,passage 
 3,cute ,kj ,none,e,passage 
 3,swats ,sw ,none,d,passage 
 3,gloves ,gl ,none,l,passage 
@@ -371,7 +371,7 @@ participant,word ,onset,ep_type,last_sound ,context
 3,start,st,none,d,passage 
 3,trot ,tr ,none,na,context 
 3,snaps ,sn ,none,na,context 
-3,dwane ,dw ,none,na,context 
+3,dwayne ,dw ,none,na,context 
 3,cute ,kj ,none,na,context 
 3,swats ,sw ,none,na,context 
 3,gloves ,gl ,none,na,context 
@@ -445,7 +445,7 @@ participant,word ,onset,ep_type,last_sound ,context
 3,start ,st,none,na,context
 4,trot ,tr ,none,z,passage 
 4,snaps ,sn ,none,n,passage 
-4,dwane ,dw ,none,na,passage 
+4,dwayne ,dw ,none,na,passage 
 4,cute ,kj ,none,e,passage 
 4,swats ,sw ,none,d,passage 
 4,gloves ,gl ,none,l,passage 
@@ -519,7 +519,7 @@ participant,word ,onset,ep_type,last_sound ,context
 4,start,st,none,d,passage
 4,trot ,tr ,none,na,context 
 4,snaps ,sn ,none,na,context 
-4,dwane ,dw ,none,na,context 
+4,dwayne ,dw ,none,na,context 
 4,cute ,kj ,none,na,context 
 4,swats ,sw ,none,na,context 
 4,gloves ,gl ,none,na,context 
@@ -593,7 +593,7 @@ participant,word ,onset,ep_type,last_sound ,context
 4,start,st,none,na,context
 5,trot ,tr ,none,z,passage 
 5,snaps ,sn ,none,n,passage 
-5,dwane ,dw ,none,na,passage 
+5,dwayne ,dw ,none,na,passage 
 5,cute ,kj ,none,e,passage 
 5,swats ,sw ,none,d,passage 
 5,gloves ,gl ,none,l,passage 
@@ -667,7 +667,7 @@ participant,word ,onset,ep_type,last_sound ,context
 5,start,st,none,d,passage 
 5,trot ,tr ,na,na,context 
 5,snaps ,sn ,na,na,context 
-5,dwane ,dw ,na,na,context 
+5,dwayne ,dw ,na,na,context 
 5,cute ,kj ,na,na,context 
 5,swats ,sw ,na,na,context 
 5,gloves ,gl ,na,na,context 
@@ -741,7 +741,7 @@ participant,word ,onset,ep_type,last_sound ,context
 5,start,st,na,na,context 
 6,trot ,tr ,none,z,passage 
 6,snaps ,sn ,none,n,passage 
-6,dwane ,dw ,na,na,passage 
+6,dwayne ,dw ,na,na,passage 
 6,cute ,kj ,none,e,passage 
 6,swats ,sw ,none,d,passage 
 6,gloves ,gl ,none,l,passage 
@@ -815,7 +815,7 @@ participant,word ,onset,ep_type,last_sound ,context
 6,start,st,prothesis,d,passage 
 6,trot ,tr ,na,na,context 
 6,snaps ,sn ,na,na,context 
-6,dwane ,dw ,na,na,context 
+6,dwayne ,dw ,na,na,context 
 6,cute ,kj ,na,na,context 
 6,swats ,sw ,na,na,context 
 6,gloves ,gl ,na,na,context 
@@ -889,7 +889,7 @@ participant,word ,onset,ep_type,last_sound ,context
 6,start,st,na,na,context 
 7,trot ,tr ,anaptyxis ,z,passage 
 7,snaps ,sn ,prothesis ,n,passage 
-7,dwane ,dw ,na,na,passage 
+7,dwayne ,dw ,na,na,passage 
 7,cute ,kj ,none,e,passage 
 7,swats ,sw ,none,d,passage 
 7,gloves ,gl ,anaptyxis ,l,passage 
@@ -963,7 +963,7 @@ participant,word ,onset,ep_type,last_sound ,context
 7,start,st,prothesis ,d,passage 
 7,trot ,tr ,na,na,context 
 7,snaps ,sn ,na,na,context 
-7,dwane ,dw ,na,na,context 
+7,dwayne ,dw ,na,na,context 
 7,cute ,kj ,na,na,context 
 7,swats ,sw ,na,na,context 
 7,gloves ,gl ,na,na,context 
@@ -1037,7 +1037,7 @@ participant,word ,onset,ep_type,last_sound ,context
 7,start,st,na,na,context 
 8,trot ,tr ,na,z,passage 
 8,snaps ,sn ,na,n,passage 
-8,dwane ,dw ,na,na,passage 
+8,dwayne ,dw ,na,na,passage 
 8,cute ,kj ,na,e,passage 
 8,swats ,sw ,na,d,passage 
 8,gloves ,gl ,na,l,passage 
@@ -1111,7 +1111,7 @@ participant,word ,onset,ep_type,last_sound ,context
 8,start,st,na,d,passage 
 8,trot ,tr ,anaptyxis ,na,context 
 8,snaps ,sn ,prothesis ,na,context 
-8,dwane ,dw ,na ,na,context 
+8,dwayne ,dw ,na ,na,context 
 8,cute ,kj ,none ,na,context 
 8,swats ,sw ,none ,na,context 
 8,gloves ,gl ,anaptyxis ,na,context 
@@ -1185,7 +1185,7 @@ participant,word ,onset,ep_type,last_sound ,context
 8,start,st,prothesis ,na,context
 9,trot ,tr ,none,z,passage 
 9,snaps ,sn ,prothesis,n,passage 
-9,dwane ,dw ,na ,na,passage 
+9,dwayne ,dw ,na ,na,passage 
 9,cute ,kj ,none,e,passage 
 9,swats ,sw ,none,d,passage 
 9,gloves ,gl ,none,l,passage 
@@ -1259,7 +1259,7 @@ participant,word ,onset,ep_type,last_sound ,context
 9,start,st,none,d,passage 
 9,trot ,tr ,none,na,context 
 9,snaps ,sn ,none,na,context 
-9,dwane ,dw ,na ,na,context 
+9,dwayne ,dw ,na ,na,context 
 9,cute ,kj ,none,na,context 
 9,swats ,sw ,none,na,context 
 9,gloves ,gl ,none,na,context 
@@ -1333,7 +1333,7 @@ participant,word ,onset,ep_type,last_sound ,context
 9,start,st,none,na,context
 10,trot ,tr ,none,z,passage 
 10,snaps ,sn ,none,n,passage 
-10,dwane ,dw ,none,na,passage 
+10,dwayne ,dw ,none,na,passage 
 10,cute ,kj ,none,e,passage 
 10,swats ,sw ,none,d,passage 
 10,gloves ,gl ,none,l,passage 
@@ -1407,7 +1407,7 @@ participant,word ,onset,ep_type,last_sound ,context
 10,start,st,none,d,passage
 10,trot ,tr ,none,na,context 
 10,snaps ,sn ,none,na,context 
-10,dwane ,dw ,none,na,context 
+10,dwayne ,dw ,none,na,context 
 10,cute ,kj ,none,na,context 
 10,swats ,sw ,none,na,context 
 10,gloves ,gl ,none,na,context 
@@ -1481,7 +1481,7 @@ participant,word ,onset,ep_type,last_sound ,context
 10,start,st,none,na,context 
 11,trot ,tr ,na,z,passage 
 11,snaps ,sn ,na,n,passage 
-11,dwane ,dw ,na,na,passage 
+11,dwayne ,dw ,na,na,passage 
 11,cute ,kj ,na,e,passage 
 11,swats ,sw ,na,d,passage 
 11,gloves ,gl ,na,l,passage 
@@ -1555,7 +1555,7 @@ participant,word ,onset,ep_type,last_sound ,context
 11,start,st,na,d,passage 
 11,trot ,tr ,na,na,context 
 11,snaps ,sn ,na,na,context 
-11,dwane ,dw ,na,na,context 
+11,dwayne ,dw ,na,na,context 
 11,cute ,kj ,na,na,context 
 11,swats ,sw ,na,na,context 
 11,gloves ,gl ,na,na,context 
@@ -1629,7 +1629,7 @@ participant,word ,onset,ep_type,last_sound ,context
 11,start,st,na,na,context 
 12,trot ,tr ,na,z,passage 
 12,snaps ,sn ,na,n,passage 
-12,dwane ,dw ,na,na,passage 
+12,dwayne ,dw ,na,na,passage 
 12,cute ,kj ,na,e,passage 
 12,swats ,sw ,na,d,passage 
 12,gloves ,gl ,na,l,passage 
@@ -1703,7 +1703,7 @@ participant,word ,onset,ep_type,last_sound ,context
 12,start,st,na,d,passage
 12,trot ,tr ,na,na,context 
 12,snaps ,sn ,na,na,context 
-12,dwane ,dw ,na,na,context 
+12,dwayne ,dw ,na,na,context 
 12,cute ,kj ,na,na,context 
 12,swats ,sw ,na,na,context 
 12,gloves ,gl ,na,na,context 
@@ -1777,7 +1777,7 @@ participant,word ,onset,ep_type,last_sound ,context
 12,start,st,na,na,context 
 13,trot ,tr ,none,z,passage 
 13,snaps ,sn ,none,n,passage 
-13,dwane ,dw ,none,na,passage 
+13,dwayne ,dw ,none,na,passage 
 13,cute ,kj ,none,e,passage 
 13,swats ,sw ,none,d,passage 
 13,gloves ,gl ,none,l,passage 
@@ -1851,7 +1851,7 @@ participant,word ,onset,ep_type,last_sound ,context
 13,start,st,none,d,passage 
 13,trot ,tr ,none,na,context 
 13,snaps ,sn ,none,na,context 
-13,dwane ,dw ,none,na,context 
+13,dwayne ,dw ,none,na,context 
 13,cute ,kj ,none,na,context 
 13,swats ,sw ,none,na,context 
 13,gloves ,gl ,none,na,context 
@@ -1925,7 +1925,7 @@ participant,word ,onset,ep_type,last_sound ,context
 13,start,st,none,na,context 
 14,trot ,tr ,none,z,passage 
 14,snaps ,sn ,none,n,passage 
-14,dwane ,dw ,none,na,passage 
+14,dwayne ,dw ,none,na,passage 
 14,cute ,kj ,none,e,passage 
 14,swats ,sw ,none,d,passage 
 14,gloves ,gl ,none,l,passage 
@@ -1999,7 +1999,7 @@ participant,word ,onset,ep_type,last_sound ,context
 14,start,st,none,d,passage 
 14,trot ,tr ,na,na,context 
 14,snaps ,sn ,na,na,context 
-14,dwane ,dw ,na,na,context 
+14,dwayne ,dw ,na,na,context 
 14,cute ,kj ,na,na,context 
 14,swats ,sw ,na,na,context 
 14,gloves ,gl ,na,na,context 
@@ -2073,7 +2073,7 @@ participant,word ,onset,ep_type,last_sound ,context
 14,start,st,na,na,context 
 15,trot ,tr ,none,z,passage 
 15,snaps ,sn ,none,n,passage 
-15,dwane ,dw ,anaptyxis,na,passage 
+15,dwayne ,dw ,anaptyxis,na,passage 
 15,cute ,kj ,none,e,passage 
 15,swats ,sw ,none,d,passage 
 15,gloves ,gl ,none,l,passage 
@@ -2147,7 +2147,7 @@ participant,word ,onset,ep_type,last_sound ,context
 15,start,st,prothesis,d,passage 
 15,trot ,tr ,none,na,context 
 15,snaps ,sn ,none,na,context 
-15,dwane ,dw ,anaptyxis,na,context 
+15,dwayne ,dw ,anaptyxis,na,context 
 15,cute ,kj ,none,na,context 
 15,swats ,sw ,none,na,context 
 15,gloves ,gl ,none,na,context 
@@ -2221,7 +2221,7 @@ participant,word ,onset,ep_type,last_sound ,context
 15,start,st,none,na,context 
 16,trot ,tr ,none,z,passage 
 16,snaps ,sn ,none,n,passage 
-16,dwane ,dw ,na,na,passage 
+16,dwayne ,dw ,na,na,passage 
 16,cute ,kj ,none,e,passage 
 16,swats ,sw ,none,d,passage 
 16,gloves ,gl ,none,l,passage 
@@ -2295,7 +2295,7 @@ participant,word ,onset,ep_type,last_sound ,context
 16,start,st,none,d,passage 
 16,trot ,tr ,none,na,context 
 16,snaps ,sn ,none,na,context 
-16,dwane ,dw ,na,na,context 
+16,dwayne ,dw ,na,na,context 
 16,cute ,kj ,none,na,context 
 16,swats ,sw ,none,na,context 
 16,gloves ,gl ,none,na,context 
@@ -2369,7 +2369,7 @@ participant,word ,onset,ep_type,last_sound ,context
 16,start,st,none,na,context 
 17,trot ,tr ,none,z,passage 
 17,snaps ,sn ,prothesis ,n,passage 
-17,dwane ,dw ,anaptyxis ,na,passage 
+17,dwayne ,dw ,anaptyxis ,na,passage 
 17,cute ,kj ,none,e,passage 
 17,swats ,sw ,none,d,passage 
 17,gloves ,gl ,none,l,passage 
@@ -2443,7 +2443,7 @@ participant,word ,onset,ep_type,last_sound ,context
 17,start,st,none,d,passage 
 17,trot ,tr ,none,na,context 
 17,snaps ,sn ,none,na,context 
-17,dwane ,dw ,anaptyxis ,na,context 
+17,dwayne ,dw ,anaptyxis ,na,context 
 17,cute ,kj ,none,na,context 
 17,swats ,sw ,none,na,context 
 17,gloves ,gl ,none,na,context 
@@ -2517,7 +2517,7 @@ participant,word ,onset,ep_type,last_sound ,context
 17,start,st,none,na,context 
 18,trot ,tr ,none,z,passage 
 18,snaps ,sn ,none,n,passage 
-18,dwane ,dw ,none,na,passage 
+18,dwayne ,dw ,none,na,passage 
 18,cute ,kj ,none,e,passage 
 18,swats ,sw ,none,d,passage 
 18,gloves ,gl ,none,l,passage 
@@ -2591,7 +2591,7 @@ participant,word ,onset,ep_type,last_sound ,context
 18,starts,st,prothesis ,d,passage 
 18,trot ,tr ,none,na,context 
 18,snaps ,sn ,none,na,context 
-18,dwane ,dw ,anaptyxis ,na,context 
+18,dwayne ,dw ,anaptyxis ,na,context 
 18,cute ,kj ,none,na,context 
 18,swats ,sw ,none,na,context 
 18,gloves ,gl ,none,na,context 
@@ -2665,7 +2665,7 @@ participant,word ,onset,ep_type,last_sound ,context
 18,starts ,st,none,na,context 
 19,trot ,tr ,na,z,passage 
 19,snaps ,sn ,na,n,passage 
-19,dwane ,dw ,na,na,passage 
+19,dwayne ,dw ,na,na,passage 
 19,cute ,kj ,na,e,passage 
 19,swats ,sw ,na,d,passage 
 19,gloves ,gl ,na,l,passage 
@@ -2739,7 +2739,7 @@ participant,word ,onset,ep_type,last_sound ,context
 19,starts,st,na,d,passage 
 19,trot ,tr ,anaptyxis ,na,context 
 19,snaps ,sn ,none,na,context 
-19,dwane ,dw ,anaptyxis ,na,context 
+19,dwayne ,dw ,anaptyxis ,na,context 
 19,cute ,kj ,anaptyxis ,na,context 
 19,swats ,sw ,anaptyxis ,na,context 
 19,gloves ,gl ,anaptyxis ,na,context 
@@ -2813,7 +2813,7 @@ participant,word ,onset,ep_type,last_sound ,context
 19,starts ,st,na,na,context 
 20,trot ,tr ,na,z,passage 
 20,snaps ,sn ,na,n,passage 
-20,dwane ,dw ,na,na,passage 
+20,dwayne ,dw ,na,na,passage 
 20,cute ,kj ,na,e,passage 
 20,swats ,sw ,na,d,passage 
 20,gloves ,gl ,na,l,passage 
@@ -2887,7 +2887,7 @@ participant,word ,onset,ep_type,last_sound ,context
 20,starts,st,na,d,passage 
 20,trot ,tr ,none,na,context 
 20,snaps ,sn ,prothesis ,na,context 
-20,dwane ,dw ,na,na,context 
+20,dwayne ,dw ,na,na,context 
 20,cute ,kj ,none,na,context 
 20,swats ,sw ,none,na,context 
 20,gloves ,gl ,anaptyxis,na,context 
@@ -2961,7 +2961,7 @@ participant,word ,onset,ep_type,last_sound ,context
 20,starts ,st,na,na,context 
 21,trot ,tr ,na,z,passage 
 21,snaps ,sn ,na,n,passage 
-21,dwane ,dw ,na,na,passage 
+21,dwayne ,dw ,na,na,passage 
 21,cute ,kj ,na,e,passage 
 21,swats ,sw ,na,d,passage 
 21,gloves ,gl ,na,l,passage 
@@ -3035,7 +3035,7 @@ participant,word ,onset,ep_type,last_sound ,context
 21,starts,st,na,d,passage 
 21,trot ,tr ,prothesis ,na,context 
 21,snaps ,sn ,prothesis,na,context 
-21,dwane ,dw ,anaptyxis,na,context 
+21,dwayne ,dw ,anaptyxis,na,context 
 21,cute ,kj ,none ,na,context 
 21,swats ,sw ,anaptyxis,na,context 
 21,gloves ,gl ,anaptyxis,na,context 

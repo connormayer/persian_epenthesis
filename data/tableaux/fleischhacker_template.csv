@@ -1,4 +1,4 @@
-Input ,Output ,Frequency ,DEP-[ə]/S_T,C//V,C/V,L-ANCHOR,CONTIGUITY,DEP-[ə]/S_N,DEP-[ə]/S_L,DEP-[ə]/S_W,DEP-[ə]/T_R,COMPLEX
+Input ,Output ,Frequency ,DEP-[ə]/S_T,C//V,C/V,L-ANCHOR,CONTIGUITY,DEP-[ə]/S_N,DEP-[ə]/S_L,DEP-[ə]/S_W,DEP-[ə]/O_R,COMPLEX
 trot ,trot ,,,1,1,,,,,,,1
 trot ,terot,,,,,,1,,,,1,
 trot ,etrot,,,,1,1,,,,,,
@@ -131,12 +131,12 @@ ground ,eground ,,,,1,1,,,,,,
 slips ,slips ,,,1,1,,,,,,,1
 slips ,selips ,,,,,,1,,1,,,
 slips ,eslips ,,,,1,1,,,,,,
-place ,place ,,1,1,,,,,,,1,
-place ,pelace ,,,,,1,,,1,,,
-place ,eplace ,,,1,1,,,,,,,
-tweaking ,tweaking ,,1,1,,,,,,,1,
-tweaking ,teweaking ,,,,,1,,,1,,,
-tweaking ,etweaking ,,,1,1,,,,,,,
+place ,place ,,,1,1,,,,,,,1
+place ,pelace ,,,,,,1,,,,1,
+place ,eplace ,,,,1,1,,,,,,
+tweaking ,tweaking ,,,1,1,,,,,,,1
+tweaking ,teweaking ,,,,,,1,,,,1,
+tweaking ,etweaking ,,,,1,1,,,,,,
 sweeping ,sweeping ,,,1,1,,,,,,,1
 sweeping ,seweeping ,,,,,,1,,,1,,
 sweeping ,esweeping ,,,,1,1,,,,,,
@@ -146,9 +146,9 @@ sloth ,esloth ,,,,1,1,,,,,,
 sniffs ,sniffs ,,,1,1,,,,,,,1
 sniffs ,seniffs ,,,,,,1,1,,,,
 sniffs ,esniffs ,,,,1,1,,,,,,
-flock ,flock ,,1,1,,,,,,,1,
-flock ,felock ,,,,,1,,,1,,,
-flock ,eflock ,,,1,1,,,,,,,
+flock ,flock ,,,1,1,,,,,,,1
+flock ,felock ,,,,,,1,,,,1,
+flock ,eflock ,,,,1,1,,,,,,
 snatch ,snatch ,,,1,1,,,,,,,1
 snatch ,senatch ,,,,,,1,1,,,,
 snatch ,esnatch ,,,,1,1,,,,,,
@@ -167,48 +167,48 @@ smacked ,esmacked ,,,,1,1,,,,,,
 skeptical ,skeptical ,,,1,1,,,,,,,1
 skeptical ,sekeptical ,,1,,,,1,,,,,
 skeptical ,eskeptical ,,,,1,1,,,,,,
-fly ,fly ,,1,1,,,,,,,1,
-fly ,fely ,,,,,1,,,1,,,
-fly ,efly ,,,1,1,,,,,,,
-breeze ,breeze ,,1,1,,,,,,,1,
-breeze ,bereeze ,,,,,1,,,1,,,
-breeze ,ebreeze ,,,1,1,,,,,,,
-queen ,queen ,,1,1,,,,,,,1,
-queen ,qeueen ,,,,,1,,,1,,,
-queen ,equeen ,,,1,1,,,,,,,
-twitches ,twitches ,,1,1,,,,,,,1,
-twitches ,tewitches ,,,,,1,,,1,,,
-twitches ,etwitches ,,,1,1,,,,,,,
-throttle ,throttle ,,1,1,,,,,,,1,
-throttle,therottle ,,,,,1,,,1,,,
-throttle ,ethrottle ,,,1,1,,,,,,,
-brings ,brings ,,1,1,,,,,,,1,
-brings ,berings ,,,,,1,,,1,,,
-brings ,ebrings ,,,1,1,,,,,,,
-three ,three ,,1,1,,,,,,,1,
-three ,theree,,,,,1,,,1,,,
-three ,ethree ,,,1,1,,,,,,,
+fly ,fly ,,,1,1,,,,,,,1
+fly ,fely ,,,,,,1,,,,1,
+fly ,efly ,,,,1,1,,,,,,
+breeze ,breeze ,,,1,1,,,,,,,1
+breeze ,bereeze ,,,,,,1,,,,1,
+breeze ,ebreeze ,,,,1,1,,,,,,
+queen ,queen ,,,1,1,,,,,,,1
+queen ,qeueen ,,,,,,1,,,,1,
+queen ,equeen ,,,,1,1,,,,,,
+twitches ,twitches ,,,1,1,,,,,,,1
+twitches ,tewitches ,,,,,,1,,,,1,
+twitches ,etwitches ,,,,1,1,,,,,,
+throttle ,throttle ,,,1,1,,,,,,,1
+throttle,therottle ,,,,,,1,,,,1,
+throttle ,ethrottle ,,,,1,1,,,,,,
+brings ,brings ,,,1,1,,,,,,,1
+brings ,berings ,,,,,,1,,,,1,
+brings ,ebrings ,,,,1,1,,,,,,
+three ,three ,,,1,1,,,,,,,1
+three ,theree,,,,,,1,,,,1,
+three ,ethree ,,,,1,1,,,,,,
 sleep ,sleep ,,,1,1,,,,,,,1
 sleep ,seleep ,,,,,,1,,1,,,
 sleep ,esleep ,,,,1,1,,,,,,
 scarlett ,scarlett ,,,1,1,,,,,,,1
 scarlett ,secarlett ,,1,,,,1,,,,,
 scarlett ,escarlett ,,,,1,1,,,,,,
-creek ,creek ,,1,1,,,,,,,1,
-creek ,cereek ,,,,,1,,,1,,,
-creek ,ecreek ,,,1,1,,,,,,,
-plethora ,plethora ,,1,1,,,,,,,1,
-plethora ,pelethora ,,,,,1,,,1,,,
-plethora ,eplethora ,,,1,1,,,,,,,
+creek ,creek ,,,1,1,,,,,,,1
+creek ,cereek ,,,,,,1,,,,1,
+creek ,ecreek ,,,,1,1,,,,,,
+plethora ,plethora ,,,1,1,,,,,,,1
+plethora ,pelethora ,,,,,,1,,,,1,
+plethora ,eplethora ,,,,1,1,,,,,,
 snow ,snow ,,,1,1,,,,,,,1
 snow ,senow ,,,,,,1,1,,,,
 snow ,esnow ,,,,1,1,,,,,,
 smelling ,smelling ,,,1,1,,,,,,,1
 smelling ,semelling ,,,,,,1,1,,,,
 smelling ,esmelling ,,,,1,1,,,,,,
-brother ,brother ,,1,1,,,,,,,1,
-brother ,berother ,,,,,1,,,1,,,
-brother ,ebrother ,,,1,1,,,,,,,
-freaks ,freaks ,,1,1,,,,,,,1,
-freaks ,fereaks ,,,,,1,,,1,,,
-freaks ,efreaks ,,,1,1,,,,,,,
+brother ,brother ,,,1,1,,,,,,,1
+brother ,berother ,,,,,,1,,,,1,
+brother ,ebrother ,,,,1,1,,,,,,
+freaks ,freaks ,,,1,1,,,,,,,1
+freaks ,fereaks ,,,,,,1,,,,1,
+freaks ,efreaks ,,,,1,1,,,,,,

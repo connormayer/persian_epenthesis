@@ -75,7 +75,7 @@ plethora,plethora,0,0,0,0,0,0,0,0,0,0,1,0,0
 plethora,pelethora,1,0,0,0,0,0,1,0,0,0,0,1,1
 plethora,eplethora,0,0,1,0,0,0,0,0,0,0,0,1,0
 quacks,quacks,0,0,0,0,0,0,0,0,0,0,1,0,0
-quacks,qeuaks,0,0,0,0,0,1,0,0,0,0,0,1,1
+quacks,qeuaks,1,0,0,0,0,1,0,0,0,0,0,1,1
 quacks,equacks,0,1,0,0,0,0,0,0,0,0,0,1,0
 queen,queen,0,0,0,0,0,0,0,0,0,0,1,0,0
 queen,qeueen,1,0,0,0,0,1,0,0,0,0,0,1,1
@@ -83,8 +83,8 @@ queen,equeen,0,1,0,0,0,0,0,0,0,0,0,1,0
 quickly,quickly,0,0,0,0,0,0,0,0,0,0,1,0,0
 quickly,qeuickly,1,0,0,0,0,1,0,0,0,0,0,1,1
 quickly,equickly,0,1,0,0,0,0,0,0,0,0,0,1,0
-scarlett,scarlett,0,0,0,0,0,0,0,0,0,0,1,0,0
-scarlett,secarlett,1,0,0,0,0,0,0,0,0,1,0,1,1
+scarlett,scarlett,1,0,0,0,0,0,0,0,0,0,1,0,0
+scarlett,secarlett,0,0,0,0,0,0,0,0,0,1,0,1,1
 scarlett,escarlett,0,0,0,0,0,1,0,0,0,0,0,1,0
 scoop,scoop,1,0,0,0,0,0,0,0,0,0,1,0,0
 scoop,secoop,0,0,0,0,0,0,0,0,0,1,0,1,1
@@ -116,12 +116,9 @@ slow,eslow,0,0,0,1,0,0,0,0,0,0,0,1,0
 slugs,slugs,1,0,0,0,0,0,0,0,0,0,1,0,0
 slugs,selugs,0,0,0,0,0,0,1,0,0,0,0,1,1
 slugs,eslugs,0,0,0,1,0,0,0,0,0,0,0,1,0
-smacked,smacked,1,0,0,0,0,0,0,0,0,0,1,0,0
+smacked,smacked,0,0,0,0,0,0,0,0,0,0,1,0,0
 smacked,semacked,0,0,0,0,0,0,0,1,0,0,0,1,1
-smacked,esmacked,0,0,0,0,1,0,0,0,0,0,0,1,0
-small,small,0,0,0,0,0,0,0,0,0,0,1,0,0
-small,semall,0,0,0,0,0,0,0,1,0,0,0,1,1
-small,esmall,1,0,0,0,1,0,0,0,0,0,0,1,0
+smacked,esmacked,1,0,0,0,1,0,0,0,0,0,0,1,0
 small,small,2,0,0,0,0,0,0,0,0,0,1,0,0
 small,semall,0,0,0,0,0,0,0,1,0,0,0,1,1
 small,esmall,0,0,0,0,1,0,0,0,0,0,0,1,0
