@@ -932,7 +932,7 @@ participant,word ,onset,ep_type,last_sound ,context
 7,snips ,sn ,none,i,passage 
 7,ground ,gr ,anaptyxis ,e,passage 
 7,slips ,sl ,prothesis ,u,passage 
-7,place ,pl ,prothesis ,u,passage 
+7,place ,pl ,anaptyxis,u,passage 
 7,tweaking ,tw ,anaptyxis ,n,passage 
 7,sweeping ,sw ,anaptyxis ,z,passage 
 7,sloth ,sl ,prothesis ,l,passage 
@@ -3033,7 +3033,7 @@ participant,word ,onset,ep_type,last_sound ,context
 21,brother ,br ,na,n,passage 
 21,freaks ,fr ,na,i,passage 
 21,starts,st,na,d,passage 
-21,trot ,tr ,prothesis ,na,context 
+21,trot ,tr ,anaptyxis,na,context 
 21,snaps ,sn ,prothesis,na,context 
 21,dwayne ,dw ,anaptyxis,na,context 
 21,cute ,kj ,none ,na,context 

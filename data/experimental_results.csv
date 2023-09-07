@@ -2108,6 +2108,8 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,nap_sonority,sonority_
 21,trot,tr,prothesis,TRUE,FALSE,context,5,3,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,snaps,sn,prothesis,TRUE,FALSE,context,5,1,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,dwayne,dw,anaptyxis,TRUE,FALSE,context,4,4,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
+21,dwane,dw,anaptyxis,TRUE,FALSE,context,4,4,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
+>>>>>>> 11d397a6a79c623878dcee8274a289a3df2ba102
 21,cute,kj,none,FALSE,FALSE,context,6,4,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,swats,sw,anaptyxis,TRUE,FALSE,context,6,3,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,gloves,gl,anaptyxis,TRUE,FALSE,context,3,3,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
