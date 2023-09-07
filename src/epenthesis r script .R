@@ -9,9 +9,9 @@ df <- read_csv("data/Persian_epenthesis.csv")
 #define preceding vowwls 
 vowels <- c("e", "i", "u", "o")
 
-#create dictionary for sonority values 
-sonority <- c(t = 0,
-              d = 0, 
+#create dictionary for sonority values
+sonority_delta <- c(t = 0,
+              d = 0,
               p = 0,
               b = 0,
               k = 0,
@@ -26,6 +26,42 @@ sonority <- c(t = 0,
               j = 4,
               w = 4)
 
+# #add sonority delta 
+# df <- df %>%
+#   separate(onset, into = c("first", "second"), sep = 1, remove = FALSE) %>%
+#   mutate(sonority_delta = sonority[second] - sonority[first])
+
+
+#nap model of sonority 
+sonority <- c(t = 1, 
+              d = 2,
+              p = 1,
+              b = 2,
+              k = 1,
+              g = 2,
+              s = 1,
+              f = 1,
+              θ = 1,
+              n = 3,
+              m = 3,
+              l = 3,
+              r = 3,
+              j = 4,
+              w = 4, 
+              e = 4,
+              i = 4,
+              o = 4,
+              u = 4, 
+              a = 4)
+
+df <- df%>%
+  separate(onset, into = c("C1", "C2"), sep = 1, remove = FALSE)%>%
+  mutate(nap_sonority = (4 - sonority[C1]) + (sonority[C2] - sonority[C1]))
+
+
+#add sonority delta 
+df <- df %>%
+  mutate(sonority_delta = sonority_delta[C2] - sonority_delta[C1])
 
 #load leap q csv 
 leap_q_df <- read_csv("data/leap_q.csv")
@@ -37,14 +73,11 @@ epenthesis_df <- df %>%
 #Add two new columns: preceding_v indicates whether previous sound is a
 # vowel. has_ep indicates whether epenthesis occurs or not
 epenthesis_df <- epenthesis_df %>%
-  mutate(preceding_v = ifelse(last_sound %in% vowels, TRUE, FALSE),
-         has_ep = ifelse(ep_type %in% c("anaptyxis", "prothesis"), TRUE, FALSE))
+mutate(preceding_v = ifelse(last_sound %in% vowels, TRUE, FALSE),
+has_ep = ifelse(ep_type %in% c("anaptyxis", "prothesis"), TRUE, FALSE))
 
 
-#add sonority delta 
-epenthesis_df <- epenthesis_df %>%
-  separate(onset, into = c("first", "second"), sep = 1, remove = FALSE) %>%
-  mutate(sonority_delta = sonority[second] - sonority[first])
+
 
 #rename columns with spaces
 epenthesis_df <- epenthesis_df %>%
@@ -76,6 +109,7 @@ epenthesis_df <- epenthesis_df %>%
          has_ep,
          preceding_v,
          context,
+         nap_sonority,
          sonority_delta,
          gender,
          dominant_language,
@@ -232,26 +266,36 @@ ep_rate_df %>%
 #create experimental results df
 write_csv(epenthesis_df, 'data/expiremental_results.csv')
 
-# Fit a model with none as the reference level
+# Fit a model with nap_sonority 
 m_base <- brm(
-  ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
+  ep_type ~ nap_sonority + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
   data = epenthesis_df, 
   family="categorical", 
   prior=c(set_prior("normal(0,3)")),
   chains=4, cores=4)
 summary(m_base)
+
+
+#fit a model with sonority_delta 
+m_base_2 <- brm(
+  ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
+  data = epenthesis_df, 
+  family="categorical", 
+  prior=c(set_prior("normal(0,3)")),
+  chains=4, cores=4)
+summary(m_base_2)
+
 # This makes a series of plots of the probability distributions
 # the model has calculated for each parameter
 plot(m_base)
 
-# I can explain how this works in more detail later, but in terms of interpreting
-# the output, Estimate is the estimated difference between these two parameters,
-# CI.Lower and CI.Upper are the 95% credible intervals, and post.prob is the
-# probability under this model that muanaptyxis_PC1 > muprothesis_PC1. For the
-# data we have now this comes out as 'weakly significant'. The CI is [-0.08, 0.02]
-# and the posterior probability is just over 86%.
+#hypothesis testing
 hyp_test <- hypothesis(m_base, 'muprothesis_PC1 < muanaptyxis_PC1')
 hyp_test
+
+
+hyp_test_2 <- hypothesis(m_base_2, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test_2
 
 # This plots the probability distribution over the difference between these two
 # coefficients. You can see the peak at about -0.03
