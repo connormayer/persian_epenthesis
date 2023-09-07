@@ -3,24 +3,26 @@ library(maxent.ot)
 
 #set wd
 #setwd("~/Desktop/git_repo_persian_epenthesis")
-setwd("E:/git_repos/persian_epenthesis")
+#setwd("E:/git_repos/persian_epenthesis")
+setwd("C:/Users/conno/git_repos/persian_epenthesis")
 
-#fleischhaker global 
+##################################################
+# Fit weights to data pooled across participants #
+##################################################
+
+# Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fh_global.csv")
 
-#fit model 
+# fit model 
 fh_model <- optimize_weights(fh_global)
 fh_model$weights
 fh_model$loglik
 
+# Look at predicted frequencies
+fh_results <- predict_probabilities(fh_global, fh_model$weights)
+fh_results$predictions
 
-results <- predict_probabilities(fh_global, fh_model$weights)
-results$loglik
-results$predictions
-
-
-
-#gouskova_simple global 
+# Gouskova simple global 
 gs_global <- read_csv("data/tableaux/gs_global.csv")
 
 #fit model 
@@ -28,28 +30,26 @@ gs_model <- optimize_weights(gs_global)
 gs_model$weights
 gs_model$loglik
 
-
-results <- predict_probabilities(gs_global, gs_model$weights)
-results$loglik
-results$predictions
+gs_results <- predict_probabilities(gs_global, gs_model$weights)
+gs_results$predictions
 
 #gouskova_complex global 
 gc_global <- read_csv("data/tableaux/gc_global.csv")
 
 #fit model 
-gc_model <- optimize_weights(gc_global)
+gc_model <- optimize_weights(gc_complex_global)
 gc_model$weights
 gc_model$loglik
 
-
-results <- predict_probabilities(gc_global, gc_model$weights)
-results$loglik
-results$predictions
+gc_results <- predict_probabilities(gc_global, gc_model$weights)
+gc_results$predictions
 
 #compare models 
 compare_models(fh_model, gs_model, gc_model, method = "bic")
 
-
+#################################################
+# Look at models fit to individual participants #
+#################################################
 
 fit_models <- function(tableaux_folder, output) {
   # Make empty tibble to hold model results
@@ -68,6 +68,8 @@ fit_models <- function(tableaux_folder, output) {
   }
   # Add column names
   colnames(results_df) <- c('participant', names(model$weights), 'loglik', 'k', 'n')
+  # Convert to numeric
+  results_df <- as_tibble(type.convert(results_df))
   # Write results
   write_csv(results_df, output)
   return(results_df)
@@ -96,7 +98,7 @@ experimental_df <- read_csv('data/experimental_results.csv') %>%
 regex <- "fh_p(\\d+)\\.csv"
 fh_results_df$participant <- as.double(str_match(fh_results_df$participant, regex)[,2])
 joined_df <- inner_join(fh_results_df, experimental_df, by=c("participant"))
-view(joined_df)
+joined_df$participant <- as_factor(joined_df$participant)
 
 
 #pivot joined_df so that it has the columns Participant, Constraint, Weight, k, n, loglik, PC1.
@@ -105,24 +107,17 @@ fh_pivot <- joined_df %>%
             names_to = "Constraint", values_to = "Weight")
 fh_pivot
 
-class(fh_pivot$Weight)
-
 #normalize constraint weights
 fh_normalized <- fh_pivot %>% 
   group_by(participant) %>% 
-  mutate(Max_weight = max(Weight), 
-         weights_normalized = as.numeric(Weight) / as.numeric(Max_weight)) 
+  mutate(weights_normalized = as.numeric(Weight) / max(Weight)) 
 
-view(fh_normalized)
+fh_normalized
 
-
-#conver participant column to a factor and reorder by PC1
+#convert participant column to a factor and reorder by PC1
 fh_final <- fh_normalized 
-
-fh_final$participant <- factor(fh_normalized_1$participant)   
-
-fh_final$participant <- fct_reorder(fh_normalized_1$participant, fh_normalized_1$PC1)
-
+fh_final$participant <- factor(fh_normalized$participant)   
+fh_final$participant <- fct_reorder(fh_normalized$participant, fh_normalized$PC1)
 
 #bar plot plotting constraint and their weights for each participant 
 ggplot(data = fh_final) + 
