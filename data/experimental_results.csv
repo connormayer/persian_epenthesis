@@ -772,7 +772,7 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,nap_sonority,sonority_
 7,snips,sn,none,FALSE,TRUE,passage,5,1,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
 7,ground,gr,anaptyxis,TRUE,TRUE,passage,3,3,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
 7,slips,sl,prothesis,TRUE,TRUE,passage,5,2,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
-7,place,pl,prothesis,TRUE,TRUE,passage,5,3,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
+7,place,pl,anaptyxis,TRUE,TRUE,passage,5,3,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
 7,tweaking,tw,anaptyxis,TRUE,FALSE,passage,6,4,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
 7,sweeping,sw,anaptyxis,TRUE,FALSE,passage,6,3,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
 7,sloth,sl,prothesis,TRUE,FALSE,passage,5,2,Male,farsi,85,15,65,10,10,10,25,60,15,4,3,6,65.53770841029502,-10.579176264735688
@@ -995,7 +995,7 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,nap_sonority,sonority_
 9,spreading,sp,none,FALSE,FALSE,context,3,-1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,sniffs,sn,prothesis,TRUE,FALSE,context,5,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,flock,fl,none,FALSE,FALSE,context,5,2,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
-9,prothesis,sn,none,FALSE,FALSE,context,5,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
+9,snatch,sn,prothesis,TRUE,FALSE,context,5,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,small,sm,none,FALSE,FALSE,context,5,1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,slow,sl,none,FALSE,FALSE,context,5,2,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
 9,stop,st,none,FALSE,FALSE,context,3,-1,Male,farsi,65,35,22,10,10,8,12,24,44,7,7,7,2.845475392170996,14.433841081152334
@@ -1825,7 +1825,7 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,nap_sonority,sonority_
 18,smith,sm,none,FALSE,FALSE,passage,5,1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,starts,st,none,FALSE,FALSE,passage,3,-1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,steps,st,none,FALSE,FALSE,passage,3,-1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
-18,prothesis,sl,none,FALSE,TRUE,passage,5,2,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
+18,slugs,sl,prothesis,TRUE,TRUE,passage,5,2,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,quacks,kw,none,FALSE,FALSE,passage,6,4,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,skip,sk,none,FALSE,FALSE,passage,3,-1,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
 18,flying,fl,none,FALSE,FALSE,passage,5,2,Female,farsi,50,50,15,8,8,7,9,26,20,8,8,8,-10.270607997454654,0.1203025197949942
@@ -2105,8 +2105,8 @@ participant,word,onset,ep_type,has_ep,preceding_v,context,nap_sonority,sonority_
 20,smelling,sm,none,FALSE,FALSE,context,5,1,Female,farsi,60,10,35,10,10,10,35,75,44,1,2,1,46.58220392049191,-19.218082611319574
 20,brother,br,none,FALSE,FALSE,context,3,3,Female,farsi,60,10,35,10,10,10,35,75,44,1,2,1,46.58220392049191,-19.218082611319574
 20,freaks,fr,none,FALSE,FALSE,context,5,2,Female,farsi,60,10,35,10,10,10,35,75,44,1,2,1,46.58220392049191,-19.218082611319574
-21,trot,tr,prothesis,TRUE,FALSE,context,5,3,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
-21,snaps,sn,anaptyxis,TRUE,FALSE,context,5,1,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
+21,trot,tr,anaptyxis,TRUE,FALSE,context,5,3,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
+21,snaps,sn,prothesis,TRUE,FALSE,context,5,1,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,dwane,dw,anaptyxis,TRUE,FALSE,context,4,4,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,cute,kj,none,FALSE,FALSE,context,6,4,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
 21,swats,sw,anaptyxis,TRUE,FALSE,context,6,3,Female,farsi,99,1,65,10,10,10,16,78,12,1,1,1,87.2178360726097,-4.621280664041745
