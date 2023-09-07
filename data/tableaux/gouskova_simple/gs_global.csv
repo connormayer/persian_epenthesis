@@ -66,8 +66,8 @@ ground,ground,25,1,0,0,0
 ground,geround,5,0,1,0,1
 ground,eground,0,0,1,1,0
 place,place,24,1,0,0,0
-place,pelace,5,0,1,0,1
-place,eplace,1,0,1,1,0
+place,pelace,6,0,1,0,1
+place,eplace,0,0,1,1,0
 please,please,25,1,0,0,0
 please,pelease,5,0,1,0,1
 please,eplease,0,0,1,1,0
@@ -201,8 +201,8 @@ throttle,throttle,24,1,0,0,0
 throttle,therottle,3,0,1,0,1
 throttle,ethrottle,0,0,1,1,0
 trot,trot,26,1,0,0,0
-trot,terot,3,0,1,0,1
-trot,etrot,1,0,1,1,0
+trot,terot,4,0,1,0,1
+trot,etrot,0,0,1,1,0
 tweaking,tweaking,26,1,0,0,0
 tweaking,teweaking,3,0,1,0,1
 tweaking,etweaking,0,0,1,1,0

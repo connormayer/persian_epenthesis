@@ -201,8 +201,8 @@ throttle,throttle,0,1,0,0,0
 throttle,therottle,1,0,1,0,1
 throttle,ethrottle,0,0,1,1,0
 trot,trot,0,1,0,0,0
-trot,terot,0,0,1,0,1
-trot,etrot,1,0,1,1,0
+trot,terot,1,0,1,0,1
+trot,etrot,0,0,1,1,0
 tweaking,tweaking,0,1,0,0,0
 tweaking,teweaking,0,0,1,0,1
 tweaking,etweaking,0,0,1,1,0

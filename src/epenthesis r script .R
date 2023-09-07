@@ -266,42 +266,6 @@ ep_rate_df %>%
 #create experimental results df
 write_csv(epenthesis_df, 'data/experimental_results.csv')
 
-# # Fit a model with nap_sonority 
-# m_base <- brm(
-#   ep_type ~ nap_sonority + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
-#   data = epenthesis_df, 
-#   family="categorical", 
-#   prior=c(set_prior("normal(0,3)")),
-#   chains=4, cores=4)
-# summary(m_base)
-# 
-# 
-# #fit a model with sonority_delta 
-# m_base_2 <- brm(
-#   ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word), 
-#   data = epenthesis_df, 
-#   family="categorical", 
-#   prior=c(set_prior("normal(0,3)")),
-#   chains=4, cores=4)
-# summary(m_base_2)
-# 
-# # This makes a series of plots of the probability distributions
-# # the model has calculated for each parameter
-# plot(m_base)
-# 
-# #hypothesis testing
-# hyp_test <- hypothesis(m_base, 'muprothesis_PC1 < muanaptyxis_PC1')
-# hyp_test
-# 
-# 
-# hyp_test_2 <- hypothesis(m_base_2, 'muprothesis_PC1 < muanaptyxis_PC1')
-# hyp_test_2
-# 
-# # This plots the probability distribution over the difference between these two
-# # coefficients. You can see the peak at about -0.03
-# plot(hyp_test)
-
-
 # Generate tableaux
 # This code relies on the ordering in the spreadsheets being a particular way
 
@@ -373,3 +337,38 @@ for (p in unique(counts_df$participant)) {
   p_gc_tableau$Frequency <- participant_counts$count
   write_csv(p_gc_tableau, str_glue('data/tableaux/gouskova_complex/gc_p{p}.csv'))
 }
+
+# Fit a model with nap_sonority
+m_base <- brm(
+  ep_type ~ nap_sonority + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  data = epenthesis_df,
+  family="categorical",
+  prior=c(set_prior("normal(0,3)")),
+  chains=4, cores=4)
+summary(m_base)
+
+
+#fit a model with sonority_delta
+m_base_2 <- brm(
+  ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  data = epenthesis_df,
+  family="categorical",
+  prior=c(set_prior("normal(0,3)")),
+  chains=4, cores=4)
+summary(m_base_2)
+
+# This makes a series of plots of the probability distributions
+# the model has calculated for each parameter
+plot(m_base)
+
+#hypothesis testing
+hyp_test <- hypothesis(m_base, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test
+
+
+hyp_test_2 <- hypothesis(m_base_2, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test_2
+
+# This plots the probability distribution over the difference between these two
+# coefficients. You can see the peak at about -0.03
+plot(hyp_test)

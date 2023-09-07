@@ -66,8 +66,8 @@ ground,ground,0,1,0,0,0
 ground,geround,1,0,1,0,1
 ground,eground,0,0,1,1,0
 place,place,0,1,0,0,0
-place,pelace,0,0,1,0,1
-place,eplace,1,0,1,1,0
+place,pelace,1,0,1,0,1
+place,eplace,0,0,1,1,0
 please,please,0,1,0,0,0
 please,pelease,1,0,1,0,1
 please,eplease,0,0,1,1,0

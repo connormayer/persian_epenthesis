@@ -125,15 +125,18 @@ fh_colnames <- colnames(fh_results_df)
 fh_names <- fh_colnames[2:(length(fh_colnames)-3)]
 fh_final <- process_data(fh_results_df, experimental_df, fh_prefix, fh_names)
 plot_results(fh_final)
+fh_ll <- sum((fh_final %>% select(participant, loglik) %>% unique())$loglik)
 
 gs_prefix <- 'gs'
 gs_colnames <- colnames(gs_results_df)
 gs_names <- gs_colnames[2:(length(gs_colnames)-3)]
 gs_final <- process_data(gs_results_df, experimental_df, gs_prefix, gs_names)
 plot_results(gs_final)
+gs_ll <- sum((gs_final %>% select(participant, loglik) %>% unique())$loglik)
 
 gc_prefix <- 'gc'
 gc_colnames <- colnames(gc_results_df)
 gc_names <- gc_colnames[2:(length(gc_colnames)-3)]
 gc_final <- process_data(gc_results_df, experimental_df, gc_prefix, gc_names)
 plot_results(gc_final)
+gc_ll <- sum((gc_final %>% select(participant, loglik) %>% unique())$loglik)
