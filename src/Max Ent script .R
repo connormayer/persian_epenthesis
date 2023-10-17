@@ -47,19 +47,24 @@ gc_results$predictions
 #compare models 
 compare_models(fh_model, gs_model, gc_model, method = "bic")
 
+
+
 #Models with split up *complex 
 #Fleischhacker 
-fh_star_complex <- read_csv("fh_complex.csv")
+fh_star_complex <- read_csv("fh_star_complex.csv")
 fh_complex_model <- optimize_weights(fh_star_complex) 
+fh_complex_model$weights
+
 
 #Gouskova Complex
-gc_star_complex <- read_csv("gc_complex.csv")
+gc_star_complex <- read_csv("gc_star_complex.csv")
 gc_complex_model <- optimize_weights(gc_star_complex)
 
+
 #Gouskova simple 
-gs_star_complex <- read_csv("gs_complex.csv")
+gs_star_complex <- read_csv("gs_star_complex.csv")
 gs_complex_model <- optimize_weights(gs_star_complex)
-gs_complex_model$weights
+
 
 #compare models 
 compare_models(fh_complex_model, gc_complex_model, gs_complex_model, method = "bic")
