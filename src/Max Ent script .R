@@ -11,7 +11,7 @@ setwd("E:/git_repos/persian_epenthesis")
 ##################################################
 
 # Fleischhacker global 
-fh_global <- read_csv("data/tableaux/fh_global.csv")
+fh_global <- read_csv("tableaux/fh_global.csv")
 
 # fit model 
 fh_model <- optimize_weights(fh_global)
@@ -23,7 +23,7 @@ fh_results <- predict_probabilities(fh_global, fh_model$weights)
 fh_results$predictions
 
 # Gouskova simple global 
-gs_global <- read_csv("data/tableaux/gs_global.csv")
+gs_global <- read_csv("tableaux/gs_global.csv")
 
 #fit model 
 gs_model <- optimize_weights(gs_global)
@@ -34,7 +34,7 @@ gs_results <- predict_probabilities(gs_global, gs_model$weights)
 gs_results$predictions
 
 #gouskova_complex global 
-gc_global <- read_csv("data/tableaux/gc_global.csv")
+gc_global <- read_csv("tableaux/gc_global.csv")
 
 #fit model 
 gc_model <- optimize_weights(gc_global)
@@ -44,7 +44,7 @@ gc_model$loglik
 gc_results <- predict_probabilities(gc_global, gc_model$weights)
 gc_results$predictions
 
-#compare models 
+#compare models without *complex split 
 compare_models(fh_model, gs_model, gc_model, method = "bic")
 
 
@@ -55,25 +55,20 @@ fh_star_complex <- read_csv("fh_star_complex.csv")
 fh_complex_model <- optimize_weights(fh_star_complex) 
 fh_complex_model$weights
 
-
 #Gouskova Complex
 gc_star_complex <- read_csv("gc_star_complex.csv")
 gc_complex_model <- optimize_weights(gc_star_complex)
+gc_complex_model$loglik
+gc_complex_model$weights
 
 
 #Gouskova simple 
 gs_star_complex <- read_csv("gs_star_complex.csv")
 gs_complex_model <- optimize_weights(gs_star_complex)
+gs_complex_model$weights
 
-
-#compare models 
-compare_models(fh_complex_model, gc_complex_model, gs_complex_model, method = "bic")
-
-
-
-
-
-
+#compare models with star complex split
+compare_models(fh_model, gs_model, gc_model,fh_complex_model, gc_complex_model, gs_complex_model, method = "bic")
 
 
 

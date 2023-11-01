@@ -276,6 +276,7 @@ counts_df <- epenthesis_df %>%
   ungroup() %>%
   filter(word != 'spreading')
 
+
 #generate global and individual tableaux for fleischhacker analysis 
 fh_template <- read_csv('data/tableaux/fleischhacker_template.csv')
 fh_template <- fh_template %>%
@@ -287,11 +288,15 @@ global_counts <- counts_df %>%
   summarize(count=sum(count)) %>%
   arrange(word)
 
+#generate global counts csv
+write_csv(counts_df, 'data/counts.csv')
+
 # Sort global counts and tableau alphabetically so numbers go in the right places
 global_fh_tableau <- fh_template
 global_fh_tableau$Frequency <- global_counts$count
 
 write_csv(global_fh_tableau, 'data/tableaux/fleischhacker/fh_global.csv')
+
 
 for (p in unique(counts_df$participant)) {
   participant_counts <- counts_df %>%
@@ -300,6 +305,7 @@ for (p in unique(counts_df$participant)) {
   p_fh_tableau$Frequency <- participant_counts$count
   write_csv(p_fh_tableau, str_glue('data/tableaux/fleischhacker/fh_p{p}.csv'))
 }
+
 
 #generate global and individual tableaux for gouskova_simple analysis 
 gs_template <- read_csv('data/tableaux/gouskova_simple_template.csv')
