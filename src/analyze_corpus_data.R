@@ -24,6 +24,35 @@ df <- read_csv("data/corpus/corpus_data.csv") |>
          has_ep = ep_type %in% c("anaptyxis", "prothesis"),
          ep_type = fct_relevel(ep_type, "none"))
 
+##add NAP sonority delta 
+nap_sonority <- c(t = 1, 
+                  d = 2,
+                  p = 1,
+                  b = 2,
+                  k = 1,
+                  g = 2,
+                  s = 1,
+                  f = 1,
+                  θ = 1,
+                  n = 3,
+                  m = 3,
+                  l = 3,
+                  r = 3,
+                  j = 4,
+                  w = 4, 
+                  e = 4,
+                  i = 4,
+                  o = 4,
+                  u = 4, 
+                  a = 4)
+
+df <- df %>%
+  separate(onset, into = c("first", "second"), sep = 1, remove = FALSE) %>%
+  mutate(nap_sonority = (4 - nap_sonority[first]) + 
+           (nap_sonority[second] - nap_sonority[first]))
+view(df)
+
+
 #################
 # VISUALIZATION #
 #################
@@ -166,6 +195,10 @@ temp_df_2 %>%
   theme_classic() + 
   theme(text=element_text(size=25))
 
+
+
+
+
 ########################
 # STATISTICAL ANALYSIS #
 ########################
@@ -175,6 +208,12 @@ m_base <- brm(ep_type ~ delta + preceding_v + onset_age + onset + (1|speaker) + 
          data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
          chains=4, cores=4)
 summary(m_base)
+
+#model with NAP sonority 
+m_base_2 <- brm(ep_type ~ nap_sonority + preceding_v + onset_age + onset + (1|speaker) + (1|word),
+              data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
+              chains=4, cores=4)
+summary(m_base_2)
 
 # Plot posteriors
 plot(m_base)
