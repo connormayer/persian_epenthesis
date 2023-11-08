@@ -132,3 +132,7 @@ plot_model(gc_results, onsets, 'gc_global')
 plot_model(fh_split_results, onsets, 'fh_split_global')
 plot_model(gs_split_results, onsets, 'gs_split_global')
 plot_model(gc_split_results, onsets, 'gc_split_global')
+
+experimental_results <- read_csv('data/experiment/experimental_results.csv') 
+# inner join experimental results and *_results, then group by sonority
+# delta (or whatever) and get the mean error

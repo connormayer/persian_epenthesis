@@ -17,7 +17,6 @@ sonority <- c(t = 0,
               w = 4)
 
 # Generate tableaux
-# This code relies on the ordering in the spreadsheets being a particular way
 experiment_df <- read_csv('data/experiment/experimental_results.csv') %>%
   separate(onset, into = c("first", "second"), sep = 1, remove = FALSE)
 
