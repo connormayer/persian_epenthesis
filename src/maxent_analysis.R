@@ -133,6 +133,32 @@ plot_model(fh_split_results, onsets, 'fh_split_global')
 plot_model(gs_split_results, onsets, 'gs_split_global')
 plot_model(gc_split_results, onsets, 'gc_split_global')
 
-experimental_results <- read_csv('data/experiment/experimental_results.csv') 
 # inner join experimental results and *_results, then group by sonority
 # delta (or whatever) and get the mean error
+
+#load experimental results 
+experimental_results <- read_csv('data/experiment/experimental_results.csv') 
+
+#create errors function
+sonority_errors <- function(results) {
+  #join df 
+  joined_df <- full_join(results$predictions, experimental_results, by = c("Input" = "word")) %>%
+    distinct(Input, Output, .keep_all = TRUE) %>%
+    select(Input, Output, Predicted, Observed, Error, nap_sonority, sonority_delta)
+  
+  #mean errors 
+  joined_df <- joined_df%>%
+    group_by(sonority_delta) %>%
+    mutate(delta_error = mean(Error))
+  
+  joined_df <- joined_df %>%
+    group_by(nap_sonority) %>%
+    mutate(mean_nap_error = mean(Error)) }
+
+#run on results 
+gs_sonority <- sonority_errors(gs_results)
+gc_sonority <- sonority_errors(gc_results)
+fh_sonority <- sonority_errors(fh_results)
+gs_split_results <- sonority_errors(gs_split_results)
+gc_split_results <- sonority_errors(gc_split_results)
+fh_split_results <- sonority_errors(fh_split_results)
