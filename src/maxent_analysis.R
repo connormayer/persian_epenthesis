@@ -149,7 +149,7 @@ sonority_errors <- function(results) {
   #mean errors 
   joined_df <- joined_df%>%
     group_by(sonority_delta) %>%
-    mutate(delta_error = mean(Error))
+    mutate(mean_delta_error = mean(Error))
   
   joined_df <- joined_df %>%
     group_by(nap_sonority) %>%
