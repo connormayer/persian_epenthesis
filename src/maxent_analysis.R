@@ -2,36 +2,140 @@ library(tidyverse)
 library(maxent.ot)
 library(ggrepel)
 
+options(dplyr.summarise.inform = FALSE)
+
 ##################################################
 # Fit weights to data pooled across participants #
 ##################################################
 
+fit_individual_models <- function(full_model, pc_scores, name_template, folder) {
+  # Rho is the amount by which we scale the Persian dominance score. Rho of 0
+  # means no effect of dominance.
+  rhos_to_test <- c(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2)
+  best_ll <- -Inf
+  best_rho <- -1
+  best_preds <- NULL
+  
+  # Try every possible rho value
+  for (rho in rhos_to_test) {
+    total_ll <- 0
+    predictions <- data.frame()
+    # Go through tableaux for each participant
+    for (p in pc_scores$participant) {
+        filename <- file.path(folder, str_glue("{name_template}_p{p}.csv"))
+        p_tableau <- read_csv(filename, show_col_types=FALSE)
+        
+        # Get Persian dominance for participant
+        scaling_factor <- pc_scores %>%
+          filter(participant == p)
+        
+        # Scale weight of *Complex constraint(s) up or down depending on
+        # scaling factor
+        weights <- full_model$weights
+        if ('*Complex' %in% names(weights)) {
+          weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1, 0)
+        } else {
+          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1, 0)
+          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1, 0)
+        }
+        # Generate predictions and LL under scaled weights
+        cur_preds <- predict_probabilities(p_tableau, weights) 
+        total_ll <- total_ll + cur_preds$loglik
+        predictions <- rbind(predictions, 
+                             cur_preds$predictions %>%
+                                mutate(participant=p))
+    }
+    if (total_ll > best_ll) {
+      # If overall LL is better for this value of rho, store it
+      best_ll <- total_ll
+      best_rho <- rho
+      best_preds <- predictions
+    }
+  }
+  return(list(
+    name = str_glue('{name_template}_ind'),
+    loglik=best_ll, 
+    rho=best_rho,
+    k = full_model$k + 1,
+    n = full_model$n,
+    predictions = best_preds
+  ))
+}
+
+pc_scores <- read_csv('data/experiment/experimental_results.csv') %>%
+  group_by(participant) %>%
+  summarize(PC1 = mean(PC1))
+
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
-fh_model <- optimize_weights(fh_global)
+#cross_validate(fh_global, 5, 0, c(100, 5), grid_search=TRUE)
+fh_model <- optimize_weights(fh_global, mu = 0, sigma = 100, model_name='fh')
+# Fit individual models
+fh_ind_model <- fit_individual_models(
+  fh_model, pc_scores, 'fh', 'data/tableaux/fleischhacker_ind'
+)
 
 # Gouskova simple global 
 gs_global <- read_csv("data/tableaux/gouskova_simple_global.csv")
-gs_model <- optimize_weights(gs_global)
+#cross_validate(gs_global, 5, 0, c(2000, 1000, 5, 2, 1), grid_search=TRUE)
+gs_model <- optimize_weights(gs_global, mu = 0, sigma = 5, model_name='gs')
+# Fit individual models
+gs_ind_model <- fit_individual_models(
+  gs_model, pc_scores, 'gs', 'data/tableaux/gouskova_simple_ind'
+)
 
 # Gouskova_complex global 
 gc_global <- read_csv("data/tableaux/gouskova_complex_global.csv")
-gc_model <- optimize_weights(gc_global)
+#cross_validate(gc_global, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
+gc_model <- optimize_weights(gc_global, mu = 0, sigma = 500, model_name='gc')
+gc_ind_model <- fit_individual_models(
+  gc_model, pc_scores, 'gc', 'data/tableaux/gouskova_complex_ind'
+)
 
 # Fleischhacker global split *complex
 fh_global_split <- read_csv("data/tableaux/fleischhacker_global_split.csv")
-fh_split_model <- optimize_weights(fh_global_split) 
+#cross_validate(fh_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
+fh_split_model <- optimize_weights(fh_global_split, mu = 0, sigma = 1000, model_name='fh_split') 
+fh_split_ind_model <- fit_individual_models(
+  fh_split_model, pc_scores, 'fh_split', 'data/tableaux/fleischhacker_split_ind'
+)
+
 
 # Gouskova simple global split *complex
 gs_global_split <- read_csv("data/tableaux/gouskova_simple_global_split.csv")
-gs_split_model <- optimize_weights(gs_global_split)
+#cross_validate(gs_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
+gs_split_model <- optimize_weights(gs_global_split, mu = 0, sigma = 5, model_name='gs_split')
+gs_split_ind_model <- fit_individual_models(
+  gs_split_model, pc_scores, 'gs_split', 'data/tableaux/gouskova_simple_split_ind'
+)
 
 # Gouskova complex global split *complex 
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
-gc_split_model <- optimize_weights(gc_global_split)
+#cross_validate(gc_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
+gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split')
+gc_split_ind_model <- fit_individual_models(
+  gc_split_model, pc_scores, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
+)
 
 # compare models
-compare_models(fh_model, gs_model, gc_model, fh_split_model, gs_split_model, gc_split_model, method = "bic")
+compare_models(
+  fh_model, 
+  fh_ind_model,
+  fh_split_model,
+  fh_split_ind_model,
+  
+  gs_model,
+  gs_ind_model,
+  gs_split_model,
+  gs_split_ind_model,
+  
+  gc_model,
+  gc_ind_model,
+  gc_split_model,
+  gc_split_ind_model,
+  
+  method = "bic"
+)
 
 # predict probabilities and save to fh/gs/gc_results
 fh_results <- predict_probabilities(fh_global, fh_model$weights)
@@ -50,7 +154,8 @@ plot_model <- function(model_preds, onsets, outname) {
   
   # Join the predicted results with the onset column
   preds_with_onsets <- inner_join(model_preds$predictions, onsets, by=c('Input')) %>% 
-    mutate(ep_type = str_split_fixed(Output, '-', 2)[,2])
+    mutate(ep_type = str_split_fixed(Output, '-', 2)[,2]) %>%
+    filter(!is.na(Observed))
   
   # Error rates by onset types
   preds_with_onsets %>%
@@ -126,12 +231,18 @@ onsets <- read_csv('data/experiment/experimental_results.csv') %>%
   unique() %>%
   filter(Input != 'spreading') 
 
-plot_model(fh_results, onsets, 'fh_global')
-plot_model(gs_results, onsets, 'gs_global')
-plot_model(gc_results, onsets, 'gc_global')
-plot_model(fh_split_results, onsets, 'fh_split_global')
-plot_model(gs_split_results, onsets, 'gs_split_global')
-plot_model(gc_split_results, onsets, 'gc_split_global')
+plot_model(fh_results, onsets, 'fh')
+plot_model(gs_results, onsets, 'gs')
+plot_model(gc_results, onsets, 'gc')
+plot_model(fh_split_results, onsets, 'fh_split')
+plot_model(gs_split_results, onsets, 'gs_split')
+plot_model(gc_split_results, onsets, 'gc_split')
+plot_model(fh_ind_model, onsets, 'fh')
+plot_model(gs_ind_model, onsets, 'gs')
+plot_model(gc_ind_model, onsets, 'gc')
+plot_model(fh_split_ind_model, onsets, 'fh_split_ind')
+plot_model(gs_split_ind_model, onsets, 'gs_split_ind')
+plot_model(gc_split_ind_model, onsets, 'gc_split_ind')
 
 # inner join experimental results and *_results, then group by sonority
 # delta (or whatever) and get the mean error

@@ -38,6 +38,16 @@ global_counts <- counts_df %>%
   summarize(count=sum(count)) %>%
   arrange(word, fct_relevel(ep_type, "none"))
 
+create_individual_tableaux <- function(data, constraints, out_folder, name_template) {
+  dir.create(out_folder, showWarnings = FALSE)
+  for (p in unique(data$participant)) {
+    participant_counts <- data %>%
+      filter(participant == p)
+    filename <- file.path(out_folder, str_glue("{name_template}_p{p}.csv"))
+    create_tableaux(participant_counts, constraints, filename)
+  }
+}
+
 # Function that builds relevant tableaux given a list of constraints
 create_tableaux <- function(data, constraints, output_file) {
   headers <- c('Input', 'Output', 'Frequency', constraints)
@@ -170,6 +180,12 @@ create_tableaux(
   c('SyllableContact', '*Complex', 'Dep', 'Contiguity'),
   'data/tableaux/gouskova_simple_global.csv')
 
+# And with participant-specific counts
+create_individual_tableaux(
+  counts_df,
+  c('SyllableContact', '*Complex', 'Dep', 'Contiguity'),
+  'data/tableaux/gouskova_simple_ind', 'gs')
+
 # Create Gouskova complex tableau with global counts
 create_tableaux(
   global_counts, 
@@ -179,6 +195,15 @@ create_tableaux(
     '*Complex', 'Dep', 'Contiguity'),
   'data/tableaux/gouskova_complex_global.csv')
 
+# And with participant-specific counts
+create_individual_tableaux(
+  counts_df,
+  c('SyllableContact_4', 'SyllableContact_3', 'SyllableContact_2', 
+    'SyllableContact_1', 'SyllableContact_-1', 'SyllableContact_-2',
+    'SyllableContact_-3', 'SyllableContact_-4', 'SyllableContact_-5',
+    '*Complex', 'Dep', 'Contiguity'),
+  'data/tableaux/gouskova_complex_ind', 'gc')
+
 # Create Fleischhacker tableau with global counts
 create_tableaux(
   global_counts, 
@@ -186,11 +211,24 @@ create_tableaux(
     'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R', '*Complex'),
   'data/tableaux/fleischhacker_global.csv')
 
+# And with participant-specific counts
+create_individual_tableaux(
+  counts_df,
+  c('Dep-[ə]/S_T', 'C/V', 'L-Anchor', 'Contiguity', 
+    'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R', '*Complex'),
+  'data/tableaux/fleischhacker_ind', 'fh')
+
 # Create Gouskova simple split complex tableau with global counts
 create_tableaux(
   global_counts,
   c('SyllableContact', '*Complex-S', '*Complex-T', 'Dep', 'Contiguity'),
   'data/tableaux/gouskova_simple_global_split.csv')
+
+# And with participant-specific counts
+create_individual_tableaux(
+  counts_df,
+  c('SyllableContact', '*Complex-S', '*Complex-T', 'Dep', 'Contiguity'),
+  'data/tableaux/gouskova_simple_split_ind', 'gs_split')
 
 # Create Gouskova complex split complex tableau with global counts
 create_tableaux(
@@ -201,6 +239,15 @@ create_tableaux(
     '*Complex-S', '*Complex-T', 'Dep', 'Contiguity'),
   'data/tableaux/gouskova_complex_global_split.csv')
 
+# And with participant-specific counts
+create_individual_tableaux(
+  counts_df,
+  c('SyllableContact_4', 'SyllableContact_3', 'SyllableContact_2', 
+    'SyllableContact_1', 'SyllableContact_-1', 'SyllableContact_-2',
+    'SyllableContact_-3', 'SyllableContact_-4', 'SyllableContact_-5',
+    '*Complex-S', '*Complex-T', 'Dep', 'Contiguity'),
+  'data/tableaux/gouskova_complex_split_ind', 'gc_split')
+
 # Create Fleischhacker split complex tableau with global counts
 create_tableaux(
   global_counts, 
@@ -208,3 +255,11 @@ create_tableaux(
     'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R',
     '*Complex-S', '*Complex-T'),
   'data/tableaux/fleischhacker_global_split.csv')
+
+# And with participant-specific counts
+create_individual_tableaux(
+  counts_df,
+  c('Dep-[ə]/S_T', 'C/V', 'L-Anchor', 'Contiguity', 
+    'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R',
+    '*Complex-S', '*Complex-T'),
+  'data/tableaux/fleischhacker_split_ind', 'fh_split')
