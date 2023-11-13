@@ -8,6 +8,31 @@ options(dplyr.summarise.inform = FALSE)
 # Fit weights to data pooled across participants #
 ##################################################
 
+# Not currently used, but this fits separate models to each individual
+# participant. Provides an upper bound for model performance
+fit_best_models <- function(full_model, pc_scores, name_template, folder) {
+  total_ll <- 0
+  predictions <- data.frame()
+  # Go through tableaux for each participant
+  for (p in pc_scores$participant) {
+    filename <- file.path(folder, str_glue("{name_template}_p{p}.csv"))
+    p_tableau <- read_csv(filename, show_col_types=FALSE)
+    best_p_model <- optimize_weights(p_tableau)
+    cur_preds <- predict_probabilities(p_tableau, best_p_model$weights) 
+    total_ll <- total_ll + best_p_model$loglik
+    predictions <- rbind(predictions, 
+                         cur_preds$predictions %>%
+                           mutate(participant=p))
+  }
+  return(list(
+    name = str_glue('{name_template}_ind'),
+    loglik=total_ll, 
+    k = full_model$k * nrow(pc_scores),
+    n = full_model$n,
+    predictions = predictions
+  ))
+}
+
 fit_individual_models <- function(full_model, pc_scores, name_template, folder) {
   # Rho is the amount by which we scale the Persian dominance score. Rho of 0
   # means no effect of dominance.
