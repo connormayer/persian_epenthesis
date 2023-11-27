@@ -108,7 +108,7 @@ epenthesis_df <- df %>%
          english_reading_proficiency
   ) %>%
   mutate(participant = as_factor(participant),
-         ep_type <- fct_relevel(ep_type, "none")) %>%
+         ep_type = fct_relevel(ep_type, "none")) %>%
   filter(word != 'spreading')
 
 # Get subset of columns we'll do PCA on
@@ -165,6 +165,60 @@ epenthesis_df %>%
   scale_fill_gradient(trans='log', breaks=c(0, 2, 8, 32, 128, 512),
                       low="white", high="darkblue")
 
+epenthesis_df %>%
+  pivot_longer(cols = c("sonority_delta", "nap_sonority"), 
+               names_to = "sonority_type",
+               values_to = 'sonority_val') %>%
+  group_by(sonority_type, sonority_val, ep_type) %>%
+  summarize(count = n()) %>%
+  filter(ep_type != 'none') 
+
+epenthesis_df %>%
+  pivot_longer(cols = c("sonority_delta", "nap_sonority"), 
+               names_to = "sonority_type",
+               values_to = 'sonority_val') %>%
+  group_by(sonority_type, sonority_val, ep_type) %>%
+  summarize(count = n()) %>%
+  filter(ep_type != 'none') %>%
+  ungroup() %>%
+  group_by(sonority_type, sonority_val) %>%
+  mutate(count = count / sum(count)) %>%
+  ungroup() %>%
+  add_row(sonority_type = 'sonority_delta',
+          sonority_val = 4,
+          ep_type = 'prothesis',
+          count=0) %>%
+  add_row(sonority_type = 'sonority_delta',
+          sonority_val = 1,
+          ep_type = 'anaptyxis',
+          count=0) %>%
+  add_row(sonority_type = 'sonority_delta',
+          sonority_val = -1,
+          ep_type = 'anaptyxis',
+          count=0) %>%
+  add_row(sonority_type = 'nap_sonority',
+          sonority_val = 4,
+          ep_type = 'prothesis',
+          count=0) %>%
+  mutate(sonority_type = fct_relevel(
+                          fct_recode(
+                            sonority_type, 
+                            `Traditional Sonority Δ` = "sonority_delta",
+                            `NAP Sonority Δ` = "nap_sonority"), 
+                          "Traditional Sonority Δ")) %>%
+  ggplot(aes(sonority_val, count, color=ep_type)) +
+  geom_line(lwd=3) +
+  geom_point(size=5) + 
+  xlab("Onset sonority Δ") + 
+  ylab("Relative proportion") +
+  ggtitle("Traditional sonority Δ predicts epenthesis type, \n but NAP sonority Δ does not") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  labs(color='Epenthesis \ntype') +
+  facet_grid(~ sonority_type, scales = 'free_x')
+
 # Heatmap plotting epenthesis type by proceding vowel
 epenthesis_df %>%
   group_by(preceding_v, ep_type) %>%
@@ -206,23 +260,32 @@ temp_df_2 <- epenthesis_df %>%
 
 # Plot prothesis proportion against PC1
 temp_df_2 %>%
-  ggplot(aes(x=PC1, y=freq)) +
-  geom_point() +
+  ggplot(aes(x=-PC1, y=freq)) +
+  geom_point(size=8) +
   geom_smooth(method='lm') +
-  xlab("Relative Farsi Dominance") + 
-  ylab("Prothesis count / Total epenthesis count") +
-  ggtitle("Relative rate of prothesis increases with L2 proficiency") +
-  theme_classic(base_size=15)
+  xlab("Relative English Dominance") + 
+  ylab(expression(frac("Prothesis count", "Total epenthesis count"))) +
+  ggtitle("Relative prothesis rate \nincreases with L2 proficiency") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold"))
 
 # I think these plots are actually easier to interpret without the regression
 # lines
 
 # Plot epenthesis rate against PC1
 ep_rate_df %>%
-  ggplot(aes(x=PC1, y=ep_rate)) +
-  geom_point() +
-  #geom_smooth(method='lm') +
-  ylab("Proportion of complex onsets epenthesized")
+  ggplot(aes(x=-PC1, y=ep_rate)) +
+  geom_point(size = 6) +
+  geom_smooth(method='lm') +
+  ylab("Proportion of epenthesis") +
+  xlab("Relative English Dominance") + 
+  ggtitle("Overall rate of epenthesis \n decreases with L2 proficiency") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold"))
 
 # Plot ana rate against PC1
 ep_rate_df %>%
@@ -242,35 +305,37 @@ ep_rate_df %>%
 write_csv(epenthesis_df, 'data/experiment/experimental_results.csv')
 
 # Fit a model with nap_sonority
-m_base <- brm(
+m_nap <- brm(
   ep_type ~ nap_sonority + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
   chains=4, cores=4)
-summary(m_base)
+summary(m_nap)
+m_nap <- add_criterion(m_nap, criterion = c("loo", "waic"))
 
 
 #fit a model with sonority_delta
-m_base_2 <- brm(
+m_sonority_d <- brm(
   ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
   chains=4, cores=4)
-summary(m_base_2)
+summary(m_sonority_d)
+m_sonority_d <- add_criterion(m_sonority_d, criterion = c("loo", "waic"))
 
 # This makes a series of plots of the probability distributions
 # the model has calculated for each parameter
-plot(m_base)
+plot(m_sonority_d)
 
 #hypothesis testing
-hyp_test <- hypothesis(m_base, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test <- hypothesis(m_nap, 'muprothesis_PC1 < muanaptyxis_PC1')
 hyp_test
 
-hyp_test_2 <- hypothesis(m_base_2, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1 < muanaptyxis_PC1')
 hyp_test_2
 
 # This plots the probability distribution over the difference between these two
 # coefficients. You can see the peak at about -0.03
-plot(hyp_test)
+plot(hyp_test_2)

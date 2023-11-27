@@ -29,62 +29,115 @@ fit_best_models <- function(full_model, pc_scores, name_template, folder) {
     loglik=total_ll, 
     k = full_model$k * nrow(pc_scores),
     n = full_model$n,
-    predictions = predictions
+    predictions = predictions,
+    w = full_model$weights
   ))
 }
 
-fit_individual_models <- function(full_model, pc_scores, name_template, folder) {
+fit_individual_models <- function(full_model, pc_scores, name_template, folder, separate_rho=FALSE) {
   # Rho is the amount by which we scale the Persian dominance score. Rho of 0
   # means no effect of dominance.
-  rhos_to_test <- c(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2)
+  rhos_to_test <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
   best_ll <- -Inf
   best_rho <- -1
   best_preds <- NULL
   
-  # Try every possible rho value
-  for (rho in rhos_to_test) {
-    total_ll <- 0
-    predictions <- data.frame()
-    # Go through tableaux for each participant
-    for (p in pc_scores$participant) {
-        filename <- file.path(folder, str_glue("{name_template}_p{p}.csv"))
-        p_tableau <- read_csv(filename, show_col_types=FALSE)
-        
-        # Get Persian dominance for participant
-        scaling_factor <- pc_scores %>%
-          filter(participant == p)
-        
-        # Scale weight of *Complex constraint(s) up or down depending on
-        # scaling factor
-        weights <- full_model$weights
-        if ('*Complex' %in% names(weights)) {
-          weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1, 0)
-        } else {
-          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1, 0)
-          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1, 0)
+  # H = SUM_i (w_i + rho * pc_score) * constraint_violation_i
+  
+  if (!separate_rho) {
+    # Try every possible rho value
+    for (rho in rhos_to_test) {
+      total_ll <- 0
+      predictions <- data.frame()
+      # Go through tableaux for each participant
+      for (p in pc_scores$participant) {
+          filename <- file.path(folder, str_glue("{name_template}_p{p}.csv"))
+          p_tableau <- read_csv(filename, show_col_types=FALSE)
+          
+          # Get Persian dominance for participant
+          scaling_factor <- pc_scores %>%
+            filter(participant == p)
+          
+          # Scale weight of *Complex constraint(s) up or down depending on
+          # scaling factor
+          weights <- full_model$weights
+          if ('*Complex' %in% names(weights)) {
+            weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1, 0)
+          } else {
+            weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1, 0)
+            weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1, 0)
+          }
+          # Generate predictions and LL under scaled weights
+          cur_preds <- predict_probabilities(p_tableau, weights) 
+          total_ll <- total_ll + cur_preds$loglik
+          predictions <- rbind(predictions, 
+                               cur_preds$predictions %>%
+                                  mutate(participant=p))
+      }
+      if (total_ll > best_ll) {
+        # If overall LL is better for this value of rho, store it
+        best_ll <- total_ll
+        best_rho <- rho
+        best_preds <- predictions
+      }
+    }
+    return(list(
+      name = str_glue('{name_template}_ind'),
+      loglik=best_ll, 
+      rho=best_rho,
+      k = full_model$k + 1,
+      n = full_model$n,
+      predictions = best_preds,
+      w = full_model$weights
+    ))
+  } else{
+    # Try every possible rho value
+    for (rho_s in rhos_to_test) {
+      for (rho_t in rhos_to_test) {
+        print(str_glue("Rho S: {rho_s}, Rho T: {rho_t}"))
+        total_ll <- 0
+        predictions <- data.frame()
+        # Go through tableaux for each participant
+        for (p in pc_scores$participant) {
+          filename <- file.path(folder, str_glue("{name_template}_p{p}.csv"))
+          p_tableau <- read_csv(filename, show_col_types=FALSE)
+          
+          # Get Persian dominance for participant
+          scaling_factor <- pc_scores %>%
+            filter(participant == p)
+          
+          # Scale weight of *Complex constraint(s) up or down depending on
+          # scaling factor
+          weights <- full_model$weights
+          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho_s * scaling_factor$PC1, 0)
+          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho_t * scaling_factor$PC1, 0)
+          # Generate predictions and LL under scaled weights
+          cur_preds <- predict_probabilities(p_tableau, weights) 
+          total_ll <- total_ll + cur_preds$loglik
+          predictions <- rbind(predictions, 
+                               cur_preds$predictions %>%
+                                 mutate(participant=p))
         }
-        # Generate predictions and LL under scaled weights
-        cur_preds <- predict_probabilities(p_tableau, weights) 
-        total_ll <- total_ll + cur_preds$loglik
-        predictions <- rbind(predictions, 
-                             cur_preds$predictions %>%
-                                mutate(participant=p))
+        if (total_ll > best_ll) {
+          # If overall LL is better for this value of rho, store it
+          best_ll <- total_ll
+          best_rho_s <- rho_s
+          best_rho_t <- rho_t
+          best_preds <- predictions
+        }
+      }
     }
-    if (total_ll > best_ll) {
-      # If overall LL is better for this value of rho, store it
-      best_ll <- total_ll
-      best_rho <- rho
-      best_preds <- predictions
-    }
+    return(list(
+      name = str_glue('{name_template}_ind_rho'),
+      loglik=best_ll, 
+      rho_s=best_rho_s,
+      rho_t=best_rho_t,
+      k = full_model$k + 2,
+      n = full_model$n,
+      predictions = best_preds,
+      w = full_model$weights
+    ))
   }
-  return(list(
-    name = str_glue('{name_template}_ind'),
-    loglik=best_ll, 
-    rho=best_rho,
-    k = full_model$k + 1,
-    n = full_model$n,
-    predictions = best_preds
-  ))
 }
 
 pc_scores <- read_csv('data/experiment/experimental_results.csv') %>%
@@ -124,6 +177,10 @@ fh_split_model <- optimize_weights(fh_global_split, mu = 0, sigma = 1000, model_
 fh_split_ind_model <- fit_individual_models(
   fh_split_model, pc_scores, 'fh_split', 'data/tableaux/fleischhacker_split_ind'
 )
+fh_split_ind_model_rho <- fit_individual_models(
+  fh_split_model, pc_scores, 'fh_split', 'data/tableaux/fleischhacker_split_ind',
+  separate_rho=TRUE
+)
 
 
 # Gouskova simple global split *complex
@@ -133,6 +190,10 @@ gs_split_model <- optimize_weights(gs_global_split, mu = 0, sigma = 5, model_nam
 gs_split_ind_model <- fit_individual_models(
   gs_split_model, pc_scores, 'gs_split', 'data/tableaux/gouskova_simple_split_ind'
 )
+gs_split_ind_model_rho <- fit_individual_models(
+  gs_split_model, pc_scores, 'gs_split', 'data/tableaux/gouskova_simple_split_ind',
+  separate_rho=TRUE
+)
 
 # Gouskova complex global split *complex 
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
@@ -141,6 +202,10 @@ gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_n
 gc_split_ind_model <- fit_individual_models(
   gc_split_model, pc_scores, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
 )
+gc_split_ind_model_rho <- fit_individual_models(
+  gc_split_model, pc_scores, 'gc_split', 'data/tableaux/gouskova_complex_split_ind',
+  separate_rho=TRUE
+)
 
 # compare models
 compare_models(
@@ -148,16 +213,19 @@ compare_models(
   fh_ind_model,
   fh_split_model,
   fh_split_ind_model,
+  fh_split_ind_model_rho,
   
   gs_model,
   gs_ind_model,
   gs_split_model,
   gs_split_ind_model,
+  gs_split_ind_model_rho,
   
   gc_model,
   gc_ind_model,
   gc_split_model,
   gc_split_ind_model,
+  gc_split_ind_model_rho,
   
   method = "bic"
 )
@@ -278,18 +346,21 @@ experimental_results <- read_csv('data/experiment/experimental_results.csv')
 #create errors function
 sonority_errors <- function(results) {
   #join df 
-  joined_df <- full_join(results$predictions, experimental_results, by = c("Input" = "word")) %>%
-    distinct(Input, Output, .keep_all = TRUE) %>%
-    select(Input, Output, Predicted, Observed, Error, nap_sonority, sonority_delta)
+  # In order for this to work, experimental_results already needs to be defined
+  sonority_scores <- experimental_results %>%
+    select(word, nap_sonority, sonority_delta) %>%
+    distinct()
+  
+  joined_df <- inner_join(results$predictions, sonority_scores, by = c("Input" = "word"))
   
   #mean errors 
-  joined_df <- joined_df%>%
+  joined_df <- joined_df %>%
     group_by(sonority_delta) %>%
-    mutate(mean_delta_error = mean(Error))
+    mutate(mean_delta_error = mean(Error^2))
   
   joined_df <- joined_df %>%
     group_by(nap_sonority) %>%
-    mutate(mean_nap_error = mean(Error)) }
+    mutate(mean_nap_error = mean(Error^2)) }
 
 #run on results 
 gs_sonority <- sonority_errors(gs_results)
