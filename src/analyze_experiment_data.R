@@ -339,3 +339,52 @@ hyp_test_2
 # This plots the probability distribution over the difference between these two
 # coefficients. You can see the peak at about -0.03
 plot(hyp_test_2)
+
+
+
+m_s <- brm(
+  ep_type ~ sonority_delta +  preceding_v + PC1 * onset + context + (1|participant) + (1|word),
+  data = epenthesis_df,
+  family="categorical",
+  prior=c(set_prior("normal(0,3)")),
+  chains=4, cores=4)
+summary(m_s)
+
+
+prothesis_df <- epenthesis_df %>%
+  select(participant, onset, ep_type, PC1) %>%
+  filter(ep_type == "prothesis")
+
+
+sl_df <- prothesis_df %>%
+  group_by(participant, onset, PC1) %>%
+  summarise(count = n()) %>%
+  #mutate(sl_freq = count / sum(count)) %>%
+  filter(onset == "sl")
+
+
+ggplot(sl_df, aes(PC1 * -1, count)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+#multiply pc1 by -1 
+
+
+sn_df <- prothesis_df %>%
+  group_by(participant, onset, PC1) %>%
+  summarise(count = n()) %>%
+  #mutate(sn_freq = count / sum(count)) %>%
+  filter(onset %in% c("sn", "sm"))
+
+
+st_df <- prothesis_df %>%
+  group_by(participant, onset, PC1) %>%
+  summarise(count = n()) %>%
+  #mutate(st_freq = count / sum(count)) %>%
+  filter(onset == "st")
+
+
+s_df <- rbind(sl_df, sn_df, st_df)
+
+ggplot(s_df, aes(PC1 * -1, count, group = onset, color = onset)) +
+  geom_point() +
+  geom_smooth(method = "lm")
