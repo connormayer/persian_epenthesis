@@ -266,10 +266,11 @@ temp_df_2 %>%
   xlab("Relative English Dominance") + 
   ylab(expression(frac("Prothesis count", "Total epenthesis count"))) +
   ggtitle("Relative prothesis rate \nincreases with L2 proficiency") +
-  theme_classic(base_size=30) +
+  theme_classic(base_size=22) +
   theme(axis.text=element_text(size=16),
-        axis.title=element_text(size=30,face="bold"),
+        axis.title=element_text(face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold"))
+ggsave('figures/relative_prothesis.png', height = 7, width = 7, units='in')
 
 # I think these plots are actually easier to interpret without the regression
 # lines
@@ -282,10 +283,11 @@ ep_rate_df %>%
   ylab("Proportion of epenthesis") +
   xlab("Relative English Dominance") + 
   ggtitle("Overall rate of epenthesis \n decreases with L2 proficiency") +
-  theme_classic(base_size=30) +
+  theme_classic(base_size=22) +
   theme(axis.text=element_text(size=16),
-        axis.title=element_text(size=30,face="bold"),
+        axis.title=element_text(face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold"))
+ggsave('figures/overall_epenthesis.png', height = 7, width = 7, units='in')
 
 # Plot ana rate against PC1
 ep_rate_df %>%
