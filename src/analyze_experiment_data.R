@@ -62,7 +62,8 @@ epenthesis_df <- df %>%
 # Add two new columns: preceding_v indicates whether previous sound is a
 # vowel. has_ep indicates whether epenthesis occurs or not
   mutate(preceding_v = last_sound %in% vowels,
-         has_ep = ep_type %in% c("anaptyxis", "prothesis")) %>%
+         has_ep = ep_type %in% c("anaptyxis", "prothesis"),
+         s_initial = str_starts(onset, 's')) %>%
   # Rename a few columns
   rename(
     dominant_language = `dominant language`,
@@ -93,6 +94,7 @@ epenthesis_df <- df %>%
          context,
          nap_sonority,
          sonority_delta,
+         s_initial,
          gender,
          dominant_language,
          current_farsi_exposure,
@@ -134,7 +136,7 @@ pca_input <- epenthesis_df %>%
 # Do the PCA
 pca <- pca_input %>% 
   select(-participant) %>%
-  prcomp()
+  prcomp(scale. = TRUE, center = TRUE)
 
 # Convert LEAP-Q scores into corresponding PC scores
 predicted <- data.frame(predict(pca, pca_input)) %>%
@@ -175,7 +177,7 @@ epenthesis_df %>%
   filter(ep_type != 'none') 
 
 epenthesis_df %>%
-  pivot_longer(cols = c("sonority_delta", "nap_sonority"), 
+  pivot_longer(cols = c("sonority_delta", "nap_sonority", "s_initial"), 
                names_to = "sonority_type",
                values_to = 'sonority_val') %>%
   group_by(sonority_type, sonority_val, ep_type) %>%
@@ -201,24 +203,78 @@ epenthesis_df %>%
           sonority_val = 4,
           ep_type = 'prothesis',
           count=0) %>%
+  add_row(sonority_type = 's_initial',
+          sonority_val = FALSE,
+          ep_type = 'prothesis',
+          count=0) %>%
   mutate(sonority_type = fct_relevel(
                           fct_recode(
                             sonority_type, 
                             `Traditional Sonority Δ` = "sonority_delta",
-                            `NAP Sonority Δ` = "nap_sonority"), 
+                            `NAP Sonority Δ` = "nap_sonority",
+                            `sC onset?` = 's_initial'), 
                           "Traditional Sonority Δ")) %>%
-  ggplot(aes(sonority_val, count, color=ep_type)) +
+  ggplot(aes(as.integer(sonority_val), count, color=ep_type)) +
   geom_line(lwd=3) +
   geom_point(size=5) + 
-  xlab("Onset sonority Δ") + 
+  xlab("Onset value") + 
   ylab("Relative proportion") +
-  ggtitle("Traditional sonority Δ predicts epenthesis type, \n but NAP sonority Δ does not") +
+  #ggtitle("Traditional sonority Δ predicts epenthesis type, \n but NAP sonority Δ does not") +
   theme_classic(base_size=30) +
   theme(axis.text=element_text(size=16),
         axis.title=element_text(size=30,face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold")) +
   labs(color='Epenthesis \ntype') +
-  facet_grid(~ sonority_type, scales = 'free_x')
+  facet_grid(~ sonority_type, scales = 'free_x') +
+  scale_x_continuous(breaks = breaks_width(1))
+ggsave('figures/sonority_measures_experiment.png', height = 7, width = 18, units='in')
+
+ep_rate_df_2 <- epenthesis_df %>%
+  group_by(onset, sonority_delta, nap_sonority, s_initial) %>%
+  summarize(non_ep_rate = 1 - mean(has_ep),
+            ana_rate = sum(ep_type == 'anaptyxis') / sum(!is.na(ep_type)),
+            pro_rate = sum(ep_type == 'prothesis') / sum(!is.na(ep_type))) %>%
+  pivot_longer(cols = c("non_ep_rate", "ana_rate", "pro_rate"), 
+               names_to = "ep_group",
+               values_to = 'rate') %>%
+  mutate(ep_group = fct_relevel(
+    fct_recode(
+      ep_group, 
+      `No epenthesis` = "non_ep_rate",
+      `Anaptyxis` = "ana_rate",
+      `Prothesis` = 'pro_rate'), 
+    "No epenthesis"))
+
+
+ep_rate_df_2 %>% filter(sonority_delta == 2) %>%
+  ggplot(aes(x=onset, y=rate, fill=ep_group)) +
+  geom_bar(stat='identity') +
+  xlab("Onset") + 
+  ylab("Relative proportion") +
+  #ggtitle("Traditional sonority Δ predicts epenthesis type, \n but NAP sonority Δ does not") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  labs(color='Epenthesis \ntype')
+ggsave('figures/traditional_delta_2_experiment.png', height = 7, width = 10, units='in')
+
+blah <- ep_rate_df_2 %>% filter(s_initial)
+blah$onset <- fct_relevel(blah$onset, "sk", "sp", "st", "sn", "sm", "sl", "sw")
+
+blah %>%
+  ggplot(aes(x=onset, y=rate, fill=ep_group)) +
+  geom_bar(stat='identity') +
+  xlab("Onset") + 
+  ylab("Relative proportion") +
+  #ggtitle("Traditional sonority Δ predicts epenthesis type, \n but NAP sonority Δ does not") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  labs(color='Epenthesis \ntype')
+ggsave('figures/s_onsets_experiment.png', height = 7, width = 10, units='in')
+
 
 # Heatmap plotting epenthesis type by proceding vowel
 epenthesis_df %>%
@@ -304,6 +360,69 @@ ep_rate_df %>%
   #geom_smooth(method='lm') +
   ylab("Proportion of total complex onsets with prothesis")
 
+pca_df <- epenthesis_df %>%
+  group_by(participant) %>%
+  mutate(RED = -mean(PC1)) %>%
+  select(participant, RED) %>%
+  unique()
+
+pca_df %>%
+  ggplot() +
+  geom_histogram(aes(x=RED), binwidth=1) +
+  ylab("Number of participants") +
+  xlab("Relative English Dominance") + 
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold"))
+ggsave('figures/relative_english_dominance.png', height = 7, width = 10, units='in')
+
+foo <- epenthesis_df %>%
+  group_by(s_initial, ep_type) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  group_by(s_initial) %>%
+  mutate(count = count / sum(count),
+         s_initial = ifelse(s_initial, 'sC onsets', 'OR onsets'))
+
+foo %>%
+  ggplot(aes(x=ep_type, y=count, fill=ep_type)) +
+  geom_bar(stat='identity') +
+  facet_wrap(~ s_initial) +
+  ylab("Proportion of responses") +
+  xlab("Epenthesis type") + 
+  # ggtitle("Overall rate of epenthesis \n decreases with L2 proficiency") +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  scale_fill_discrete(guide="none")
+ggsave('figures/exp_epenthesis_by_onset_type.png', height = 7, width = 10, units='in')
+
+foo2 <- epenthesis_df %>%
+  group_by(s_initial, has_ep) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  group_by(s_initial) %>%
+  mutate(count = count / sum(count),
+         s_initial = ifelse(s_initial, 'sC onsets', 'OR onsets'),
+         has_ep = ifelse(has_ep, 'epenthesis', 'no epenthesis'))
+
+foo2 %>%
+  ggplot(aes(x=has_ep, y=count, fill=has_ep)) +
+  geom_bar(stat='identity') +
+  facet_wrap(~ s_initial) +
+  ylab("Proportion of responses") +
+  xlab("Epenthesis type") + 
+  # ggtitle("Overall rate of epenthesis \n decreases with L2 proficiency") +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  scale_fill_discrete(guide="none")
+ggsave('figures/exp_overall_epenthesis_by_onset_type.png', height = 7, width = 10, units='in')
+
+
 # Create experimental results df
 write_csv(epenthesis_df, 'data/experiment/experimental_results.csv')
 
@@ -313,9 +432,10 @@ m_nap <- brm(
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4)
+  chains=4, cores=4,
+  save_pars = save_pars(all = TRUE))
 summary(m_nap)
-m_nap <- add_criterion(m_nap, criterion = c("loo", "waic"))
+nap_loo <- loo(m_nap, k_threshold = 0.7)
 
 
 #fit a model with sonority_delta
@@ -324,13 +444,31 @@ m_sonority_d <- brm(
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4)
+  chains=4, cores=4,
+  save_pars = save_pars(all = TRUE))
 summary(m_sonority_d)
-m_sonority_d <- add_criterion(m_sonority_d, criterion = c("loo", "waic"))
+sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
+
+
+#fit a model with sonority_delta
+m_sonority_binary <- brm(
+  ep_type ~ s_initial + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  data = epenthesis_df,
+  family="categorical",
+  prior=c(set_prior("normal(0,3)")),
+  chains=4, cores=4,
+  save_pars = save_pars(all = TRUE))
+summary(m_sonority_binary)
+sonority_binary_loo <- loo(m_sonority_binary, k_threshold = 0.7)
 
 # This makes a series of plots of the probability distributions
 # the model has calculated for each parameter
-plot(m_sonority_d)
+plot(m_sonority_binary)
+
+loo_list <- list(sonority_binary_loo, sonority_d_loo, nap_loo)
+loo_model_weights(loo_list)
+loo_model_weights(loo_list, method='pseudobma')
+loo_model_weights(loo_list, method='pseudobma', BB=FALSE)
 
 #hypothesis testing
 hyp_test <- hypothesis(m_nap, 'muprothesis_PC1 < muanaptyxis_PC1')
@@ -339,23 +477,25 @@ hyp_test
 hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1 < muanaptyxis_PC1')
 hyp_test_2
 
+hyp_test_3 <- hypothesis(m_sonority_binary, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test_3
+
 # This plots the probability distribution over the difference between these two
 # coefficients. You can see the peak at about -0.03
-plot(hyp_test_2)
-
+plot(hyp_test_3)
 
 m_s <- brm(
   ep_type ~ sonority_delta +  preceding_v + PC1 * onset + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4)
+  chains=4, cores=4,
+  save_pars = save_pars(all = TRUE))
 summary(m_s)
+s_loo <- loo(m_s, k_threshold = 0.7, moment_match=TRUE)
 
-m_sonority_d<- add_criterion(m_sonority_d, "loo")
-m_s<- add_criterion(m_s, "loo")
-
-loo(m_sonority_d, m_s)
+loo_list_2 <- list(sonority_binary_loo, sonority_d_loo, nap_loo, s_loo)
+loo_model_weights(loo_list_2)
 
 
 

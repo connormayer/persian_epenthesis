@@ -397,18 +397,20 @@ fh_best_onset %>%
   geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
   facet_wrap(~ onset)
 
-fh_best_s %>%
+fh_best_s %>% 
+  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
   ggplot() +
   geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) +
-  xlab("Is sC cluster?") +
+  xlab("Cluster type") +
   ylab("Mean error") + 
   scale_fill_discrete(guide="none") +
   ggtitle("Perceptual model") +
   theme_classic(base_size=22) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold"))
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  ylim(-0.15, 0.15)
 ggsave('figures/fh_best.png', height = 7, width = 7, units='in')
 
 gs_best <- gs_split_ind_model_rho$predictions %>%
@@ -431,17 +433,19 @@ gs_best_onset %>%
   facet_wrap(~ onset)
 
 gs_best_s %>%
+  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
   ggplot() +
   geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) +
-  xlab("Is sC cluster?") +
+  xlab("Cluster type") +
   ylab("Mean error") + 
   scale_fill_discrete(guide="none") +
-  ggtitle("Syl. Contact. Simple Model") +
+  ggtitle("Syl. Cont. Simple Model") +
   theme_classic(base_size=22) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold"))
+        plot.title = element_text(hjust = 0.5, face="bold")) + 
+  ylim(-0.15, 0.15)
 ggsave('figures/gs_best.png', height = 7, width = 7, units='in')
 
 gc_best <- gc_split_ind_model_rho$predictions %>%
@@ -464,15 +468,17 @@ gc_best_onset %>%
   facet_wrap(~ onset)
 
 gc_best_s %>%
+  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
   ggplot() +
   geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) + 
-  xlab("Is sC cluster?") +
+  xlab("Cluster type") +
   ylab("Mean error") + 
   scale_fill_discrete(guide="none") +
   ggtitle("Syl. Cont. Hierarchical Model") +
   theme_classic(base_size=22) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold"))
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  ylim(-0.15, 0.15)
 ggsave('figures/gc_best.png', height = 7, width = 7, units='in')
