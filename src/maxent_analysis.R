@@ -234,9 +234,17 @@ compare_models(
 fh_results <- predict_probabilities(fh_global, fh_model$weights)
 gs_results <- predict_probabilities(gs_global, gs_model$weights)
 gc_results <- predict_probabilities(gc_global, gc_model$weights)
+
+
 fh_split_results <- predict_probabilities(fh_global_split, fh_split_model$weights)
 gs_split_results <- predict_probabilities(gs_global_split, gs_split_model$weights)
 gc_split_results <- predict_probabilities(gc_global_split, gc_split_model$weights)
+
+
+compare <- fh_split_results
+compare$fh_gs_diff <- fh_split_results$predictions$Predicted - gs_split_results$predictions$Predicted
+compare$fh_gc_diff <- fh_split_results$predictions$Predicted - gc_split_results$predictions$Predicted
+compare$gs_gc_diff <- gs_split_results$predictions$Predicted - gc_split_results$predictions$Predicted
 
 #################
 # VISUALIZATION #
@@ -369,3 +377,108 @@ fh_sonority <- sonority_errors(fh_results)
 gs_split_results <- sonority_errors(gs_split_results)
 gc_split_results <- sonority_errors(gc_split_results)
 fh_split_results <- sonority_errors(fh_split_results)
+
+fh_best <- fh_split_ind_model_rho$predictions %>%
+  inner_join(onsets, by=c("Input")) %>%
+  separate(Output, c('word', 'ep_type'), sep='-') %>%
+  mutate(s_initial = str_starts(onset, 's')) %>%
+  filter(!is.na(Error))
+
+fh_best_onset <- fh_best %>%
+  group_by(onset, ep_type) %>%
+  summarize(mean_error = mean(Error))
+
+fh_best_s <- fh_best %>%
+  group_by(s_initial, ep_type) %>%
+  summarize(mean_error = mean(Error))
+
+fh_best_onset %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
+  facet_wrap(~ onset)
+
+fh_best_s %>% 
+  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  facet_wrap(~ s_initial) +
+  xlab("Cluster type") +
+  ylab("Mean error") + 
+  scale_fill_discrete(guide="none") +
+  ggtitle("Perceptual model") +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  ylim(-0.15, 0.15)
+ggsave('figures/fh_best.png', height = 7, width = 7, units='in')
+
+gs_best <- gs_split_ind_model_rho$predictions %>%
+  inner_join(onsets, by=c("Input")) %>%
+  separate(Output, c('word', 'ep_type'), sep='-') %>%
+  mutate(s_initial = str_starts(onset, 's')) %>%
+  filter(!is.na(Error))
+
+gs_best_onset <- gs_best %>%
+  group_by(onset, ep_type) %>%
+  summarize(mean_error = mean(Error))
+
+gs_best_s <- gs_best %>%
+  group_by(s_initial, ep_type) %>%
+  summarize(mean_error = mean(Error))
+
+gs_best_onset %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
+  facet_wrap(~ onset)
+
+gs_best_s %>%
+  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  facet_wrap(~ s_initial) +
+  xlab("Cluster type") +
+  ylab("Mean error") + 
+  scale_fill_discrete(guide="none") +
+  ggtitle("Syl. Cont. Simple Model") +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) + 
+  ylim(-0.15, 0.15)
+ggsave('figures/gs_best.png', height = 7, width = 7, units='in')
+
+gc_best <- gc_split_ind_model_rho$predictions %>%
+  inner_join(onsets, by=c("Input")) %>%
+  separate(Output, c('word', 'ep_type'), sep='-') %>%
+  mutate(s_initial = str_starts(onset, 's')) %>%
+  filter(!is.na(Error))
+
+gc_best_onset <- gc_best %>%
+  group_by(onset, ep_type) %>%
+  summarize(mean_error = mean(Error))
+
+gc_best_s <- gc_best %>%
+  group_by(s_initial, ep_type) %>%
+  summarize(mean_error = mean(Error))
+
+gc_best_onset %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
+  facet_wrap(~ onset)
+
+gc_best_s %>%
+  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  facet_wrap(~ s_initial) + 
+  xlab("Cluster type") +
+  ylab("Mean error") + 
+  scale_fill_discrete(guide="none") +
+  ggtitle("Syl. Cont. Hierarchical Model") +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  ylim(-0.15, 0.15)
+ggsave('figures/gc_best.png', height = 7, width = 7, units='in')
