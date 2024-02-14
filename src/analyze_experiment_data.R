@@ -131,19 +131,90 @@ pca_input <- epenthesis_df %>%
   # Scale columns
   mutate(across(where(is.numeric), scale))
 
+#create grouped leap_q inputs
+pca_input_acquisition_exposure <- pca_input %>%
+  select(participant, 
+         current_farsi_exposure,
+         age_of_english_acquisition,
+         age_of_english_fluency,
+         current_english_exposure)
+
+pca_input_immersion <- pca_input %>%
+  select(participant, 
+         length_of_farsi_residence,
+         length_of_english_residence) 
+
+pca_input_self_reported_proficiency <- pca_input %>%
+  select(participant, 
+         farsi_speaking_proficiency,
+         farsi_understanding_proficiency,
+         farsi_reading_proficiency,
+         english_speaking_proficiency,
+         english_understanding_proficiency,
+         english_reading_proficiency)
+  
+
 # Do the PCA
 pca <- pca_input %>% 
   select(-participant) %>%
   prcomp()
 
-# Convert LEAP-Q scores into corresponding PC scores
+
+#run PCA on different leap_q inputs
+pca_acquisiton_exposure <-pca_input_acquisition_exposure %>% 
+  select(-participant) %>%
+  prcomp() 
+
+pca_immersion <- pca_input_immersion %>%
+  select(-participant) %>%
+  prcomp()
+
+pca_self_reported_proficiency <- pca_input_self_reported_proficiency %>%
+  select(-participant) %>%
+  prcomp()
+
+# Convert ungrouped LEAP-Q scores into corresponding PC scores
 predicted <- data.frame(predict(pca, pca_input)) %>%
   mutate(participant=pca_input$participant) %>% 
   select(participant, PC1, PC2) %>% 
   unique()
 
-# Add these scores to original dataframe
-epenthesis_df <- inner_join(epenthesis_df, predicted, by='participant')
+
+#convert grouped leap_q scores into corresponding PC scores 
+predicted_acquisition_exposure <- data.frame(predict(pca_acquisiton_exposure, pca_input_acquisition_exposure)) %>%
+  mutate(participant=pca_input$participant) %>% 
+  select(participant, PC1) %>% 
+  rename(PC1_acquisition_exposure = PC1) %>%
+  unique()
+
+
+predicted_immersion <- data.frame(predict(pca_immersion, pca_input_immersion)) %>%
+  mutate(participant=pca_input$participant) %>% 
+  select(participant, PC1) %>% 
+  unique() %>%
+  rename(PC1_immersion = PC1) 
+
+
+predicted_self_reported_proficiency <- data.frame(predict(pca_self_reported_proficiency, 
+                                                          pca_input_self_reported_proficiency)) %>%
+  mutate(participant=pca_input$participant) %>% 
+  select(participant, PC1) %>% 
+  unique() %>%
+  rename(PC1_self_report = PC1)
+
+#create df with all the PC scores
+PC_df <- inner_join(predicted_acquisition_exposure, predicted_immersion, by = "participant")
+PC_df <- inner_join(PC_df, predicted_self_reported_proficiency, by = "participant")
+PC_df <- inner_join(PC_df, predicted, by = "participant")
+
+PC_df <- PC_df %>%
+  rename(PC1_original = PC1, 
+         PC2_original = PC2)
+
+
+# Add all the PC scores to original dataframe
+epenthesis_df <- inner_join(epenthesis_df, PC_df, by='participant')
+
 
 # Simple bar plot of counts of different epenthesis types
 epenthesis_df %>%
