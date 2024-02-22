@@ -205,9 +205,9 @@ predicted_self_reported_proficiency <- data.frame(predict(pca_self_reported_prof
   rename(PC1_self_report = PC1)
 
 #create df with all the PC scores
-PC_df <- inner_join(predicted_acquisition_exposure, predicted_immersion, by = "participant")
-PC_df <- inner_join(PC_df, predicted_self_reported_proficiency, by = "participant")
-PC_df <- inner_join(PC_df, predicted, by = "participant")
+PC_df <- inner_join(predicted_acquisition_exposure, predicted_immersion)
+PC_df <- inner_join(PC_df, predicted_self_reported_proficiency)
+PC_df <- inner_join(PC_df, predicted)
 
 PC_df <- PC_df %>%
   rename(PC1_original = PC1, 
@@ -215,7 +215,7 @@ PC_df <- PC_df %>%
 
 
 # Add all the PC scores to original dataframe
-epenthesis_df <- inner_join(epenthesis_df, PC_df, by='participant')
+epenthesis_df <- inner_join(epenthesis_df, PC_df)
 
 
 # Simple bar plot of counts of different epenthesis types
@@ -511,7 +511,8 @@ nap_loo <- loo(m_nap, k_threshold = 0.7)
 
 #fit a model with sonority_delta
 m_sonority_d <- brm(
-  ep_type ~ sonority_delta + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  ep_type ~ sonority_delta + onset + preceding_v + PC1_acquisition_exposure + PC1_immersion + PC1_self_report
+  + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
@@ -523,7 +524,7 @@ sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
 
 #fit a model with sonority_delta
 m_sonority_binary <- brm(
-  ep_type ~ s_initial + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  ep_type ~ s_initial + onset + preceding_v + PC1_acquisition_exposure + PC1_immersion + PC1_self_report + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
@@ -555,17 +556,8 @@ hyp_test_3
 # coefficients. You can see the peak at about -0.03
 plot(hyp_test_3)
 
-m_s <- brm(
-  ep_type ~ sonority_delta +  preceding_v + PC1 * onset + context + (1|participant) + (1|word),
-  data = epenthesis_df,
-  family="categorical",
-  prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4,
-  save_pars = save_pars(all = TRUE))
-summary(m_s)
-s_loo <- loo(m_s, k_threshold = 0.7, moment_match=TRUE)
 
-loo_list_2 <- list(sonority_binary_loo, sonority_d_loo, nap_loo, s_loo)
+loo_list_2 <- list(sonority_binary_loo, sonority_d_loo, nap_loo)
 loo_model_weights(loo_list_2)
 
 

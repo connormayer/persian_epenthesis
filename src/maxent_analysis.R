@@ -230,6 +230,8 @@ compare_models(
   method = "bic"
 )
 
+#--------
+
 # predict probabilities and save to fh/gs/gc_results
 fh_results <- predict_probabilities(fh_global, fh_model$weights)
 gs_results <- predict_probabilities(gs_global, gs_model$weights)

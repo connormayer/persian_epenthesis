@@ -32,9 +32,18 @@ counts_df <- experiment_df %>%
                distinct(),
              by=c('word'))
 
+
+#reconfigure df 
+counts_df <- counts_df %>%
+  mutate(syllable_contact = ifelse(
+    ep_type == 'prothesis',
+    sonority[second] - sonority[first],
+    ifelse(ep_type == 'anaptyxis',
+           sonority[second] - 5, NA)))
+
 # Global counts
 global_counts <- counts_df %>%
-  group_by(word, ep_type, sonority_delta, first, second) %>%
+  group_by(word, ep_type, sonority_delta, first, second, syllable_contact) %>%
   summarize(count=sum(count)) %>%
   arrange(word, fct_relevel(ep_type, "none"))
 
@@ -47,6 +56,7 @@ create_individual_tableaux <- function(data, constraints, out_folder, name_templ
     create_tableaux(participant_counts, constraints, filename)
   }
 }
+
 
 # Function that builds relevant tableaux given a list of constraints
 create_tableaux <- function(data, constraints, output_file) {
@@ -76,52 +86,47 @@ create_tableaux <- function(data, constraints, output_file) {
           row$ep_type == 'prothesis' & row$sonority_delta > 0, 1, ''
         )
       } else if (constraint == 'SyllableContact_4') {
-        violation <- ifelse(
-          row$ep_type == 'prothesis' & row$sonority_delta == 4, 1, ''
+        violation <- ifelse( ! is.na(row$syllable_contact) &
+        row$syllable_contact >= 4, 1, ''
         )
       } else if (constraint == 'SyllableContact_3') {
-        violation <- ifelse(
-          row$ep_type == 'prothesis' & row$sonority_delta == 3, 1, ''
+        violation <- ifelse(! is.na(row$syllable_contact) &
+          row$syllable_contact >= 3, 1, ''
         )
       } else if (constraint == 'SyllableContact_2') {
-          violation <- ifelse(
-            row$ep_type == 'prothesis' & row$sonority_delta == 2, 1, ''
+          violation <- ifelse(! is.na(row$syllable_contact) &
+            row$syllable_contact >= 2, 1, ''
           )
       } else if (constraint == 'SyllableContact_1') {
-        violation <- ifelse(
-          row$ep_type == 'prothesis' & row$sonority_delta == 1, 1, ''
+        violation <- ifelse(! is.na(row$syllable_contact) &
+           row$syllable_contact >= 1, 1, ''
         )
       } else if (constraint == 'SyllableContact_-1') {
-        violation <- ifelse(
-          row$ep_type == 'prothesis' & row$sonority_delta == -1 ||
-            row$ep_type == 'anaptyxis' & sonority[row$second] == 4, 
+        violation <- ifelse(! is.na(row$syllable_contact) &
+           row$syllable_contact >= -1,
           1, ''
         )
       } else if (constraint == 'SyllableContact_-2') {
-        violation <- ifelse(
-          row$ep_type == 'anaptyxis' & sonority[row$second] == 3, 
+        violation <- ifelse(! is.na(row$syllable_contact) &
+          row$syllable_contact >= -2, 
           1, ''
         )
       } else if (constraint == 'SyllableContact_-3') {
-        violation <- ifelse(
-          row$ep_type == 'anaptyxis' & sonority[row$second] == 2, 
+        violation <- ifelse(! is.na(row$syllable_contact) &
+         row$syllable_contact >= -3, 
           1, ''
         )
       } else if (constraint == 'SyllableContact_-4') {
-        violation <- ifelse(
-          row$ep_type == 'anaptyxis' & sonority[row$second] == 1, 
+        violation <- ifelse(! is.na(row$syllable_contact) &
+          row$syllable_contact >= -4, 
           1, ''
         )
       } else if (constraint == 'SyllableContact_-5') {
-        violation <- ifelse(
-          row$ep_type == 'anaptyxis' & sonority[row$second] == 0, 
+        violation <- ifelse(! is.na(row$syllable_contact) &
+          row$syllable_contact >= -5, 
           1, ''
         )
-      } else if (constraint == 'Dep-[ə]/S_T') {
-        violation <- ifelse(
-          row$ep_type == 'anaptyxis' & row$sonority_delta == -1, 
-          1, ''
-        )
+     
       } else if (constraint == 'C/V') {
         violation <- ifelse(
           row$ep_type == 'anaptyxis', '', 1
@@ -130,26 +135,30 @@ create_tableaux <- function(data, constraints, output_file) {
         violation <- ifelse(
           row$ep_type == 'prothesis', 1, ''
         )
+      } else if (constraint == 'Dep-[ə]/S_T') {
+        violation <- ifelse(
+          row$first == 's' & row$ep_type == 'anaptyxis' & row$syllable_contact == -5, 
+          1, ''
+        )
       } else if (constraint == 'Dep-[ə]/S_N') {
         violation <- ifelse(
-          row$ep_type == 'anaptyxis' & row$sonority_delta == 1, 1, ''
+          row$first == 's' & row$ep_type == 'anaptyxis' & row$syllable_contact <= -3, 1, ''
         )
       } else if (constraint == 'Dep-[ə]/S_L') {
         violation <- ifelse(
           row$ep_type == 'anaptyxis' & 
-            row$first == 's' & row$sonority_delta == 2, 
+            row$first == 's' & row$syllable_contact <= -2, 
           1, ''
         )
       } else if (constraint == 'Dep-[ə]/S_W') {
         violation <- ifelse(
           row$ep_type == 'anaptyxis' & row$first == 's' & 
-            row$sonority_delta == 3,
+            row$syllable_contact <= -1,
           1, ''
         )
       } else if (constraint == 'Dep-[ə]/O_R') {
         violation <- ifelse(
-          row$ep_type == 'anaptyxis' & row$sonority_delta == '4' || 
-            (row$first != 's' & row$sonority_delta == 3),
+          row$ep_type == 'anaptyxis',
           1, ''
         )
       } else if (constraint == '*Complex-S') {
@@ -207,14 +216,14 @@ create_individual_tableaux(
 # Create Fleischhacker tableau with global counts
 create_tableaux(
   global_counts, 
-  c('Dep-[ə]/S_T', 'C/V', 'L-Anchor', 'Contiguity', 
+  c('C/V', 'L-Anchor', 'Contiguity', 'Dep-[ə]/S_T', 
     'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R', '*Complex'),
   'data/tableaux/fleischhacker_global.csv')
 
 # And with participant-specific counts
 create_individual_tableaux(
   counts_df,
-  c('Dep-[ə]/S_T', 'C/V', 'L-Anchor', 'Contiguity', 
+  c('C/V', 'L-Anchor', 'Contiguity', 'Dep-[ə]/S_T',
     'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R', '*Complex'),
   'data/tableaux/fleischhacker_ind', 'fh')
 
@@ -251,7 +260,7 @@ create_individual_tableaux(
 # Create Fleischhacker split complex tableau with global counts
 create_tableaux(
   global_counts, 
-  c('Dep-[ə]/S_T', 'C/V', 'L-Anchor', 'Contiguity', 
+  c('C/V', 'L-Anchor', 'Contiguity', 'Dep-[ə]/S_T', 
     'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R',
     '*Complex-S', '*Complex-T'),
   'data/tableaux/fleischhacker_global_split.csv')
@@ -259,7 +268,7 @@ create_tableaux(
 # And with participant-specific counts
 create_individual_tableaux(
   counts_df,
-  c('Dep-[ə]/S_T', 'C/V', 'L-Anchor', 'Contiguity', 
+  c('C/V', 'L-Anchor', 'Contiguity', 'Dep-[ə]/S_T', 
     'Dep-[ə]/S_N', 'Dep-[ə]/S_L', 'Dep-[ə]/S_W', 'Dep-[ə]/O_R',
     '*Complex-S', '*Complex-T'),
   'data/tableaux/fleischhacker_split_ind', 'fh_split')
