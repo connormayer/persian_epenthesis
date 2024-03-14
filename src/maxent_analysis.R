@@ -140,9 +140,9 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
   }
 }
 
-pc_scores <- read_csv('data/experiment/experimental_results.csv') %>%
+pc_scores <- read_csv('data/experiment/experimental_revised_results.csv') %>%
   group_by(participant) %>%
-  summarize(PC1 = mean(PC1))
+  summarize(PC1 = mean(PC1_original))
 
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
@@ -165,7 +165,7 @@ gs_ind_model <- fit_individual_models(
 # Gouskova_complex global 
 gc_global <- read_csv("data/tableaux/gouskova_complex_global.csv")
 #cross_validate(gc_global, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
-gc_model <- optimize_weights(gc_global, mu = 0, sigma = 500, model_name='gc')
+gc_model <- optimize_weights(gc_global, mu = 0, sigma = 500, model_name='gc', upper_bound = 70)
 gc_ind_model <- fit_individual_models(
   gc_model, pc_scores, 'gc', 'data/tableaux/gouskova_complex_ind'
 )
@@ -198,7 +198,7 @@ gs_split_ind_model_rho <- fit_individual_models(
 # Gouskova complex global split *complex 
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
 #cross_validate(gc_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
-gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split')
+gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split', upper_bound = 70)
 gc_split_ind_model <- fit_individual_models(
   gc_split_model, pc_scores, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
 )

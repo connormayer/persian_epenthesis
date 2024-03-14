@@ -45,7 +45,8 @@ nap_sonority <- c(t = 1,
                   a = 4)
 
 # add sonority deltas
-df <- read_csv("data/experiment/experiment_responses.csv") %>%
+#df <- read_csv("data/experiment/experiment_responses.csv") %>%
+df <- read_csv("data/experiment/revised_results.csv") %>%
   separate(onset, into = c("first", "second"), sep = 1, remove = FALSE) %>%
   # C2 - C1
   mutate(sonority_delta = sonority[second] - sonority[first]) %>%
@@ -360,7 +361,7 @@ epenthesis_df %>%
 # The first step is to make a new df where ep_rate is the mean of has_ep
 # This means it's the proportion of cases where epenthesis occurs
 ep_rate_df <- epenthesis_df %>%
-  group_by(participant, PC1, PC2) %>%
+  group_by(participant, PC1_original, PC2_original) %>%
   summarize(ep_rate = mean(has_ep),
             ep_count = sum(has_ep),
             ana_rate = sum(ep_type == 'anaptyxis') / sum(!is.na(ep_type)),
@@ -369,7 +370,7 @@ ep_rate_df <- epenthesis_df %>%
             pro_count = sum(ep_type == 'prothesis'))
 
 # Look at correlation between the two
-cor(ep_rate_df$PC1, ep_rate_df$ep_rate)
+cor(ep_rate_df$PC1_original, ep_rate_df$ep_rate)
 cor(ep_rate_df$PC2, ep_rate_df$ep_rate)
 
 # Look at proportion of anaptyxis vs. prothesis as a function of onset age
@@ -378,7 +379,7 @@ cor(ep_rate_df$PC2, ep_rate_df$ep_rate)
 # We then only keep prothesis rate (because anaptyxis rate is just 1 - prothesis rate)
 temp_df_2 <- epenthesis_df %>%
   filter(has_ep) %>% 
-  group_by(participant, PC1, PC2, ep_type) %>%
+  group_by(participant, PC1_original, PC2_original, ep_type) %>%
   # Count number of epenthesis types
   summarize(count = n()) %>%
   # Normalize counts by total count for each speaker
@@ -388,7 +389,7 @@ temp_df_2 <- epenthesis_df %>%
 
 # Plot prothesis proportion against PC1
 temp_df_2 %>%
-  ggplot(aes(x=-PC1, y=freq)) +
+  ggplot(aes(x=-PC1_original, y=freq)) +
   geom_point(size=8) +
   geom_smooth(method='lm') +
   xlab("Relative English Dominance") + 
@@ -405,7 +406,7 @@ ggsave('figures/relative_prothesis.png', height = 7, width = 7, units='in')
 
 # Plot epenthesis rate against PC1
 ep_rate_df %>%
-  ggplot(aes(x=-PC1, y=ep_rate)) +
+  ggplot(aes(x=-PC1_original, y=ep_rate)) +
   geom_point(size = 6) +
   geom_smooth(method='lm') +
   ylab("Proportion of epenthesis") +
@@ -495,11 +496,11 @@ ggsave('figures/exp_overall_epenthesis_by_onset_type.png', height = 7, width = 1
 
 
 # Create experimental results df
-write_csv(epenthesis_df, 'data/experiment/experimental_results.csv')
+write_csv(epenthesis_df, 'data/experiment/experimental_revised_results.csv')
 
 # Fit a model with nap_sonority
 m_nap <- brm(
-  ep_type ~ nap_sonority + onset + preceding_v + PC1 + context + (1|participant) + (1|word),
+  ep_type ~ nap_sonority + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
@@ -511,8 +512,7 @@ nap_loo <- loo(m_nap, k_threshold = 0.7)
 
 #fit a model with sonority_delta
 m_sonority_d <- brm(
-  ep_type ~ sonority_delta + onset + preceding_v + PC1_acquisition_exposure + PC1_immersion + PC1_self_report
-  + context + (1|participant) + (1|word),
+  ep_type ~ sonority_delta + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
@@ -524,7 +524,7 @@ sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
 
 #fit a model with sonority_delta
 m_sonority_binary <- brm(
-  ep_type ~ s_initial + onset + preceding_v + PC1_acquisition_exposure + PC1_immersion + PC1_self_report + context + (1|participant) + (1|word),
+  ep_type ~ s_initial + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
@@ -546,10 +546,10 @@ loo_model_weights(loo_list, method='pseudobma', BB=FALSE)
 hyp_test <- hypothesis(m_nap, 'muprothesis_PC1 < muanaptyxis_PC1')
 hyp_test
 
-hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1_original - muanaptyxis_PC1_original < 0')
 hyp_test_2
 
-hyp_test_3 <- hypothesis(m_sonority_binary, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test_3 <- hypothesis(m_sonority_binary, 'muprothesis_PC1_original - muanaptyxis_PC1_original < 0')
 hyp_test_3
 
 # This plots the probability distribution over the difference between these two
