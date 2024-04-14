@@ -495,6 +495,7 @@ foo2 %>%
 ggsave('figures/exp_overall_epenthesis_by_onset_type.png', height = 7, width = 10, units='in')
 
 
+
 # Create experimental results df
 write_csv(epenthesis_df, 'data/experiment/experimental_revised_results.csv')
 
@@ -522,6 +523,7 @@ summary(m_sonority_d)
 sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
 
 
+
 #fit a model with sonority_delta
 m_sonority_binary <- brm(
   ep_type ~ s_initial + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
@@ -546,15 +548,15 @@ loo_model_weights(loo_list, method='pseudobma', BB=FALSE)
 hyp_test <- hypothesis(m_nap, 'muprothesis_PC1 < muanaptyxis_PC1')
 hyp_test
 
-hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1_original - muanaptyxis_PC1_original < 0')
+hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1_original < muanaptyxis_PC1_original')
 hyp_test_2
 
-hyp_test_3 <- hypothesis(m_sonority_binary, 'muprothesis_PC1_original - muanaptyxis_PC1_original < 0')
+hyp_test_3 <- hypothesis(m_sonority_binary, 'muprothesis_PC1_original < muanaptyxis_PC1_original')
 hyp_test_3
 
 # This plots the probability distribution over the difference between these two
 # coefficients. You can see the peak at about -0.03
-plot(hyp_test_3)
+plot(hyp_test_2)
 
 
 loo_list_2 <- list(sonority_binary_loo, sonority_d_loo, nap_loo)
