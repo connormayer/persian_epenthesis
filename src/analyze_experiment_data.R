@@ -1,5 +1,7 @@
-require(tidyverse)
-require(brms)
+library(tidyverse)
+library(brms)
+library(lme4)
+
 
 
 # Define preceding vowwls 
@@ -499,106 +501,124 @@ ggsave('figures/exp_overall_epenthesis_by_onset_type.png', height = 7, width = 1
 # Create experimental results df
 write_csv(epenthesis_df, 'data/experiment/experimental_revised_results.csv')
 
-# Fit a model with nap_sonority
-m_nap <- brm(
-  ep_type ~ nap_sonority + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
-  data = epenthesis_df,
-  family="categorical",
-  prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4,
-  save_pars = save_pars(all = TRUE))
-summary(m_nap)
-nap_loo <- loo(m_nap, k_threshold = 0.7)
+# # Fit a model with nap_sonority
+# m_nap <- brm(
+#   ep_type ~ nap_sonority + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
+#   data = epenthesis_df,
+#   family="categorical",
+#   prior=c(set_prior("normal(0,3)")),
+#   chains=4, cores=4,
+#   save_pars = save_pars(all = TRUE))
+# summary(m_nap)
+# nap_loo <- loo(m_nap, k_threshold = 0.7)
+# 
+# 
+# #fit a model with sonority_delta
+# m_sonority_d <- brm(
+#   ep_type ~ sonority_delta + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
+#   data = epenthesis_df,
+#   family="categorical",
+#   prior=c(set_prior("normal(0,3)")),
+#   chains=4, cores=4,
+#   save_pars = save_pars(all = TRUE))
+# summary(m_sonority_d)
+# sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
 
 
-#fit a model with sonority_delta
-m_sonority_d <- brm(
-  ep_type ~ sonority_delta + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
-  data = epenthesis_df,
-  family="categorical",
-  prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4,
-  save_pars = save_pars(all = TRUE))
-summary(m_sonority_d)
-sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
 
 
+
+epenthesis_df <- read_csv('data/experiment/experimental_revised_results.csv')
 
 #fit a model with sonority_delta
 m_sonority_binary <- brm(
-  ep_type ~ s_initial + onset + preceding_v + PC1_original + context + (1|participant) + (1|word),
+  ep_type ~ s_initial + onset + preceding_v + PC1_original + context + (1|participant) + (1|onset/word),
   data = epenthesis_df,
   family="categorical",
   prior=c(set_prior("normal(0,3)")),
   chains=4, cores=4,
   save_pars = save_pars(all = TRUE))
 summary(m_sonority_binary)
-sonority_binary_loo <- loo(m_sonority_binary, k_threshold = 0.7)
 
 # This makes a series of plots of the probability distributions
 # the model has calculated for each parameter
 plot(m_sonority_binary)
 
-loo_list <- list(sonority_binary_loo, sonority_d_loo, nap_loo)
-loo_model_weights(loo_list)
-loo_model_weights(loo_list, method='pseudobma')
-loo_model_weights(loo_list, method='pseudobma', BB=FALSE)
 
-#hypothesis testing
-hyp_test <- hypothesis(m_nap, 'muprothesis_PC1 < muanaptyxis_PC1')
+hyp_test <- hypothesis(m_sonority_binary, 'muprothesis_PC1_original < muanaptyxis_PC1_original')
 hyp_test
-
-hyp_test_2 <- hypothesis(m_sonority_d, 'muprothesis_PC1_original < muanaptyxis_PC1_original')
-hyp_test_2
-
-hyp_test_3 <- hypothesis(m_sonority_binary, 'muprothesis_PC1_original < muanaptyxis_PC1_original')
-hyp_test_3
 
 # This plots the probability distribution over the difference between these two
 # coefficients. You can see the peak at about -0.03
-plot(hyp_test_2)
+plot(hyp_test)
+
+simple_model <- glmer(
+  has_ep ~ preceding_v + scale(PC1_original) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(simple_model_1)
+
+full_model <- glmer(
+  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) * scale(PC1_immersion) * scale(PC1_self_report) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(full_model)
+
+model_no_im <- glmer(
+  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) * scale(PC1_self_report) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(model_no_im)
+
+model_no_self <- glmer(
+  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) * scale(PC1_immersion) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(model_no_self)
+
+model_no_acq <- glmer(
+  has_ep ~ preceding_v + scale(PC1_immersion) * scale(PC1_self_report) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(model_no_acq)
+
+model_self <- glmer(
+  has_ep ~ preceding_v + scale(PC1_self_report) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(model_self)
+
+model_im <- glmer(
+  has_ep ~ preceding_v + scale(PC1_immersion) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(model_im)
+
+model_acq<- glmer(
+  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) * s_initial + context + (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(model_acq)
 
 
-loo_list_2 <- list(sonority_binary_loo, sonority_d_loo, nap_loo)
-loo_model_weights(loo_list_2)
+anova(model_acq, model_im, model_self)
 
 
 
 
-
-# prothesis_df <- epenthesis_df %>%
-#   select(participant, onset, ep_type, PC1) %>%
-#   filter(ep_type == "prothesis")
-# 
-# 
-# sl_df <- prothesis_df %>%
-#   group_by(participant, onset, PC1) %>%
-#   summarise(count = n()) %>%
-#   #mutate(sl_freq = count / sum(count)) %>%
-#   filter(onset == "sl")
-# 
-# 
-# ggplot(sl_df, aes(PC1 * -1, count)) +
-#   geom_point() +
-#   geom_smooth(method = "lm")
-# #multiply pc1 by -1 
-# 
-# 
-# sn_df <- prothesis_df %>%
-#   group_by(participant, onset, PC1) %>%
-#   summarise(count = n()) %>%
-#   #mutate(sn_freq = count / sum(count)) %>%
-#   filter(onset %in% c("sn", "sm"))
-# 
-# 
-# st_df <- prothesis_df %>%
-#   group_by(participant, onset, PC1) %>%
-#   summarise(count = n()) %>%
-#   #mutate(st_freq = count / sum(count)) %>%
-#   filter(onset == "st")
-# 
-# 
-# s_df <- rbind(sl_df, sn_df, st_df)
-# 
-# ggplot(s_df, aes(PC1 * -1, count, group = onset, color = onset)) +
-#   geom_point()
