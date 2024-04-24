@@ -1,6 +1,7 @@
 library(tidyverse)
 library(brms)
 library(scales)
+library(lme4)
 
 vowels <- c("[u]", "[ə]", "[ɔɪ]")
 
@@ -342,51 +343,77 @@ ep_rate_df_2 %>% filter(delta == 2) %>%
   labs(color='Epenthesis \ntype')
 ggsave('figures/traditional_delta_2_corpus.png', height = 7, width = 10, units='in')
 
+#add s initial
+df <- df %>%
+  mutate(s_initial = ifelse(first == "s", TRUE, FALSE))
+
+#add has_ep
+df <- df %>%
+  mutate(has_ep = ifelse(ep_type != "none", TRUE, FALSE))
+
 ########################
 # STATISTICAL ANALYSIS #
 ########################
 
 # Fit Bayesian multinomial logistic regression model
-m_base <- brm(ep_type ~ delta + preceding_v + onset_age + onset + (1|speaker) + (1|word),
-         data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
-         chains=4, cores=4,
-         save_pars = save_pars(all = TRUE))
-summary(m_base)
-m_base_loo <- loo(m_base, k_threshold=0.7)
+# m_base <- brm(ep_type ~ delta + preceding_v + onset_age + onset + (1|speaker) + (1|word),
+#          data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
+#          chains=4, cores=4,
+#          save_pars = save_pars(all = TRUE))
+# summary(m_base)
+# m_base_loo <- loo(m_base, k_threshold=0.7)
+# 
+# #model with NAP sonority 
+# m_base_2 <- brm(ep_type ~ nap_sonority + preceding_v + onset_age + onset + (1|speaker) + (1|word),
+#               data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
+#               chains=4, cores=4,
+#               save_pars = save_pars(all = TRUE))
+# summary(m_base_2)
+# m_base_2_loo <- loo(m_base_2, k_threshold=0.7)
+# 
+# #model with binary sonority
+# m_base_3 <- brm(ep_type ~ s_initial + preceding_v + onset_age + onset + (1|speaker) + (1|word),
+#                 data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
+#                 chains=4, cores=4,
+#                 save_pars = save_pars(all = TRUE))
+# summary(m_base_3)
+# m_base_3_loo <- loo(m_base_3, k_threshold=0.7)
+# 
+# loo_list_corp <- list(m_base_loo, m_base_2_loo, m_base_3_loo)
+# loo_ws_corp <- loo_model_weights(loo_list_corp)
+# loo_model_weights(loo_list_corp, method='pseudobma')
+# loo_model_weights(loo_list_corp, method='pseudobma', BB=FALSE)
+# 
+# # Plot posteriors
+# plot(m_base)
+# 
+# # Test whether rate of improvement at anaptyxis is slower than at prothesis
+# hyp_test <- hypothesis(m_base, 'muprothesis_onset_age < muanaptyxis_onset_age')
+# hyp_test
+# plot(hyp_test)
+# 
+# hyp_test_2 <- hypothesis(m_base_2, 'muprothesis_onset_age < muanaptyxis_onset_age')
+# hyp_test_2
+# plot(hyp_test_2)
+# 
+# hyp_test_3 <- hypothesis(m_base_3, 'muprothesis_onset_age < muanaptyxis_onset_age')
+# hyp_test_3
+# plot(hyp_test_3)
 
-#model with NAP sonority 
-m_base_2 <- brm(ep_type ~ nap_sonority + preceding_v + onset_age + onset + (1|speaker) + (1|word),
-              data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
-              chains=4, cores=4,
-              save_pars = save_pars(all = TRUE))
-summary(m_base_2)
-m_base_2_loo <- loo(m_base_2, k_threshold=0.7)
 
-#model with binary sonority
-m_base_3 <- brm(ep_type ~ s_initial + preceding_v + onset_age + onset + (1|speaker) + (1|word),
-                data=df, family="categorical", prior=c(set_prior("normal(0,3)")),
-                chains=4, cores=4,
-                save_pars = save_pars(all = TRUE))
-summary(m_base_3)
-m_base_3_loo <- loo(m_base_3, k_threshold=0.7)
+#simple logistic regression
+simple_model <- glmer(
+  has_ep ~ preceding_v + scale(onset_age) * s_initial + (1|speaker) + (1|onset), 
+  data = df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
 
-loo_list_corp <- list(m_base_loo, m_base_2_loo, m_base_3_loo)
-loo_ws_corp <- loo_model_weights(loo_list_corp)
-loo_model_weights(loo_list_corp, method='pseudobma')
-loo_model_weights(loo_list_corp, method='pseudobma', BB=FALSE)
+summary(simple_model)
 
-# Plot posteriors
-plot(m_base)
 
-# Test whether rate of improvement at anaptyxis is slower than at prothesis
-hyp_test <- hypothesis(m_base, 'muprothesis_onset_age < muanaptyxis_onset_age')
-hyp_test
-plot(hyp_test)
 
-hyp_test_2 <- hypothesis(m_base_2, 'muprothesis_onset_age < muanaptyxis_onset_age')
-hyp_test_2
-plot(hyp_test_2)
 
-hyp_test_3 <- hypothesis(m_base_3, 'muprothesis_onset_age < muanaptyxis_onset_age')
-hyp_test_3
-plot(hyp_test_3)
+
+
+
+

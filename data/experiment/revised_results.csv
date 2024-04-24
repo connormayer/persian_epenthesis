@@ -925,7 +925,7 @@
 924,7,grabs,gr,na,na,context
 925,7,ground,gr,anaptyxis,e,passage
 926,7,ground,gr,na,na,context
-927,7,place,pl,prothesis,u,passage
+927,7,place,pl,anaptyxis,u,passage
 928,7,place,pl,na,na,context
 929,7,please,pl,anaptyxis,na,passage
 930,7,please,pl,na,na,context
@@ -2740,7 +2740,7 @@
 2739,21,snag,sn,na,d,passage
 2740,21,snag,sn,prothesis,na,context
 2741,21,snaps,sn,na,n,passage
-2742,21,snaps,sn,anaptyxis,na,context
+2742,21,snaps,sn,prothesis,na,context
 2743,21,snatch,sn,na,n,passage
 2744,21,snatch,sn,prothesis,na,context
 2745,21,sniffs,sn,na,o,passage
@@ -2785,7 +2785,7 @@
 2784,21,throttle,θr,na,z,passage
 2785,21,throttle,θr,anaptyxis,na,context
 2786,21,trot,tr,na,z,passage
-2787,21,trot,tr,prothesis,na,context
+2787,21,trot,tr,anaptyxis,na,context
 2788,21,tweaking,tw,na,n,passage
 2789,21,tweaking,tw,na,na,context
 2790,21,twin,tw,na,r,passage

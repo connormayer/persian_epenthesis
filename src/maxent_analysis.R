@@ -62,10 +62,10 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
           # scaling factor
           weights <- full_model$weights
           if ('*Complex' %in% names(weights)) {
-            weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1, 0)
+            weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1_acquisition_exposure, 0)
           } else {
-            weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1, 0)
-            weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1, 0)
+            weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1_acquisition_exposure, 0)
+            weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1_aquisition_exposure, 0)
           }
           # Generate predictions and LL under scaled weights
           cur_preds <- predict_probabilities(p_tableau, weights) 
@@ -109,8 +109,8 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
           # Scale weight of *Complex constraint(s) up or down depending on
           # scaling factor
           weights <- full_model$weights
-          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho_s * scaling_factor$PC1, 0)
-          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho_t * scaling_factor$PC1, 0)
+          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho_s * scaling_factor$PC1_acquisition_exposure, 0)
+          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho_t * scaling_factor$PC1_acquisition_exposure, 0)
           # Generate predictions and LL under scaled weights
           cur_preds <- predict_probabilities(p_tableau, weights) 
           total_ll <- total_ll + cur_preds$loglik
@@ -142,7 +142,7 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
 
 pc_scores <- read_csv('data/experiment/experimental_revised_results.csv') %>%
   group_by(participant) %>%
-  summarize(PC1 = mean(PC1_original))
+  summarize(PC1_acquisition_exposure = mean(PC1_acquisition_exposure))
 
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
