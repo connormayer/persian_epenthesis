@@ -1,6 +1,6 @@
 library(tidyverse)
-library(brms)
 library(lme4)
+library(car)
 
 
 
@@ -525,35 +525,11 @@ write_csv(epenthesis_df, 'data/experiment/experimental_revised_results.csv')
 # sonority_d_loo <- loo(m_sonority_d, k_threshold=0.7)
 
 
-
-
-
 epenthesis_df <- read_csv('data/experiment/experimental_revised_results.csv')
 
-#fit a model with sonority_delta
-m_sonority_binary <- brm(
-  ep_type ~ s_initial + onset + preceding_v + PC1_original + context + (1|participant) + (1|onset/word),
-  data = epenthesis_df,
-  family="categorical",
-  prior=c(set_prior("normal(0,3)")),
-  chains=4, cores=4,
-  save_pars = save_pars(all = TRUE))
-summary(m_sonority_binary)
-
-# This makes a series of plots of the probability distributions
-# the model has calculated for each parameter
-plot(m_sonority_binary)
-
-
-hyp_test <- hypothesis(m_sonority_binary, 'muprothesis_PC1_original < muanaptyxis_PC1_original')
-hyp_test
-
-# This plots the probability distribution over the difference between these two
-# coefficients. You can see the peak at about -0.03
-plot(hyp_test)
-
 simple_model <- glmer(
-  has_ep ~ preceding_v + scale(PC1_original) * s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + scale(PC1_original) * s_initial + context + 
+    (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
@@ -561,7 +537,9 @@ simple_model <- glmer(
 summary(simple_model)
 
 model_no_im <- glmer(
-  has_ep ~ preceding_v + s_initial + scale(PC1_acquisition_exposure) + scale(PC1_self_report) + scale(PC1_acquisition_exposure):s_initial + scale(PC1_self_report):s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + s_initial + scale(PC1_acquisition_exposure) + 
+    scale(PC1_self_report) + scale(PC1_acquisition_exposure):s_initial + 
+    scale(PC1_self_report):s_initial + context + (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
@@ -569,7 +547,9 @@ model_no_im <- glmer(
 summary(model_no_im)
 
 model_no_self <- glmer(
-  has_ep ~ preceding_v + s_initial + scale(PC1_acquisition_exposure) + scale(PC1_immersion) + scale(PC1_acquisition_exposure):s_initial + scale(PC1_immersion):s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + s_initial + scale(PC1_acquisition_exposure) + 
+    scale(PC1_immersion) + scale(PC1_acquisition_exposure):s_initial + 
+    scale(PC1_immersion):s_initial + context + (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
@@ -577,7 +557,9 @@ model_no_self <- glmer(
 summary(model_no_self)
 
 model_no_acq <- glmer(
-  has_ep ~ preceding_v + s_initial + scale(PC1_immersion) + scale(PC1_self_report) + scale(PC1_immersion):s_initial + scale(PC1_self_report):s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + s_initial + scale(PC1_immersion) + 
+    scale(PC1_self_report) + scale(PC1_immersion):s_initial + 
+    scale(PC1_self_report):s_initial + context + (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
@@ -585,7 +567,8 @@ model_no_acq <- glmer(
 summary(model_no_acq)
 
 model_self <- glmer(
-  has_ep ~ preceding_v + scale(PC1_self_report) * s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + scale(PC1_self_report) * s_initial + context + 
+    (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
@@ -593,7 +576,8 @@ model_self <- glmer(
 summary(model_self)
 
 model_im <- glmer(
-  has_ep ~ preceding_v + scale(PC1_immersion) * s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + scale(PC1_immersion) * s_initial + context + 
+    (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
@@ -601,22 +585,26 @@ model_im <- glmer(
 summary(model_im)
 
 model_acq<- glmer(
-  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) * s_initial + context + (1|participant) + (1|onset/word), 
+  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) * s_initial + context +
+    (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
 
 summary(model_acq)
 
-other_model <- glmer(
-  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) + scale(PC1_immersion) + scale(PC1_self_report) + s_initial + context + scale(PC1_self_report):s_initial + scale(PC1_immersion):s_initial + scale(PC1_acquisition_exposure):s_initial + (1|participant) + (1|onset/word), 
+full_model <- glmer(
+  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) + scale(PC1_immersion) + 
+    scale(PC1_self_report) + s_initial + context + scale(PC1_self_report):s_initial + 
+    scale(PC1_immersion):s_initial + scale(PC1_acquisition_exposure):s_initial + 
+    (1|participant) + (1|onset/word), 
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
 
-summary(other_model)
+summary(full_model)
 
-anova(model_acq, model_im, model_self, model_no_acq, model_no_self, model_no_im, simple_model, other_model)
+anova(model_acq, model_im, model_self, model_no_acq, model_no_self, model_no_im, simple_model, full_model)
 
 
 # Model preferred by BIC

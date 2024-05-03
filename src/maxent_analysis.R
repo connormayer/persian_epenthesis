@@ -37,7 +37,7 @@ fit_best_models <- function(full_model, pc_scores, name_template, folder) {
 fit_individual_models <- function(full_model, pc_scores, name_template, folder, separate_rho=FALSE) {
   # Rho is the amount by which we scale the Persian dominance score. Rho of 0
   # means no effect of dominance.
-  rhos_to_test <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+  rhos_to_test <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2)
   best_ll <- -Inf
   best_rho <- -1
   best_preds <- NULL
@@ -142,7 +142,8 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
 
 pc_scores <- read_csv('data/experiment/experimental_revised_results.csv') %>%
   group_by(participant) %>%
-  summarize(PC1_acquisition_exposure = mean(PC1_acquisition_exposure))
+  summarize(PC1_acquisition_exposure = mean(PC1_acquisition_exposure),
+            PC1_original = mean(PC1_original))
 
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
