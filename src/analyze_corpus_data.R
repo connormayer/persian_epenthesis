@@ -65,18 +65,17 @@ view(df)
 
 # Simple bar plot of counts of different epenthesis times
 df %>%
-  ggplot(aes(x=ep_type)) +
-  geom_bar()
-
-# Heatmap plotting counts of epenthesis type by sonority delta
-df %>%
-  group_by(delta, ep_type) %>%
-  summarize(count = n()) %>%
-  ggplot(aes(delta, ep_type, fill=count)) +
-  geom_tile() +
-  geom_text(aes(label=count)) +
-  scale_fill_gradient(trans='log', breaks=c(0, 2, 8, 32, 128, 512),
-                      low="white", high="darkblue")
+  ggplot(aes(x=ep_type, fill=ep_type)) +
+  geom_bar() + 
+  ylab("Number of tokens") +
+  xlab("Epenthesis outcome") + 
+  # ggtitle("Overall rate of epenthesis \n decreases with L2 proficiency") +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=24),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  scale_fill_discrete(guide="none")
+ggsave('figures/corpus_epenthesis_counts.png', height=7, width=10, units='in')
 
 foo <-df %>%
   group_by(s_initial, ep_type) %>%
@@ -84,21 +83,22 @@ foo <-df %>%
   ungroup() %>%
   group_by(s_initial) %>%
   mutate(count = count / sum(count),
-         s_initial = ifelse(s_initial, 'sC onsets', 'OR onsets'))
+         s_initial = ifelse(s_initial, 'sC onsets', 'TR onsets'))
 
 foo %>%
   ggplot(aes(x=ep_type, y=count, fill=ep_type)) +
   geom_bar(stat='identity') +
   facet_wrap(~ s_initial) +
-  ylab("Proportion of responses") +
-  xlab("Epenthesis type") + 
+  ylab("Proportion of tokens") +
+  xlab("Epenthesis outcome") + 
   # ggtitle("Overall rate of epenthesis \n decreases with L2 proficiency") +
   theme_classic(base_size=22) +
-  theme(axis.text=element_text(size=16),
+  theme(axis.text=element_text(size=24),
         axis.title=element_text(face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold")) +
-  scale_fill_discrete(guide="none")
-ggsave('figures/corpus_epenthesis_by_onset_type.png', height = 7, width = 10, units='in')
+  scale_fill_discrete(guide="none") +
+  ylim(0, 1)
+ggsave('figures/corpus_epenthesis_by_onset_type.png', height = 7, width = 12, units='in')
 
 foo2 <-df %>%
   group_by(s_initial, has_ep) %>%
@@ -106,7 +106,7 @@ foo2 <-df %>%
   ungroup() %>%
   group_by(s_initial) %>%
   mutate(count = count / sum(count),
-         s_initial = ifelse(s_initial, 'sC onsets', 'OR onsets'),
+         s_initial = ifelse(s_initial, 'sC onsets', 'TR onsets'),
          has_ep = ifelse(has_ep, 'epenthesis', 'no epenthesis'))
 
 foo2 %>%
@@ -176,7 +176,7 @@ ep_rate_df %>%
 
 ep_rate_df %>%
   ggplot(aes(x=onset_age, y=ep_count)) +
-  geom_point(size=3) +
+  geom_point(size=4) +
   geom_smooth(method='lm') + 
   xlab("Age of English onset") + 
   ylab("Epenthesis count") +
@@ -241,12 +241,15 @@ temp_df_2 <- df %>%
 # Plot prothesis rate against onset age
 temp_df_2 %>%
   ggplot(aes(x=onset_age, y=freq)) +
-  geom_point(size=3) +
+  geom_point(size=4) +
   geom_smooth(method='lm') +
   xlab("Age of English onset") + 
-  ylab("Prothesis count / Total epenthesis count") +
-  theme_classic() + 
-  theme(text=element_text(size=25))
+  ylab(expression(paste("", frac("Prothesis count", "Total epenthesis count")))) +
+  theme_classic(base_size=22) +
+  theme(axis.text=element_text(size=16),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  ylim(0, 1.1)
 ggsave('figures/age_by_prothesis_prop_corpus.png', height = 7, width = 10, units='in')
 
 
@@ -403,12 +406,23 @@ df <- df %>%
 
 #simple logistic regression
 simple_model <- glmer(
-  has_ep ~ preceding_v + scale(onset_age) * s_initial + (1|speaker) + (1|onset), 
+  has_ep ~ preceding_v + scale(onset_age) * s_initial + (1|speaker) + (1|word), 
   data = df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
 
 summary(simple_model)
+
+simple_model_2 <- glmer(
+  has_ep ~ preceding_v + scale(onset_age) * s_initial + (1|speaker) + (1|onset), 
+  data = df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+summary(simple_model_2)
+
+anova(simple_model, simple_model_2)
+
 
 
 
