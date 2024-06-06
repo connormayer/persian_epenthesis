@@ -53,7 +53,11 @@ nap_sonority <- c(t = 1,
 df <- df %>%
   separate(onset, into = c("first", "second"), sep = 1, remove = FALSE) %>%
   mutate(nap_sonority = (4 - nap_sonority[first]) + 
-           (nap_sonority[second] - nap_sonority[first]))
+           (nap_sonority[second] - nap_sonority[first]),
+         ep_type = plyr::revalue(ep_type, 
+                           c("none" = "none", 
+                             "anaptyxis" = 'medial\nepenthesis',
+                             "prothesis" = 'pre-\nepenthesis')))
 view(df)
 
 
@@ -98,7 +102,7 @@ foo %>%
         plot.title = element_text(hjust = 0.5, face="bold")) +
   scale_fill_discrete(guide="none") +
   ylim(0, 1)
-ggsave('figures/corpus_epenthesis_by_onset_type.png', height = 7, width = 12, units='in')
+ggsave('figures/corpus_epenthesis_by_onset_type.png', height = 7, width = 15, units='in')
 
 foo2 <-df %>%
   group_by(s_initial, has_ep) %>%
@@ -236,7 +240,7 @@ temp_df_2 <- df %>%
   # Normalize counts by total count for each speaker
   mutate(freq = count / sum(count)) %>%
   # Keep only proportions for prothesis
-  filter(ep_type == 'prothesis')
+  filter(ep_type == 'pre-\nepenthesis')
 
 # Plot prothesis rate against onset age
 temp_df_2 %>%
@@ -244,7 +248,7 @@ temp_df_2 %>%
   geom_point(size=4) +
   geom_smooth(method='lm') +
   xlab("Age of English onset") + 
-  ylab(expression(paste("", frac("Prothesis count", "Total epenthesis count")))) +
+  ylab(expression(paste("", frac("Pre-epenthesis count", "Total epenthesis count")))) +
   theme_classic(base_size=22) +
   theme(axis.text=element_text(size=16),
         axis.title=element_text(face="bold"),
