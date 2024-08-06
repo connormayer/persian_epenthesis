@@ -37,7 +37,7 @@ fit_best_models <- function(full_model, pc_scores, name_template, folder) {
 fit_individual_models <- function(full_model, pc_scores, name_template, folder, separate_rho=FALSE) {
   # Rho is the amount by which we scale the Persian dominance score. Rho of 0
   # means no effect of dominance.
-  rhos_to_test <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2)
+  rhos_to_test <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
   best_ll <- -Inf
   best_rho <- -1
   best_preds <- NULL
@@ -62,10 +62,10 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
           # scaling factor
           weights <- full_model$weights
           if ('*Complex' %in% names(weights)) {
-            weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1_acquisition_exposure, 0)
+            weights['*Complex'] <- max(weights['*Complex'] + rho * scaling_factor$PC1, 0)
           } else {
-            weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1_acquisition_exposure, 0)
-            weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1_aquisition_exposure, 0)
+            weights['*Complex-S'] <- max(weights['*Complex-S'] + rho * scaling_factor$PC1, 0)
+            weights['*Complex-T'] <- max(weights['*Complex-T'] + rho * scaling_factor$PC1, 0)
           }
           # Generate predictions and LL under scaled weights
           cur_preds <- predict_probabilities(p_tableau, weights) 
@@ -109,8 +109,8 @@ fit_individual_models <- function(full_model, pc_scores, name_template, folder, 
           # Scale weight of *Complex constraint(s) up or down depending on
           # scaling factor
           weights <- full_model$weights
-          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho_s * scaling_factor$PC1_acquisition_exposure, 0)
-          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho_t * scaling_factor$PC1_acquisition_exposure, 0)
+          weights['*Complex-S'] <- max(weights['*Complex-S'] + rho_s * scaling_factor$PC1, 0)
+          weights['*Complex-T'] <- max(weights['*Complex-T'] + rho_t * scaling_factor$PC1, 0)
           # Generate predictions and LL under scaled weights
           cur_preds <- predict_probabilities(p_tableau, weights) 
           total_ll <- total_ll + cur_preds$loglik
@@ -145,13 +145,21 @@ pc_scores <- read_csv('data/experiment/experimental_revised_results.csv') %>%
   summarize(PC1_acquisition_exposure = mean(PC1_acquisition_exposure),
             PC1_original = mean(PC1_original))
 
+pc_orig <- pc_scores %>% 
+  select(-PC1_acquisition_exposure) %>%
+  mutate(PC1 = PC1_original)
+
+pc_acq <- pc_scores %>% 
+  select(-PC1_original) %>%
+  mutate(PC1 = PC1_acquisition_exposure)
+
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
 #cross_validate(fh_global, 5, 0, c(100, 5), grid_search=TRUE)
 fh_model <- optimize_weights(fh_global, mu = 0, sigma = 100, model_name='fh')
 # Fit individual models
-fh_ind_model <- fit_individual_models(
-  fh_model, pc_scores, 'fh', 'data/tableaux/fleischhacker_ind'
+fh_ind_model_acq <- fit_individual_models(
+  fh_model, pc_acq, 'fh', 'data/tableaux/fleischhacker_ind'
 )
 
 # Gouskova simple global 
@@ -159,40 +167,41 @@ gs_global <- read_csv("data/tableaux/gouskova_simple_global.csv")
 #cross_validate(gs_global, 5, 0, c(2000, 1000, 5, 2, 1), grid_search=TRUE)
 gs_model <- optimize_weights(gs_global, mu = 0, sigma = 5, model_name='gs')
 # Fit individual models
-gs_ind_model <- fit_individual_models(
-  gs_model, pc_scores, 'gs', 'data/tableaux/gouskova_simple_ind'
+gs_ind_model_acq <- fit_individual_models(
+  gs_model, pc_acq, 'gs', 'data/tableaux/gouskova_simple_ind'
 )
 
 # Gouskova_complex global 
 gc_global <- read_csv("data/tableaux/gouskova_complex_global.csv")
 #cross_validate(gc_global, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gc_model <- optimize_weights(gc_global, mu = 0, sigma = 500, model_name='gc', upper_bound = 70)
-gc_ind_model <- fit_individual_models(
-  gc_model, pc_scores, 'gc', 'data/tableaux/gouskova_complex_ind'
+gc_ind_model_acq <- fit_individual_models(
+  gc_model, pc_acq, 'gc', 'data/tableaux/gouskova_complex_ind'
 )
 
 # Fleischhacker global split *complex
 fh_global_split <- read_csv("data/tableaux/fleischhacker_global_split.csv")
 #cross_validate(fh_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 fh_split_model <- optimize_weights(fh_global_split, mu = 0, sigma = 1000, model_name='fh_split') 
-fh_split_ind_model <- fit_individual_models(
-  fh_split_model, pc_scores, 'fh_split', 'data/tableaux/fleischhacker_split_ind'
+fh_split_ind_model_acq <- fit_individual_models(
+  fh_split_model, pc_acq, 'fh_split', 'data/tableaux/fleischhacker_split_ind'
 )
-fh_split_ind_model_rho <- fit_individual_models(
-  fh_split_model, pc_scores, 'fh_split', 'data/tableaux/fleischhacker_split_ind',
+fh_split_ind_model_rho_acq <- fit_individual_models(
+  fh_split_model, pc_acq, 'fh_split', 'data/tableaux/fleischhacker_split_ind',
   separate_rho=TRUE
 )
+
 
 
 # Gouskova simple global split *complex
 gs_global_split <- read_csv("data/tableaux/gouskova_simple_global_split.csv")
 #cross_validate(gs_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gs_split_model <- optimize_weights(gs_global_split, mu = 0, sigma = 5, model_name='gs_split')
-gs_split_ind_model <- fit_individual_models(
-  gs_split_model, pc_scores, 'gs_split', 'data/tableaux/gouskova_simple_split_ind'
+gs_split_ind_model_acq <- fit_individual_models(
+  gs_split_model, pc_acq, 'gs_split', 'data/tableaux/gouskova_simple_split_ind'
 )
-gs_split_ind_model_rho <- fit_individual_models(
-  gs_split_model, pc_scores, 'gs_split', 'data/tableaux/gouskova_simple_split_ind',
+gs_split_ind_model_rho_acq <- fit_individual_models(
+  gs_split_model, pc_acq, 'gs_split', 'data/tableaux/gouskova_simple_split_ind',
   separate_rho=TRUE
 )
 
@@ -200,33 +209,36 @@ gs_split_ind_model_rho <- fit_individual_models(
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
 #cross_validate(gc_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split', upper_bound = 70)
-gc_split_ind_model <- fit_individual_models(
-  gc_split_model, pc_scores, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
+gc_split_ind_model_orig <- fit_individual_models(
+  gc_split_model, pc_orig, 'gc_split_orig', 'data/tableaux/gouskova_complex_split_ind'
 )
-gc_split_ind_model_rho <- fit_individual_models(
-  gc_split_model, pc_scores, 'gc_split', 'data/tableaux/gouskova_complex_split_ind',
+gc_split_ind_model_acq <- fit_individual_models(
+  gc_split_model, pc_acq, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
+)
+gc_split_ind_model_rho_acq <- fit_individual_models(
+  gc_split_model, pc_acq, 'gc_split', 'data/tableaux/gouskova_complex_split_ind',
   separate_rho=TRUE
 )
 
 # compare models
 compare_models(
   fh_model, 
-  fh_ind_model,
   fh_split_model,
-  fh_split_ind_model,
-  fh_split_ind_model_rho,
+  fh_ind_model_acq,
+  fh_split_ind_model_acq,
+  fh_split_ind_model_rho_acq,
   
   gs_model,
-  gs_ind_model,
   gs_split_model,
-  gs_split_ind_model,
-  gs_split_ind_model_rho,
+  gs_ind_model_acq,
+  gs_split_ind_model_acq,
+  gs_split_ind_model_rho_acq,
   
   gc_model,
-  gc_ind_model,
   gc_split_model,
-  gc_split_ind_model,
-  gc_split_ind_model_rho,
+  gc_ind_model_acq,
+  gc_split_ind_model_acq,
+  gc_split_ind_model_rho_acq,
   
   method = "bic"
 )

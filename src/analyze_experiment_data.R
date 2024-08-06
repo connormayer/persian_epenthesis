@@ -170,6 +170,10 @@ pca_acquisiton_exposure <-pca_input_acquisition_exposure %>%
   select(-participant) %>%
   prcomp() 
 
+pca_acquisiton_exposure_2 <-pca_input_acquisition_exposure %>% 
+  select(-participant) %>%
+  prcomp(scale. = TRUE) 
+
 pca_immersion <- pca_input_immersion %>%
   select(-participant) %>%
   prcomp()
