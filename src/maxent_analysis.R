@@ -1,6 +1,8 @@
 library(tidyverse)
 library(maxent.ot)
 library(ggrepel)
+library(gridExtra)
+library(ggpubr)
 
 options(dplyr.summarise.inform = FALSE)
 
@@ -209,9 +211,6 @@ gs_split_ind_model_rho_acq <- fit_individual_models(
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
 #cross_validate(gc_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split', upper_bound = 70)
-gc_split_ind_model_orig <- fit_individual_models(
-  gc_split_model, pc_orig, 'gc_split_orig', 'data/tableaux/gouskova_complex_split_ind'
-)
 gc_split_ind_model_acq <- fit_individual_models(
   gc_split_model, pc_acq, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
 )
@@ -341,7 +340,7 @@ plot_model <- function(model_preds, onsets, outname) {
 
 # Load experimental results to get pairs of words and onsets
 onsets <- read_csv('data/experiment/experimental_results.csv') %>%
-  select(word, onset) %>%
+  select(word, onset, sonority_delta) %>%
   mutate(Input=word) %>%
   select(-word) %>%
   unique() %>%
@@ -353,12 +352,12 @@ plot_model(gc_results, onsets, 'gc')
 plot_model(fh_split_results, onsets, 'fh_split')
 plot_model(gs_split_results, onsets, 'gs_split')
 plot_model(gc_split_results, onsets, 'gc_split')
-plot_model(fh_ind_model, onsets, 'fh')
-plot_model(gs_ind_model, onsets, 'gs')
-plot_model(gc_ind_model, onsets, 'gc')
-plot_model(fh_split_ind_model, onsets, 'fh_split_ind')
-plot_model(gs_split_ind_model, onsets, 'gs_split_ind')
-plot_model(gc_split_ind_model, onsets, 'gc_split_ind')
+plot_model(fh_ind_model_acq, onsets, 'fh')
+plot_model(gs_ind_model_acq, onsets, 'gs')
+plot_model(gc_ind_model_acq, onsets, 'gc')
+plot_model(fh_split_ind_model_acq, onsets, 'fh_split_ind')
+plot_model(gs_split_ind_model_acq, onsets, 'gs_split_ind')
+plot_model(gc_split_ind_model_acq, onsets, 'gc_split_ind')
 
 # inner join experimental results and *_results, then group by sonority
 # delta (or whatever) and get the mean error
@@ -393,14 +392,19 @@ gs_split_results <- sonority_errors(gs_split_results)
 gc_split_results <- sonority_errors(gc_split_results)
 fh_split_results <- sonority_errors(fh_split_results)
 
-fh_best <- fh_split_ind_model_rho$predictions %>%
+fh_best <- fh_split_ind_model_rho_acq$predictions %>%
   inner_join(onsets, by=c("Input")) %>%
   separate(Output, c('word', 'ep_type'), sep='-') %>%
   mutate(s_initial = str_starts(onset, 's')) %>%
-  filter(!is.na(Error))
+  filter(!is.na(Error)) %>% 
+  mutate(ep_type = plyr::revalue(ep_type, 
+                          c("none" = "none", 
+                            "anaptyxis" = 'medial\nepenthesis',
+                            "prothesis" = 'pre-\nepenthesis')),
+         ep_type = fct_relevel(ep_type, "none", 'medial\nepenthesis', "pre-\nepenthesis"))
 
 fh_best_onset <- fh_best %>%
-  group_by(onset, ep_type) %>%
+  group_by(onset, ep_type, sonority_delta) %>%
   summarize(mean_error = mean(Error))
 
 fh_best_s <- fh_best %>%
@@ -409,33 +413,49 @@ fh_best_s <- fh_best %>%
 
 fh_best_onset %>%
   ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
-  facet_wrap(~ onset)
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  facet_wrap(sonority_delta ~ onset, drop = TRUE) +
+  xlab("Onset") +
+  ylab("Mean error") + 
+  scale_fill_discrete(guide="none") +
+  ggtitle("Perceptual Model") +
+  theme_classic(base_size=12) +
+  theme(axis.text=element_text(size=12, angle = 45, vjust = 0.5, hjust = 1),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  geom_hline(yintercept=0, size=0.5)
 
-fh_best_s %>% 
+fh_plot <- fh_best_s %>% 
   mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
   ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) +
   xlab("Cluster type") +
   ylab("Mean error") + 
   scale_fill_discrete(guide="none") +
-  ggtitle("Perceptual model") +
-  theme_classic(base_size=22) +
+  ggtitle("\nPerceptual\nCost") +
+  theme_classic(base_size=20) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold")) +
-  ylim(-0.15, 0.15)
+  ylim(-0.15, 0.15) +
+  geom_hline(yintercept=0, size=0.75)
+fh_plot
 ggsave('figures/fh_best.png', height = 7, width = 7, units='in')
 
-gs_best <- gs_split_ind_model_rho$predictions %>%
+gs_best <- gs_split_ind_model_rho_acq$predictions %>%
   inner_join(onsets, by=c("Input")) %>%
   separate(Output, c('word', 'ep_type'), sep='-') %>%
   mutate(s_initial = str_starts(onset, 's')) %>%
-  filter(!is.na(Error))
+  filter(!is.na(Error)) %>% 
+  mutate(ep_type = plyr::revalue(ep_type, 
+                                 c("none" = "none", 
+                                   "anaptyxis" = 'medial\nepenthesis',
+                                   "prothesis" = 'pre-\nepenthesis')),
+         ep_type = fct_relevel(ep_type, "none", 'medial\nepenthesis', "pre-\nepenthesis"))
 
 gs_best_onset <- gs_best %>%
-  group_by(onset, ep_type) %>%
+  group_by(onset, ep_type, s_initial, sonority_delta) %>%
   summarize(mean_error = mean(Error))
 
 gs_best_s <- gs_best %>%
@@ -444,33 +464,49 @@ gs_best_s <- gs_best %>%
 
 gs_best_onset %>%
   ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
-  facet_wrap(~ onset)
+  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  facet_wrap(sonority_delta ~ onset, drop = TRUE) +
+  xlab("Onset") +
+  ylab("Mean error") + 
+  scale_fill_discrete(guide="none") +
+  ggtitle("Syl. Cont. Simple Model") +
+  theme_classic(base_size=12) +
+  theme(axis.text=element_text(size=12, angle = 45, vjust = 0.5, hjust = 1),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  geom_hline(yintercept=0, size=0.5)
 
-gs_best_s %>%
+gs_plot <- gs_best_s %>%
   mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
   ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) +
   xlab("Cluster type") +
   ylab("Mean error") + 
   scale_fill_discrete(guide="none") +
-  ggtitle("Syl. Cont. Simple Model") +
-  theme_classic(base_size=22) +
+  ggtitle("Syllable\nContact\nSimple") +
+  theme_classic(base_size=20) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold")) + 
-  ylim(-0.15, 0.15)
+  ylim(-0.15, 0.15) +
+  geom_hline(yintercept=0, size=0.75)
+gs_plot
 ggsave('figures/gs_best.png', height = 7, width = 7, units='in')
 
-gc_best <- gc_split_ind_model_rho$predictions %>%
+gc_best <- gc_split_ind_model_rho_acq$predictions %>%
   inner_join(onsets, by=c("Input")) %>%
   separate(Output, c('word', 'ep_type'), sep='-') %>%
   mutate(s_initial = str_starts(onset, 's')) %>%
-  filter(!is.na(Error))
+  filter(!is.na(Error)) %>% 
+  mutate(ep_type = plyr::revalue(ep_type, 
+                                 c("none" = "none", 
+                                   "anaptyxis" = 'medial\nepenthesis',
+                                   "prothesis" = 'pre-\nepenthesis')),
+         ep_type = fct_relevel(ep_type, "none", 'medial\nepenthesis', "pre-\nepenthesis"))
 
 gc_best_onset <- gc_best %>%
-  group_by(onset, ep_type) %>%
+  group_by(onset, ep_type, sonority_delta) %>%
   summarize(mean_error = mean(Error))
 
 gc_best_s <- gc_best %>%
@@ -479,21 +515,78 @@ gc_best_s <- gc_best %>%
 
 gc_best_onset %>%
   ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error), stat='identity') +
-  facet_wrap(~ onset)
+  geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
+  facet_wrap(sonority_delta ~ onset, drop = TRUE) +
+  xlab("Onset") +
+  ylab("Mean error") + 
+  scale_fill_discrete(guide="none") +
+  ggtitle("Syllable Cont. Complex Model") +
+  theme_classic(base_size=12) +
+  theme(axis.text=element_text(size=12, angle = 45, vjust = 0.5, hjust = 1),
+        axis.title=element_text(face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold")) +
+  geom_hline(yintercept=0, size=0.5)
+ggsave('figures/gc_best_onsets.png', height = 7, width = 7, units='in')
 
-gc_best_s %>%
+gc_plot <- gc_best_s %>%
   mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
   ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
+  geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) + 
   xlab("Cluster type") +
   ylab("Mean error") + 
   scale_fill_discrete(guide="none") +
-  ggtitle("Syl. Cont. Hierarchical Model") +
-  theme_classic(base_size=22) +
+  ggtitle("Syllable\nContact\nComplex") +
+  theme_classic(base_size=20) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold")) +
-  ylim(-0.15, 0.15)
+  ylim(-0.15, 0.15) +
+  geom_hline(yintercept=0, size=0.75)
+gc_plot
 ggsave('figures/gc_best.png', height = 7, width = 7, units='in')
+
+
+ggarrange(gs_plot, gc_plot, nrow=1)
+ggsave('figures/best_errors.png', height=7, width=14, units='in')
+
+rho_s <- fh_split_ind_model_rho_acq$rho_s
+rho_t <- fh_split_ind_model_rho_acq$rho_t
+
+participant_num <- 21
+pc <- pc_scores %>% 
+  filter(participant == participant_num) %>% 
+  pull(PC1_acquisition_exposure)
+
+cs_w <- fh_split_ind_model_rho_acq$w['*Complex-S'] + rho_s * pc
+ct_w <- fh_split_ind_model_rho_acq$w['*Complex-T'] + rho_t * pc
+
+weights <- fh_split_ind_model_rho_acq$w
+
+fly <- fh_best %>% filter(onset == 'fl' & participant == 21 &Input == 'fly')
+fly <- fly[,c(5:14)]
+# Get harmony of candidates
+fly_harm <- rowSums(sweep(fly, 2, weights, `*`))
+fly_z <- sum(exp(-fly_harm))
+
+p_pre_fly <- exp(-fly_harm[3]) / fly_z
+p_med_fly <- exp(-fly_harm[1]) / fly_z
+p_none_fly <- exp(-fly_harm[2]) / fly_z
+
+p_med_fly
+p_pre_fly
+p_none_fly
+
+sleep <- fh_best %>% filter(onset == 'sl' & participant == 21 &Input == 'sleep')
+sleep <- sleep[,c(5:14)]
+# Get harmony of candidates
+sleep_harm <- rowSums(sweep(sleep, 2, weights, `*`))
+sleep_z <- sum(exp(-sleep_harm))
+
+p_pre_sleep <- exp(-sleep_harm[3]) / sleep_z
+p_med_sleep <- exp(-sleep_harm[1]) / sleep_z
+p_none_sleep <- exp(-sleep_harm[2]) / sleep_z
+
+p_med_sleep
+p_pre_sleep
+p_none_sleep
