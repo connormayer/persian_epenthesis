@@ -224,6 +224,22 @@ PC_df <- PC_df %>%
 # Add all the PC scores to original dataframe
 epenthesis_df <- inner_join(epenthesis_df, PC_df)
 
+epenthesis_df %>%
+  group_by(onset, s_initial) %>%
+  summarize(ep_rate = mean(has_ep),
+            ep_err = sd(has_ep)/sqrt(length(has_ep))) %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(onset, ep_rate), y=ep_rate, fill=s_initial), stat='identity') +
+  geom_errorbar(aes(x=fct_reorder(onset, ep_rate), ymin=ep_rate-ep_err, ymax=ep_rate+ep_err), 
+                width=0.5, alpha=0.9, size=0.5, position=position_dodge(width=0.9)) +
+  xlab("Onset identity") +
+  ylab("Mean epenthesis rate") +
+  scale_fill_discrete(name = "sC onset?") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold"))
+ggsave('figures/onset_ep_rates_experiment.png', height = 6, width = 12, units='in')
 
 # Simple bar plot of counts of different epenthesis types
 epenthesis_df %>%
