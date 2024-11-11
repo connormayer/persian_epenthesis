@@ -58,7 +58,23 @@ df <- df %>%
                            c("none" = "none", 
                              "anaptyxis" = 'medial\nepenthesis',
                              "prothesis" = 'pre-\nepenthesis')))
-view(df)
+
+df %>%
+  group_by(onset, s_initial) %>%
+  summarize(ep_rate = mean(has_ep),
+            ep_err = sd(has_ep)/sqrt(length(has_ep))) %>%
+  ggplot() +
+  geom_bar(aes(x=fct_reorder(onset, ep_rate), y=ep_rate, fill=s_initial), stat='identity') +
+  geom_errorbar(aes(x=fct_reorder(onset, ep_rate), ymin=ep_rate-ep_err, ymax=ep_rate+ep_err), 
+                width=0.5, alpha=0.9, size=0.5, position=position_dodge(width=0.9)) +
+  xlab("Onset identity") +
+  ylab("Mean epenthesis rate") +
+  scale_fill_discrete(name = "sC onset?") +
+  theme_classic(base_size=30) +
+  theme(axis.text=element_text(size=20),
+        axis.title=element_text(size=30,face="bold"),
+        plot.title = element_text(hjust = 0.5, face="bold"))
+ggsave('figures/onset_ep_rates_corpus.png', height = 6, width = 12, units='in')
 
 
 #################
