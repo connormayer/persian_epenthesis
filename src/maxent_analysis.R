@@ -10,32 +10,6 @@ options(dplyr.summarise.inform = FALSE)
 # Fit weights to data pooled across participants #
 ##################################################
 
-# Not currently used, but this fits separate models to each individual
-# participant. Provides an upper bound for model performance
-fit_best_models <- function(full_model, pc_scores, name_template, folder) {
-  total_ll <- 0
-  predictions <- data.frame()
-  # Go through tableaux for each participant
-  for (p in pc_scores$participant) {
-    filename <- file.path(folder, str_glue("{name_template}_p{p}.csv"))
-    p_tableau <- read_csv(filename, show_col_types=FALSE)
-    best_p_model <- optimize_weights(p_tableau)
-    cur_preds <- predict_probabilities(p_tableau, best_p_model$weights) 
-    total_ll <- total_ll + best_p_model$loglik
-    predictions <- rbind(predictions, 
-                         cur_preds$predictions %>%
-                           mutate(participant=p))
-  }
-  return(list(
-    name = str_glue('{name_template}_ind'),
-    loglik=total_ll, 
-    k = full_model$k * nrow(pc_scores),
-    n = full_model$n,
-    predictions = predictions,
-    w = full_model$weights
-  ))
-}
-
 fit_individual_models <- function(full_model, pc_scores, name_template, folder, separate_rho=FALSE) {
   # Rho is the amount by which we scale the Persian dominance score. Rho of 0
   # means no effect of dominance.
@@ -147,17 +121,12 @@ pc_scores <- read_csv('data/experiment/experimental_revised_results.csv') %>%
   summarize(PC1_acquisition_exposure = mean(PC1_acquisition_exposure),
             PC1_original = mean(PC1_original))
 
-pc_orig <- pc_scores %>% 
-  select(-PC1_acquisition_exposure) %>%
-  mutate(PC1 = PC1_original)
-
 pc_acq <- pc_scores %>% 
   select(-PC1_original) %>%
   mutate(PC1 = PC1_acquisition_exposure)
 
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
-#cross_validate(fh_global, 5, 0, c(100, 5), grid_search=TRUE)
 fh_model <- optimize_weights(fh_global, mu = 0, sigma = 100, model_name='fh')
 # Fit individual models
 fh_ind_model_acq <- fit_individual_models(
@@ -166,7 +135,6 @@ fh_ind_model_acq <- fit_individual_models(
 
 # Gouskova simple global 
 gs_global <- read_csv("data/tableaux/gouskova_simple_global.csv")
-#cross_validate(gs_global, 5, 0, c(2000, 1000, 5, 2, 1), grid_search=TRUE)
 gs_model <- optimize_weights(gs_global, mu = 0, sigma = 5, model_name='gs')
 # Fit individual models
 gs_ind_model_acq <- fit_individual_models(
@@ -175,7 +143,6 @@ gs_ind_model_acq <- fit_individual_models(
 
 # Gouskova_complex global 
 gc_global <- read_csv("data/tableaux/gouskova_complex_global.csv")
-#cross_validate(gc_global, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gc_model <- optimize_weights(gc_global, mu = 0, sigma = 500, model_name='gc', upper_bound = 70)
 gc_ind_model_acq <- fit_individual_models(
   gc_model, pc_acq, 'gc', 'data/tableaux/gouskova_complex_ind'
@@ -183,7 +150,6 @@ gc_ind_model_acq <- fit_individual_models(
 
 # Fleischhacker global split *complex
 fh_global_split <- read_csv("data/tableaux/fleischhacker_global_split.csv")
-#cross_validate(fh_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 fh_split_model <- optimize_weights(fh_global_split, mu = 0, sigma = 1000, model_name='fh_split') 
 fh_split_ind_model_acq <- fit_individual_models(
   fh_split_model, pc_acq, 'fh_split', 'data/tableaux/fleischhacker_split_ind'
@@ -197,7 +163,6 @@ fh_split_ind_model_rho_acq <- fit_individual_models(
 
 # Gouskova simple global split *complex
 gs_global_split <- read_csv("data/tableaux/gouskova_simple_global_split.csv")
-#cross_validate(gs_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gs_split_model <- optimize_weights(gs_global_split, mu = 0, sigma = 5, model_name='gs_split')
 gs_split_ind_model_acq <- fit_individual_models(
   gs_split_model, pc_acq, 'gs_split', 'data/tableaux/gouskova_simple_split_ind'
@@ -209,7 +174,6 @@ gs_split_ind_model_rho_acq <- fit_individual_models(
 
 # Gouskova complex global split *complex 
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
-#cross_validate(gc_global_split, 5, 0, c(1000, 500, 200, 100, 50, 20, 5, 2, 1), grid_search=TRUE)
 gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split', upper_bound = 70)
 gc_split_ind_model_acq <- fit_individual_models(
   gc_split_model, pc_acq, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
@@ -263,134 +227,13 @@ compare$gs_gc_diff <- gs_split_results$predictions$Predicted - gc_split_results$
 #################
 # VISUALIZATION #
 #################
-plot_model <- function(model_preds, onsets, outname) {
-  outdir <- file.path('figures', outname)
-  dir.create(outdir, showWarnings = FALSE)
-  
-  # Join the predicted results with the onset column
-  preds_with_onsets <- inner_join(model_preds$predictions, onsets, by=c('Input')) %>% 
-    mutate(ep_type = str_split_fixed(Output, '-', 2)[,2]) %>%
-    filter(!is.na(Observed))
-  
-  # Error rates by onset types
-  preds_with_onsets %>%
-    group_by(onset) %>% 
-    mutate(total_error=sum(abs(Error))) %>%
-    select(onset, total_error) %>%
-    unique() %>%
-    arrange(-total_error) %>% 
-    ggplot(aes(y=total_error, x=fct_reorder(onset, total_error))) +
-    geom_bar(stat='identity')
-  
-  ggsave(file.path(outdir, str_c(outname, '_error_by_onset.png')))
-  
-  # Aggregate predicted vs. observed frequencies for each onset type and make
-  # a plot showing them
-  obs_pred_by_onset_ep_type <- preds_with_onsets %>%
-    mutate(onset_ep=str_c(onset, '-', str_sub(ep_type, 1, 1))) %>%
-    group_by(onset_ep) %>% 
-    mutate(pred=mean(Predicted),
-           obs=mean(Observed),
-           error=mean(Error)) %>%
-    select(onset_ep, obs, pred, error) %>%
-    unique() 
-  
-  ggplot(obs_pred_by_onset_ep_type, aes(x=obs, y=pred, label=onset_ep)) +
-    geom_point(size=2) +
-    geom_label_repel(max.overlaps = Inf) +
-    geom_abline(intercept=0, slope=1, size=1) + 
-    theme(axis.text.x = element_text(size=20),
-          axis.text.y = element_text(size=20),
-          axis.title.x = element_text(size=25),
-          axis.title.y = element_text(size=25)) +
-    xlim(0,1) +
-    ylim(0,1)
-  ggsave(file.path(outdir, str_c(outname, '_pred_obs_full.png')))
-  
-  # Plot predicted vs. observed frequencies for infrequent outcomes
-  # I just did this to make it a bit easier to read, this is just the left
-  # half of the above graph
-  ggplot(obs_pred_by_onset_ep_type %>%
-           filter(obs < 0.5), aes(x=obs, y=pred, label=onset_ep)) +
-    geom_point(size=2) +
-    geom_label_repel(max.overlaps = Inf) +
-    geom_abline(intercept=0, slope=1, size=1) + 
-    theme(axis.text.x = element_text(size=20),
-          axis.text.y = element_text(size=20),
-          axis.title.x = element_text(size=25),
-          axis.title.y = element_text(size=25)) +
-    xlim(0,0.3) +
-    ylim(0,0.3)
-  ggsave(file.path(outdir, str_c(outname, '_pred_obs_lower.png')))
-  
-  # Same thing but for the right half of the graph
-  ggplot(obs_pred_by_onset_ep_type %>%
-           filter(obs >= 0.5), aes(x=obs, y=pred, label=onset_ep)) +
-    geom_point(size=2) +
-    geom_label_repel(max.overlaps = Inf) +
-    geom_abline(intercept=0, slope=1, size=1) + 
-    theme(axis.text.x = element_text(size=20),
-          axis.text.y = element_text(size=20),
-          axis.title.x = element_text(size=25),
-          axis.title.y = element_text(size=25)) +
-    xlim(0.7, 1) +
-    ylim(0.7, 1)
-  ggsave(file.path(outdir, str_c(outname, '_pred_obs_upper.png')))
-}
 
-# Load experimental results to get pairs of words and onsets
-onsets <- read_csv('data/experiment/experimental_results.csv') %>%
-  select(word, onset, sonority_delta) %>%
+onsets <- read_csv('data/experiment/experimental_raw_results.csv') %>%
+  select(word, onset) %>%
   mutate(Input=word) %>%
   select(-word) %>%
   unique() %>%
   filter(Input != 'spreading') 
-
-plot_model(fh_results, onsets, 'fh')
-plot_model(gs_results, onsets, 'gs')
-plot_model(gc_results, onsets, 'gc')
-plot_model(fh_split_results, onsets, 'fh_split')
-plot_model(gs_split_results, onsets, 'gs_split')
-plot_model(gc_split_results, onsets, 'gc_split')
-plot_model(fh_ind_model_acq, onsets, 'fh')
-plot_model(gs_ind_model_acq, onsets, 'gs')
-plot_model(gc_ind_model_acq, onsets, 'gc')
-plot_model(fh_split_ind_model_acq, onsets, 'fh_split_ind')
-plot_model(gs_split_ind_model_acq, onsets, 'gs_split_ind')
-plot_model(gc_split_ind_model_acq, onsets, 'gc_split_ind')
-
-# inner join experimental results and *_results, then group by sonority
-# delta (or whatever) and get the mean error
-
-#load experimental results 
-experimental_results <- read_csv('data/experiment/experimental_results.csv') 
-
-#create errors function
-sonority_errors <- function(results) {
-  #join df 
-  # In order for this to work, experimental_results already needs to be defined
-  sonority_scores <- experimental_results %>%
-    select(word, nap_sonority, sonority_delta) %>%
-    distinct()
-  
-  joined_df <- inner_join(results$predictions, sonority_scores, by = c("Input" = "word"))
-  
-  #mean errors 
-  joined_df <- joined_df %>%
-    group_by(sonority_delta) %>%
-    mutate(mean_delta_error = mean(Error^2))
-  
-  joined_df <- joined_df %>%
-    group_by(nap_sonority) %>%
-    mutate(mean_nap_error = mean(Error^2)) }
-
-#run on results 
-gs_sonority <- sonority_errors(gs_results)
-gc_sonority <- sonority_errors(gc_results)
-fh_sonority <- sonority_errors(fh_results)
-gs_split_results <- sonority_errors(gs_split_results)
-gc_split_results <- sonority_errors(gc_split_results)
-fh_split_results <- sonority_errors(fh_split_results)
 
 fh_best <- fh_split_ind_model_rho_acq$predictions %>%
   inner_join(onsets, by=c("Input")) %>%
@@ -403,27 +246,9 @@ fh_best <- fh_split_ind_model_rho_acq$predictions %>%
                             "prothesis" = 'pre-\nepenthesis')),
          ep_type = fct_relevel(ep_type, "none", 'medial\nepenthesis', "pre-\nepenthesis"))
 
-fh_best_onset <- fh_best %>%
-  group_by(onset, ep_type, sonority_delta) %>%
-  summarize(mean_error = mean(Error))
-
 fh_best_s <- fh_best %>%
   group_by(s_initial, ep_type) %>%
   summarize(mean_error = mean(Error))
-
-fh_best_onset %>%
-  ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
-  facet_wrap(sonority_delta ~ onset, drop = TRUE) +
-  xlab("Onset") +
-  ylab("Mean error") + 
-  scale_fill_discrete(guide="none") +
-  ggtitle("Perceptual Model") +
-  theme_classic(base_size=12) +
-  theme(axis.text=element_text(size=12, angle = 45, vjust = 0.5, hjust = 1),
-        axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) +
-  geom_hline(yintercept=0, size=0.5)
 
 fh_plot <- fh_best_s %>% 
   mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
@@ -454,27 +279,9 @@ gs_best <- gs_split_ind_model_rho_acq$predictions %>%
                                    "prothesis" = 'pre-\nepenthesis')),
          ep_type = fct_relevel(ep_type, "none", 'medial\nepenthesis', "pre-\nepenthesis"))
 
-gs_best_onset <- gs_best %>%
-  group_by(onset, ep_type, s_initial, sonority_delta) %>%
-  summarize(mean_error = mean(Error))
-
 gs_best_s <- gs_best %>%
   group_by(s_initial, ep_type) %>%
   summarize(mean_error = mean(Error))
-
-gs_best_onset %>%
-  ggplot() +
-  geom_bar(aes(x=fct_reorder(ep_type, mean_error), y=mean_error, fill=ep_type), stat='identity') +
-  facet_wrap(sonority_delta ~ onset, drop = TRUE) +
-  xlab("Onset") +
-  ylab("Mean error") + 
-  scale_fill_discrete(guide="none") +
-  ggtitle("Syl. Cont. Simple Model") +
-  theme_classic(base_size=12) +
-  theme(axis.text=element_text(size=12, angle = 45, vjust = 0.5, hjust = 1),
-        axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) +
-  geom_hline(yintercept=0, size=0.5)
 
 gs_plot <- gs_best_s %>%
   mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
@@ -505,28 +312,9 @@ gc_best <- gc_split_ind_model_rho_acq$predictions %>%
                                    "prothesis" = 'pre-\nepenthesis')),
          ep_type = fct_relevel(ep_type, "none", 'medial\nepenthesis', "pre-\nepenthesis"))
 
-gc_best_onset <- gc_best %>%
-  group_by(onset, ep_type, sonority_delta) %>%
-  summarize(mean_error = mean(Error))
-
 gc_best_s <- gc_best %>%
   group_by(s_initial, ep_type) %>%
   summarize(mean_error = mean(Error))
-
-gc_best_onset %>%
-  ggplot() +
-  geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
-  facet_wrap(sonority_delta ~ onset, drop = TRUE) +
-  xlab("Onset") +
-  ylab("Mean error") + 
-  scale_fill_discrete(guide="none") +
-  ggtitle("Syllable Cont. Complex Model") +
-  theme_classic(base_size=12) +
-  theme(axis.text=element_text(size=12, angle = 45, vjust = 0.5, hjust = 1),
-        axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) +
-  geom_hline(yintercept=0, size=0.5)
-ggsave('figures/gc_best_onsets.png', height = 7, width = 7, units='in')
 
 gc_plot <- gc_best_s %>%
   mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
@@ -549,44 +337,3 @@ ggsave('figures/gc_best.png', height = 7, width = 7, units='in')
 
 ggarrange(gs_plot, gc_plot, nrow=1)
 ggsave('figures/best_errors.png', height=7, width=14, units='in')
-
-rho_s <- fh_split_ind_model_rho_acq$rho_s
-rho_t <- fh_split_ind_model_rho_acq$rho_t
-
-participant_num <- 21
-pc <- pc_scores %>% 
-  filter(participant == participant_num) %>% 
-  pull(PC1_acquisition_exposure)
-
-cs_w <- fh_split_ind_model_rho_acq$w['*Complex-S'] + rho_s * pc
-ct_w <- fh_split_ind_model_rho_acq$w['*Complex-T'] + rho_t * pc
-
-weights <- fh_split_ind_model_rho_acq$w
-
-fly <- fh_best %>% filter(onset == 'fl' & participant == 21 &Input == 'fly')
-fly <- fly[,c(5:14)]
-# Get harmony of candidates
-fly_harm <- rowSums(sweep(fly, 2, weights, `*`))
-fly_z <- sum(exp(-fly_harm))
-
-p_pre_fly <- exp(-fly_harm[3]) / fly_z
-p_med_fly <- exp(-fly_harm[1]) / fly_z
-p_none_fly <- exp(-fly_harm[2]) / fly_z
-
-p_med_fly
-p_pre_fly
-p_none_fly
-
-sleep <- fh_best %>% filter(onset == 'sl' & participant == 21 &Input == 'sleep')
-sleep <- sleep[,c(5:14)]
-# Get harmony of candidates
-sleep_harm <- rowSums(sweep(sleep, 2, weights, `*`))
-sleep_z <- sum(exp(-sleep_harm))
-
-p_pre_sleep <- exp(-sleep_harm[3]) / sleep_z
-p_med_sleep <- exp(-sleep_harm[1]) / sleep_z
-p_none_sleep <- exp(-sleep_harm[2]) / sleep_z
-
-p_med_sleep
-p_pre_sleep
-p_none_sleep
