@@ -1,6 +1,7 @@
 library(tidyverse)
 library(lme4)
 library(car)
+library(sjPlot)
 
 ################
 # PROCESS DATA #
@@ -266,27 +267,34 @@ temp_df %>%
   ylim(0, 1.1)
 ggsave('figures/experiment_prothesis_by_red.png', height = 7, width = 10, units='in')
 
+
+# Compute proportions and standard errors
 temp_df_2 <- epenthesis_df %>%
   group_by(s_initial, ep_type) %>%
-  summarize(count = n()) %>%
+  summarize(count = n(), .groups = 'drop') %>%
   ungroup() %>%
   group_by(s_initial) %>%
-  mutate(count = count / sum(count),
+  mutate(total = sum(count),
+         proportion = count / total,
+         se = sqrt((proportion * (1 - proportion)) / total),  # Standard error
          s_initial = ifelse(s_initial, 'sC onsets', 'TR onsets'))
 
+# Plot proportions
 temp_df_2 %>%
-  ggplot(aes(x=ep_type, y=count, fill=ep_type)) +
-  geom_bar(stat='identity') +
+  ggplot(aes(x = ep_type, y = proportion, fill = ep_type)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = proportion - se, ymax = proportion + se), width = 0.2) +  # Error bars
   facet_wrap(~ s_initial) +
   ylab("Proportion of tokens") +
   xlab("Epenthesis outcome") + 
-  theme_classic(base_size=22) +
-  theme(axis.text=element_text(size=16),
-        axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) +
-  scale_fill_discrete(guide="none") +
-  ylim(0,1)
+  theme_classic(base_size = 22) +
+  theme(axis.text = element_text(size = 16),
+        axis.title = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  scale_fill_discrete(guide = "none") +
+  ylim(0, 1)
 ggsave('figures/experiment_epenthesis_by_onset_type.png', height = 7, width = 10, units='in')
+
 
 #########
 # STATS #
@@ -358,7 +366,15 @@ model_acq <- glmer(
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
 
-summary(model_acq)
+model_acq_simple <- model_acq <- glmer(
+  has_ep ~ scale(PC1_acquisition_exposure) * s_initial + context +
+    (1|participant) + (1|onset/word), 
+  data = epenthesis_df, family = 'binomial',
+  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
+)
+
+
+anova(model_acq, model_acq_no_pv)
 
 full_model <- glmer(
   has_ep ~ preceding_v + scale(PC1_acquisition_exposure) + scale(PC1_immersion) + 
@@ -368,10 +384,10 @@ full_model <- glmer(
   data = epenthesis_df, family = 'binomial',
   control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
 )
-
+ 
 summary(full_model)
 
-anova(model_acq, model_im, model_self, model_no_acq, model_no_self, model_no_im, simple_model, full_model)
+anova(model_acq_no_pv, model_acq, model_im, model_self, model_no_acq, model_no_self, model_no_im, simple_model, full_model)
 
 # Model preferred by BIC
 vif(model_acq)
@@ -380,3 +396,22 @@ vif(model_no_im)
 
 # Best model
 summary(model_acq)
+
+
+#simpler model (proposed by reviewer)
+#create onset type 
+epenthesis_df <- epenthesis_df %>%
+  mutate(onset_type = case_when(
+    onset == "sw" ~ "sC",
+    s_initial == FALSE ~ "TR",
+    s_initial == TRUE ~ "sC"
+  ))
+
+mod_simple <- glmer(has_ep ~ s_initial + (1 + s_initial| participant) + (1|word),
+                    data = epenthesis_df, family = "binomial")
+summary(mod_simple)
+
+anova(model_acq, mod_simple, model_acq_simple)
+
+
+
