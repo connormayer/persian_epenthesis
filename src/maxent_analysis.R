@@ -251,7 +251,8 @@ fh_best_s <- fh_best %>%
   summarize(mean_error = mean(Error))
 
 fh_plot <- fh_best_s %>% 
-  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
+  mutate(s_initial = ifelse(s_initial, 'SC onset', 'OR onset'),
+         s_initial = factor(s_initial, levels = c('SC onset', 'OR onset'))) %>%
   ggplot() +
   geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) +
@@ -265,8 +266,10 @@ fh_plot <- fh_best_s %>%
         plot.title = element_text(hjust = 0.5, face="bold")) +
   ylim(-0.15, 0.15) +
   geom_hline(yintercept=0, size=0.75)
+
 fh_plot
 ggsave('figures/fh_best.png', height = 7, width = 7, units='in')
+
 
 gs_best <- gs_split_ind_model_rho_acq$predictions %>%
   inner_join(onsets, by=c("Input")) %>%
@@ -283,8 +286,9 @@ gs_best_s <- gs_best %>%
   group_by(s_initial, ep_type) %>%
   summarize(mean_error = mean(Error))
 
-gs_plot <- gs_best_s %>%
-  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
+gs_plot <- gs_best_s %>% 
+  mutate(s_initial = ifelse(s_initial, 'SC onset', 'OR onset'),
+         s_initial = factor(s_initial, levels = c('SC onset', 'OR onset'))) %>%
   ggplot() +
   geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) +
@@ -295,9 +299,10 @@ gs_plot <- gs_best_s %>%
   theme_classic(base_size=20) +
   theme(axis.text=element_text(size=16, angle = 45, vjust = 0.5, hjust = 1),
         axis.title=element_text(face="bold"),
-        plot.title = element_text(hjust = 0.5, face="bold")) + 
+        plot.title = element_text(hjust = 0.5, face="bold")) +
   ylim(-0.15, 0.15) +
   geom_hline(yintercept=0, size=0.75)
+
 gs_plot
 ggsave('figures/gs_best.png', height = 7, width = 7, units='in')
 
@@ -316,8 +321,9 @@ gc_best_s <- gc_best %>%
   group_by(s_initial, ep_type) %>%
   summarize(mean_error = mean(Error))
 
-gc_plot <- gc_best_s %>%
-  mutate(s_initial = ifelse(s_initial, 'sC', 'TR')) %>%
+gc_plot <- gc_best_s %>% 
+  mutate(s_initial = ifelse(s_initial, 'SC onset', 'OR onset'),
+         s_initial = factor(s_initial, levels = c('SC onset', 'OR onset'))) %>%
   ggplot() +
   geom_bar(aes(x=ep_type, y=mean_error, fill=ep_type), stat='identity') +
   facet_wrap(~ s_initial) + 
@@ -331,6 +337,7 @@ gc_plot <- gc_best_s %>%
         plot.title = element_text(hjust = 0.5, face="bold")) +
   ylim(-0.15, 0.15) +
   geom_hline(yintercept=0, size=0.75)
+
 gc_plot
 ggsave('figures/gc_best.png', height = 7, width = 7, units='in')
 
