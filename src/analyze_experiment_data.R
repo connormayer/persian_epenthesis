@@ -282,23 +282,33 @@ temp_df_2 <- epenthesis_df %>%
 # Plot proportions
 temp_df_2 %>%
   mutate(s_initial = case_when(
-    s_initial == "TR onsets" ~ "OR onsets",
-    s_initial == "sC onsets" ~ "SC onsets",
-    TRUE ~ s_initial
+    s_initial == "TR onsets"  ~ "OR onsets",
+    s_initial == "sC onsets"  ~ "SC onsets",
+    TRUE                      ~ s_initial
   )) %>%
-  mutate(s_initial = factor(s_initial, levels = c("SC onsets", "OR onsets"))) %>% # Reorder factor levels
+  mutate(s_initial = factor(s_initial, levels = c("SC onsets", "OR onsets"))) %>%
   ggplot(aes(x = ep_type, y = proportion, fill = ep_type)) +
   geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = proportion - se, ymax = proportion + se), width = 0.2) +
+  geom_errorbar(aes(ymin = proportion - se,
+                    ymax = proportion + se),
+                width = 0.2) +
+  # place N just above the error bar
+  geom_text(
+    aes(
+      y     = proportion + se + 0.07,          
+      label = paste0(count)
+    ),
+    fontface = "bold",
+    size     = 5
+  ) +
   facet_wrap(~ s_initial) +
   ylab("Proportion of tokens") +
-  xlab("Epenthesis outcome") + 
+  xlab("Epenthesis outcome") +
   theme_classic(base_size = 22) +
-  theme(axis.text = element_text(size = 16),
-        axis.title = element_text(face = "bold"),
-        plot.title = element_text(hjust = 0.5, face = "bold")) +
+  theme(axis.text  = element_text(size = 16),
+        axis.title = element_text(face = "bold")) +
   scale_fill_discrete(guide = "none") +
-  ylim(0, 1)
+  ylim(0, 1.15)                              
 
 ggsave('figures/experiment_epenthesis_by_onset_type.png', height = 7, width = 10, units='in')
 
