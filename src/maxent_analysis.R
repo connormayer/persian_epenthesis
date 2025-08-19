@@ -127,7 +127,7 @@ pc_acq <- pc_scores %>%
 
 # Fleischhacker global 
 fh_global <- read_csv("data/tableaux/fleischhacker_global.csv")
-fh_model <- optimize_weights(fh_global, mu = 0, sigma = 100, model_name='fh')
+fh_model <- optimize_weights(fh_global, mu = 0, sigma = 1000, model_name='fh')
 # Fit individual models
 fh_ind_model_acq <- fit_individual_models(
   fh_model, pc_acq, 'fh', 'data/tableaux/fleischhacker_ind'
@@ -135,7 +135,7 @@ fh_ind_model_acq <- fit_individual_models(
 
 # Gouskova simple global 
 gs_global <- read_csv("data/tableaux/gouskova_simple_global.csv")
-gs_model <- optimize_weights(gs_global, mu = 0, sigma = 5, model_name='gs')
+gs_model <- optimize_weights(gs_global, mu = 0, sigma = 1000, model_name='gs')
 # Fit individual models
 gs_ind_model_acq <- fit_individual_models(
   gs_model, pc_acq, 'gs', 'data/tableaux/gouskova_simple_ind'
@@ -143,7 +143,7 @@ gs_ind_model_acq <- fit_individual_models(
 
 # Gouskova_complex global 
 gc_global <- read_csv("data/tableaux/gouskova_complex_global.csv")
-gc_model <- optimize_weights(gc_global, mu = 0, sigma = 500, model_name='gc', upper_bound = 70)
+gc_model <- optimize_weights(gc_global, mu = 0, sigma = 1000, model_name='gc', upper_bound = 70)
 gc_ind_model_acq <- fit_individual_models(
   gc_model, pc_acq, 'gc', 'data/tableaux/gouskova_complex_ind'
 )
@@ -163,7 +163,7 @@ fh_split_ind_model_rho_acq <- fit_individual_models(
 
 # Gouskova simple global split *complex
 gs_global_split <- read_csv("data/tableaux/gouskova_simple_global_split.csv")
-gs_split_model <- optimize_weights(gs_global_split, mu = 0, sigma = 5, model_name='gs_split')
+gs_split_model <- optimize_weights(gs_global_split, mu = 0, sigma = 1000, model_name='gs_split')
 gs_split_ind_model_acq <- fit_individual_models(
   gs_split_model, pc_acq, 'gs_split', 'data/tableaux/gouskova_simple_split_ind'
 )
@@ -174,7 +174,7 @@ gs_split_ind_model_rho_acq <- fit_individual_models(
 
 # Gouskova complex global split *complex 
 gc_global_split <- read_csv("data/tableaux/gouskova_complex_global_split.csv")
-gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 200, model_name='gc_split', upper_bound = 70)
+gc_split_model <- optimize_weights(gc_global_split, mu = 0, sigma = 1000, model_name='gc_split', upper_bound = 70)
 gc_split_ind_model_acq <- fit_individual_models(
   gc_split_model, pc_acq, 'gc_split', 'data/tableaux/gouskova_complex_split_ind'
 )
