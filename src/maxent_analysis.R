@@ -206,6 +206,72 @@ compare_models(
   method = "bic"
 )
 
+#visualize the BIC scores by model group (Fig. 7) 
+df <- read_csv("/Users/noahkhaloo/Desktop/persian_epenthesis/data/experiment/model_performance.csv") %>%
+  mutate(`Base Model` = recode(`Base Model`,
+                               "Syllable Contact - Complex" = "Syllable Contact Complex",
+                               "Syllable Contact - Simple"  = "Syllable Contact Simple"
+  )) %>%
+  mutate(`Model Type` = case_when(
+    `Scaled by RED?` == "N" & `Split *Complex?` == "N" ~ "No modifications",
+    `Scaled by RED?` == "N" & `Split *Complex?` == "Y" ~ "Split *Complex",
+    `Scaled by RED?` == "Y" & `Split *Complex?` == "N" ~ "Scaled by RED",
+    `Scaled by RED?` == "Y" & `Split *Complex?` == "Y" & `Split ?` == "N" ~ "Scaled by RED, Split *Complex",
+    `Scaled by RED?` == "Y" & `Split *Complex?` == "Y" & `Split ?` == "Y" ~ "Scaled by RED, Split *Complex, Split Rho",
+    TRUE ~ "Other"
+  )) %>%
+  filter(`Model Type` != "Other") %>%
+  mutate(
+    # multi-line centered x labels
+    base_label = fct_recode(`Base Model`,
+                            "Perceptual\nCost"           = "Perceptual Cost",
+                            "Syllable\nContact\nComplex" = "Syllable Contact Complex",
+                            "Syllable\nContact\nSimple"  = "Syllable Contact Simple"
+    ),
+    base_label = factor(base_label, levels = c(
+      "Perceptual\nCost",
+      "Syllable\nContact\nComplex",
+      "Syllable\nContact\nSimple"
+    ))
+  )
+
+# --- Legend order (most → least complex) ---
+lvl_desc <- c(
+  "Scaled by RED, Split *Complex, Split Rho",
+  "Scaled by RED, Split *Complex",
+  "Scaled by RED",
+  "Split *Complex",
+  "No modifications"
+)
+df <- df %>% mutate(`Model Type` = factor(`Model Type`, levels = lvl_desc))
+
+# --- Plot (print so ggsave grabs it) ---
+ggplot(df, aes(x = base_label, y = BIC,
+               color = `Model Type`, group = `Model Type`)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 6) +
+  scale_color_manual(
+    breaks = lvl_desc, limits = lvl_desc,  # legend order
+    values = c(
+      "No modifications"                          = "red",
+      "Split *Complex"                            = "magenta",
+      "Scaled by RED"                             = "darkolivegreen3",
+      "Scaled by RED, Split *Complex"             = "mediumseagreen",
+      "Scaled by RED, Split *Complex, Split Rho"  = "deepskyblue"
+    )
+  ) +
+  scale_y_reverse() +
+  scale_x_discrete(expand = expansion(mult = c(0.2, 0.2))) +
+  labs(x = NULL, y = "BIC", color = "Model Type") +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.text.x = element_text(hjust = 0.5, vjust = 0.5, margin = margin(t = 10)),
+    legend.position = "right",
+    panel.grid.minor = element_blank()
+  )
+ggsave("/Users/noahkhaloo/Desktop/persian_epenthesis/figures/model_comparison.png",
+       width = 10, height = 5, units = "in", dpi = 300, bg = "white")
+
 #--------
 
 # predict probabilities and save to fh/gs/gc_results
