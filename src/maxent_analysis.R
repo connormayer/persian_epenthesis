@@ -341,6 +341,5 @@ gc_plot <- gc_best_s %>%
 gc_plot
 ggsave('figures/gc_best.png', height = 7, width = 7, units='in')
 
-
 ggarrange(gs_plot, gc_plot, nrow=1)
 ggsave('figures/best_errors.png', height=7, width=14, units='in')

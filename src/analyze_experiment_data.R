@@ -206,12 +206,17 @@ epenthesis_df %>%
                 width=0.5, alpha=0.9, size=0.5, position=position_dodge(width=0.9)) +
   xlab("Onset identity") +
   ylab("Mean epenthesis rate") +
+  # ylab("Mean \n epenthesis \n rate") +
   scale_fill_discrete(name = "SC onset?") +
   theme_classic(base_size=30) +
   theme(axis.text=element_text(size=20),
         axis.title=element_text(size=30,face="bold"),
         plot.title = element_text(hjust = 0.5, face="bold"))
-ggsave('figures/experiment_ep_rates_by_onset.png', height = 6, width = 12, units='in')
+#ggsave('figures/experiment_ep_rates_by_onset.png', height = 6, width = 12, units='in')
+const <- 2
+ggsave('figures/experiment_ep_rates_by_onset_square.png', height = 6 * const, width = 6 * const, units='in')
+# const <- 4
+# ggsave('figures/experiment_ep_rates_by_onset_banner.png', height = 260 * const, width = 1477 * const, units='px')
 
 # Plot showing relationship between LEAP-Q PCs and epenthesis rate
 # The first step is to make a new df where ep_rate is the mean of has_ep
@@ -318,7 +323,7 @@ ggsave('figures/experiment_epenthesis_by_onset_type.png', height = 7, width = 10
 #########
 epenthesis_df <- read_csv('data/experiment/experimental_revised_results.csv')
 
-# Compare different 
+# Compare different RED implementations
 simple_model <- glmer(
   has_ep ~ preceding_v + scale(PC1_original) * s_initial + context + 
     (1|participant) + (1|onset/word), 
@@ -404,36 +409,3 @@ vif(model_no_im)
 
 # Best model
 summary(model_acq)
-
-
-#simpler model (proposed by reviewer)
-#create onset type 
-epenthesis_df <- epenthesis_df %>%
-  mutate(onset_type = case_when(
-    onset == "sw" ~ "sC",
-    s_initial == FALSE ~ "TR",
-    s_initial == TRUE ~ "sC"
-  ))
-
-
-
-mod_simple_1 <- glmer(
-  has_ep ~ preceding_v +  s_initial + context +
-    (1|participant) + (1|onset/word), 
-  data = epenthesis_df, family = 'binomial',
-  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
-)
-
-mod_simple_2 <- glmer(
-  has_ep ~ preceding_v + scale(PC1_acquisition_exposure) + s_initial + context +
-    (1|participant) + (1|onset/word), 
-  data = epenthesis_df, family = 'binomial',
-  control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5))
-)
-
-
-anova(model_acq, mod_simple_1, mod_simple_2)
-
-f <- epenthesis_df %>% filter(has_ep == "TRUE" & preceding_v == "TRUE" & s_initial == "TRUE")
-
-
