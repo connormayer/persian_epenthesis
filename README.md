@@ -1,6 +1,8 @@
 # The acquisition of L2 English complex onsets by L1 Farsi speakers
 
-This repository contains the code used in Khaloo and Mayer (2025). The acquisition of L2 English consonant clusters by L1 Farsi speakers. *Laboratory Phonology, 16*(1), 1-43.
+This repository contains the code and data used in 
+
+> Khaloo, N. & Mayer, C. (2025). The acquisition of L2 English consonant clusters by L1 Farsi speakers. *Laboratory Phonology, 16*(1), 1-43.
 
 ## src
 
