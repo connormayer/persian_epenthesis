@@ -1,0 +1,17 @@
+Base Model,Scaled by RED?,Split *Complex?,Split ?,"Log
+Likelihood",Num. Params,BIC
+Perceptual Cost,Y,Y,Y,-658,12,1408
+Perceptual Cost,Y,Y,N,-671,11,1427
+Syllable Contact - Complex,Y,Y,Y,-729,15,1573
+Syllable Contact - Complex,Y,Y,N,-743,14,1593
+Perceptual Cost,Y,N,N,-777,10,1631
+Syllable Contact - Complex,Y,N,N,-822,13,1745
+Syllable Contact - Simple,Y,Y,Y,-915,7,1885
+Syllable Contact - Simple,Y,N,N,-926,5,1891
+Syllable Contact - Simple,Y,Y,N,-926,6,1898
+Perceptual Cost,N,Y,n/a,-989,10,2055
+Syllable Contact - Complex,N,Y,n/a,-1061,13,2222
+Syllable Contact - Complex,N,N,n/a,-1089,12,2270
+Perceptual Cost,N,N,n/a,-1109,9,2288
+Syllable Contact - Simple,N,N,n/a,-1172,4,2375
+Syllable Contact - Simple,N,Y,n/a,-1171,5,2381
